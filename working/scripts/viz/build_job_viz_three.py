@@ -165,7 +165,7 @@ def build_html(jobs: list[dict]) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Job Search Space - Eden Redman</title>
+  <title>Job Search Space</title>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <style>
     :root {
@@ -1606,7 +1606,7 @@ def build_html(jobs: list[dict]) -> str:
   function screenshot() {
     const a = document.createElement("a");
     a.href = renderer.domElement.toDataURL("image/png");
-    a.download = "job_search_space_eden.png";
+    a.download = "job_search_space.png";
     a.click();
   }
 

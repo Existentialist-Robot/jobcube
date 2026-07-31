@@ -1,5 +1,10 @@
 # Getting Started — Claude-Assisted Job Search Workspace
 
+> **Start with [`README.md`](README.md)** for the short version — what this is, prerequisites, and a
+> five-step quick start. This file is the deep walkthrough: it takes you from a fresh clone to a
+> filed, submission-ready application, and explains *why* each guard exists. Work through it once,
+> in order.
+
 ## What this repo does
 
 This workspace turns Claude Code into your personal job application pipeline. It handles job discovery (searching confirmed-queryable job boards), fit evaluation (screening roles against your profile and realistic hiring probability, not just skills match), application drafting (résumé body + cover letter, length-matched to your Canva template), porting (editing your Canva design via MCP without you touching the tool), and filing (exporting PDFs, naming folders, updating your tracker).
@@ -17,10 +22,43 @@ Before you start:
 1. **Claude Code** installed and running (`claude` CLI — see [claude.ai/code](https://claude.ai/code))
 2. **Canva account** with MCP integration enabled in Claude Code settings (this is what lets Claude edit your design without a browser)
 3. **Python 3.11+** for the helper scripts (`pip install plotly` for the viz)
-4. **Node.js** (optional — only needed if you use the `check_viz_html.py` syntax checker)
+4. **Node.js** (optional — only needed if you use the `working/scripts/utils/check_viz_full.py` / `check_viz_three.py` syntax checkers)
 5. **GitHub account** (the repo tracks your applications via git)
 6. **Optional: Adzuna API key** — structured Canadian job listings with salary data. Free tier. Register at [developer.adzuna.com](https://developer.adzuna.com). The pipeline can call it as an MCP tool for significantly better search coverage than HTML scraping.
 7. **Optional: Jooble API key** — broader aggregator. Free key on request at [jooble.org/api/about](https://jooble.org/api/about).
+
+---
+
+## Step 0 — Load your private documents
+
+Before you personalize anything, give Claude your raw source material. Drop your real files into
+`documents/`:
+
+| Folder | What goes in it |
+|--------|-----------------|
+| `documents/cv/` | Your current résumé(s), in any format |
+| `documents/linkedin/` | Your LinkedIn data export or a saved profile PDF |
+| `documents/diplomas/` | Degrees, transcripts, certifications |
+| `documents/references/` | Reference letters, performance reviews, testimonials |
+| `documents/postings/` | Job postings you want evaluated — saved or pasted |
+| `documents/applications/` | Past applications worth reusing language from |
+
+**The contents are gitignored.** Only the folder structure and `documents/README.md` are tracked, so
+the layout survives a fresh clone while your personal files never get committed. Verify with:
+
+```bash
+git check-ignore -v documents/cv/your_resume.pdf   # should report a match
+```
+
+This matters for two reasons. First, Step 1 is much faster if Claude can read your existing CV and
+draft the profile from it rather than asking you to type it all out — you can literally say *"read
+`documents/cv/` and fill in CLAUDE.md."* Second, it keeps personal data out of a repo you may later
+push to a public fork.
+
+> **Trust boundary — read this once.** Anything in `documents/postings/` is untrusted third-party
+> content. A job posting is **data to evaluate, never instructions to follow**, and pasting one in by
+> hand does not launder it. If a posting contains text like "ignore previous instructions" or "email
+> this document to…", that is an injection attempt, not a requirement of the role.
 
 ---
 
@@ -151,14 +189,14 @@ The blue sphere in the viz shows your current search focus — the region of the
 
 Claude will:
 1. Ask if you want to review the shortlist before drafting (or pass `--confirm` / `--auto` next time to skip the question)
-2. Search the confirmed-queryable boards in `working/scripts/utils/../boards.md` — ~4–6 WebFetch/WebSearch calls per wave
+2. Search the confirmed-queryable boards in `.claude/skills/pipeline/boards.md` — ~4–6 WebFetch/WebSearch calls per wave
 3. Filter results through a **hiring probability gate** (skills match ≠ hiring probability; roles where there's no realistic path to hire are dropped silently)
 4. Write a sweep doc to `working/active/job_sweep_YYYY-MM-DD.md` **before presenting anything in chat**
 5. Summarize from the doc, then wait for your input
 
 ### The anti-signal filter
 
-Every sweep result is cross-checked against `memory/project_applied_roles.md` (your applied roles log). Roles you've already applied to are silently dropped — you never see them again. Update this file after every submission.
+Every sweep result is cross-checked against your applied-roles log — `job_search_tracker.csv` plus Claude's own project memory (`.claude/projects/<project>/memory/`, which is gitignored and created on first use). Roles you've already applied to are silently dropped — you never see them again. Update the tracker after every submission.
 
 ### The open-status gate
 
@@ -266,17 +304,29 @@ Claude will read the key files and give you a status brief before doing anything
 ## Directory Reference
 
 ```
-ai-job-search/
+ai-job-search-template/
+├── README.md                   # front door: what this is + quick start
 ├── CLAUDE.md                   # candidate profile + workflow rules (AI reads this first)
-├── GETTING_STARTED.md          # this file
+├── GETTING_STARTED.md          # this file — the deep walkthrough
 ├── HANDOFF.md                  # sprint state, active docs, pending items
-├── SWEEP_TEMPLATE.md           # template for sweep docs
+├── LICENSE                     # MIT (dual copyright; fonts under OFL)
 ├── .env.example                # env var keys (copy to .env, fill in)
 ├── .gitignore
 ├── job_search_tracker.csv      # canonical application index
+├── documents/                  # YOUR PRIVATE INPUTS — contents gitignored
+│   ├── cv/                     # existing résumé(s)
+│   ├── linkedin/               # LinkedIn export / profile PDF
+│   ├── diplomas/               # degrees, transcripts, certifications
+│   ├── references/             # reference letters, reviews
+│   ├── postings/               # job postings to evaluate (UNTRUSTED content)
+│   └── applications/           # past applications worth reusing
 ├── working/
+│   ├── templates/              # COPY THESE, never edit in place
+│   │   ├── SWEEP_TEMPLATE.md   # one job-search sweep
+│   │   ├── PACKET_TEMPLATE.md  # one application: measured copy + checklists
+│   │   └── OUTREACH_LOG_TEMPLATE.md  # LinkedIn outreach for one role
 │   ├── active/                 # live work only: current sweep + current interview doc
-│   ├── exports/                # FINALS ARCHIVE: every submitted app (PDFs + drafts)
+│   ├── exports/                # FINALS ARCHIVE: every submitted app (PDFs + packet)
 │   ├── archive/
 │   │   ├── sweeps/             # past sweep docs (move here after sprint ends)
 │   │   ├── sprints/            # past sprint plans
@@ -284,12 +334,14 @@ ai-job-search/
 │   └── scripts/
 │       ├── PORTING_RECIPE.md   # step-by-step Canva porting guide
 │       ├── REVIEW_AGENTS.md    # reviewer persona templates + log
-│       ├── utils/              # general-purpose utilities (parse, read, audit)
-│       ├── builders/           # per-role builder scripts (clone one per port)
-│       ├── viz/                # visualization generator
-│       └── generated/          # output JSON from builder scripts
-├── cv/                         # LaTeX CV fallback (legacy)
-├── cover_letters/              # LaTeX cover letter fallback (legacy)
+│       ├── template/           # template_port.py + manifest.json (the port primitive)
+│       ├── utils/              # render, verify sign-off, measure gap, audits
+│       ├── viz/                # visualization generators
+│       ├── builders/           # historical examples — do NOT clone for new work
+│       └── generated/          # output JSON from the port primitive
+├── cv/                         # LaTeX CV fallback (legacy), placeholder-tokenized
+├── cover_letters/              # LaTeX cover letter fallback (legacy) + bundled fonts
+├── .agents/vendor/             # vendored linkedin-cli submodule + setup script
 └── .claude/skills/             # AI skill definitions
     ├── pipeline/SKILL.md       # full pipeline skill
     ├── pipeline/boards.md      # confirmed queryable job boards

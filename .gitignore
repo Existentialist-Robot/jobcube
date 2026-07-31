@@ -27,6 +27,13 @@ job_scraper/*.md
 *_BehavioralReport.pdf
 linkedin_Profile.pdf
 
+# Private intake: ignore everything you drop in documents/, but keep the
+# folder structure tracked so the layout survives a fresh clone.
+documents/**
+!documents/**/
+!documents/README.md
+!documents/**/.gitkeep
+
 # Personal photos and signatures
 *.jpg
 *.jpeg
