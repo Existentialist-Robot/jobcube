@@ -1,0 +1,164 @@
+{
+ "_README": [
+  "WORKED EXAMPLE - RECALIBRATE BEFORE YOU RELY ON IT.",
+  "These variants were fingerprinted against one specific Canva design. The",
+  "positions and capacities below will NOT match your layout.",
+  "",
+  "Register your own layout with:",
+  "  python template_port.py build-manifest <snapshot.json> --name v1",
+  "where <snapshot.json> is a saved start-editing-transaction response.",
+  "Pages auto-match by position fingerprint, so multiple variants can coexist.",
+  "",
+  "The cap values are a starting estimate from box geometry. Character count",
+  "predicts fit only roughly - wrapping depends on word lengths. After your",
+  "first port, render the page and tighten any slot that overflowed to the",
+  "longest length you have actually seen fit."
+ ],
+ "variants": {
+  "resume-v1": {
+   "fingerprint": "000f3acc5b74",
+   "page_kind": "resume",
+   "slots": {
+    "section_header": {
+     "pos": "144,26",
+     "kind": "single",
+     "w": 268.203125,
+     "h": 22.26666,
+     "cap": 30
+    },
+    "divider": {
+     "pos": "290,26",
+     "kind": "single",
+     "w": 203.84375,
+     "h": 18.79998,
+     "cap": 31
+    },
+    "headline": {
+     "pos": "70,26",
+     "kind": "single",
+     "w": 247.828125,
+     "h": 18.79998,
+     "cap": 44
+    },
+    "profile": {
+     "pos": "176,26",
+     "kind": "single",
+     "w": 729.820878236131,
+     "h": 68.97928666666668,
+     "cap": 719
+    },
+    "tagline": {
+     "pos": "604,28",
+     "kind": "single",
+     "w": 251.78125,
+     "h": 18.79998,
+     "cap": 37
+    },
+    "ceo": {
+     "pos": "318,28",
+     "kind": "bullets",
+     "w": 465.65226741198614,
+     "h": 178.34763666188573,
+     "cap": 955
+    },
+    "cto": {
+     "pos": "506,28",
+     "kind": "bullets",
+     "w": 466.92481040075455,
+     "h": 88.99619344076835,
+     "cap": 522
+    },
+    "program_creator": {
+     "pos": "730,26",
+     "kind": "bullets",
+     "w": 466.92481040075455,
+     "h": 88.9990524933247,
+     "cap": 522
+    },
+    "skill_label_4": {
+     "pos": "538,542",
+     "kind": "single",
+     "w": 189.85908674944824,
+     "h": 18.79998,
+     "cap": 25
+    },
+    "skill_desc_4": {
+     "pos": "562,542",
+     "kind": "single",
+     "w": 247.6439948124231,
+     "h": 63.28968000000001,
+     "cap": 194
+    },
+    "skill_label_3": {
+     "pos": "456,542",
+     "kind": "single",
+     "w": 202.42332663060233,
+     "h": 18.79998,
+     "cap": 25
+    },
+    "skill_desc_3": {
+     "pos": "480,542",
+     "kind": "single",
+     "w": 252.70276980210883,
+     "h": 46.40057999999999,
+     "cap": 141
+    },
+    "skill_desc_2": {
+     "pos": "396,542",
+     "kind": "single",
+     "w": 262.3671810156437,
+     "h": 46.40057999999999,
+     "cap": 146
+    },
+    "skill_label_2": {
+     "pos": "372,542",
+     "kind": "single",
+     "w": 222.47635165544193,
+     "h": 18.79998,
+     "cap": 25
+    },
+    "skill_desc_1": {
+     "pos": "314,542",
+     "kind": "single",
+     "w": 252.7027698021088,
+     "h": 46.400579999999984,
+     "cap": 141
+    },
+    "skill_label_1": {
+     "pos": "290,542",
+     "kind": "single",
+     "w": 263.74682453479534,
+     "h": 18.79998,
+     "cap": 25
+    },
+    "research": {
+     "pos": "632,26",
+     "kind": "bullets",
+     "w": 466.92481040075455,
+     "h": 88.99905249332468,
+     "cap": 522
+    }
+   }
+  },
+  "cover-v1": {
+   "fingerprint": "4cf0bfd4a593",
+   "page_kind": "cover",
+   "slots": {
+    "cover_body": {
+     "pos": "168,52",
+     "kind": "cover",
+     "w": 711.397476923503,
+     "h": 781.3122387560353,
+     "cap": 6502
+    },
+    "cover_headline": {
+     "pos": "70,26",
+     "kind": "single",
+     "w": 247.828125,
+     "h": 18.79998,
+     "cap": 46
+    }
+   }
+  }
+ }
+}

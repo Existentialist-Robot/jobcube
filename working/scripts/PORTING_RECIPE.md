@@ -2,14 +2,21 @@
 
 The résumé/cover template is identical across every dup pair. **Element IDs regenerate per duplicated page** (the one thing that changes), so a quick parse is always needed — but the layout, mapping, and recipe below never change.
 
-## Fast path (per pair)
+## First-run setup (once)
+1. Fill in `template/port_config.json` — sign-off name, cover character band, ban list. **`port` refuses to run while the name is the `[YOUR_NAME]` placeholder.**
+2. `python template/template_port.py build-manifest <snapshot.json> --name v1` — register YOUR layout. The shipped `manifest.json` and the capacities in `template_port.py` are a **worked example measured against one specific design**, not universal values.
+
+## Fast path (any number of pairs, one batch)
 1. `start-editing-transaction` → note the persisted snapshot file path + transaction_id.
-2. Copy closest builder from `builders/` → `builders/build_<role>_pair<k>.py`. Change: `SNAP` path, page numbers, `ID` dict (from parse_transaction.py), `CURRENT` dict (from read_work_boxes.py / read_bullets_full.py), and role copy (`SINGLE` dict + `NEW_BULLETS` dict + `cover`).
-3. Run it → prints per-box char counts + `CLEAN MAP: PASS` + writes `generated/<role>_ops.json`.
-4. `perform-editing-operations` immediately after `start-editing-transaction` (transactions expire — don't let them sit).
-5. `format_text {font_style: normal}` on each work-experience box — clears baked italic first bullet.
-6. Check response: title runs intact (bold preserved), no obvious overflow.
-7. `commit-editing-transaction` — **changes are lost if not committed**.
+2. Write a `copy.json` — slots + lead-role bullets + cover body per pair (schema in the `template_port.py` docstring; drafting tables in [`../templates/PACKET_TEMPLATE.md`](../templates/PACKET_TEMPLATE.md)).
+3. `python template/template_port.py port <snapshot.json> copy.json` → measures every slot against its manifest cap, flags `UNDER-FILL`, scans the ban list, prints `SLOP-WARN` per cover, checks each cover ends with the sign-off, prints **`CLEAN-MAP CHECK: PASS`**, and writes the ops JSON. **Never proceed on FAIL.**
+4. `python validate_canva_ops.py <snapshot.json> <ops.json>` must pass.
+5. `perform-editing-operations` with **all** ops in one call, immediately after `start-editing-transaction` (transactions expire — a stale one silently drops the edits).
+6. `python utils/verify_port_signoff.py <perform_response.json> <cover_eid...>` — **before** committing. On FAIL, **cancel** the transaction; never commit a clipped cover.
+7. `commit-editing-transaction` — within seconds. **Changes are lost if not committed.**
+8. Render-verify (see below) — this is not optional.
+
+`template_port.py` handles the `format_text {font_style: normal}` on work boxes (clears the baked italic first bullet) and the width-only `resize_element` on each cover box before its text is written, so the frame grows before Canva can clip the sign-off.
 
 ## Stable template layout (logical box → how to find it)
 - **headline** (×2, resume+cover): your positioning title (top of page).
@@ -26,36 +33,54 @@ The résumé/cover template is identical across every dup pair. **Element IDs re
 - **Work boxes** → `find_and_replace_text` on the **bullets-block only** (everything after the first `\n\n`), preserving the bold title; then **`format_text {font_style: normal}`** to clear the baked italic first bullet (verify the title stays its own run).
 - Never set italic. Length-match by character count; expect a 1-line trim pass.
 
-## Overflow detection (MANDATORY — always run after commit)
-Character count is an imprecise proxy because proportional fonts render wide words wider regardless of char count. The only reliable overflow check is **box height comparison**:
+## Render-verify loop (MANDATORY — always run after commit)
+Character count is an imprecise proxy: proportional fonts render wide words wider regardless of char count, so a box that held 184 chars of one wording overflows at 184 of another. **Pixels decide.**
 
-1. After committing, start a new transaction and run `working/scripts/utils/height_audit.py`.
-2. Compare work box heights across pairs. The **shortest clean box height is the baseline**.
-3. Any box taller than baseline by ≥ 5 units = overflow. Trim the longest bullets until heights match.
-4. **Per-bullet rule:** matching the *box total* to ceiling is not sufficient — a single over-long bullet wraps to an extra line and overflows even when the box total is under. Match each bullet to its proven-good equivalent length (or shorter), not just the box total.
-5. Wide-word text (long words like "government", "post-secondary", "institutional") renders wider than char count — aim 10–15 chars UNDER the limit when using wide-word-heavy text.
-6. Skill descs: check `height` in the response — any skill desc taller than ~40 units is overflowing.
+1. `export-design` the edited page(s) to PDF (`size:letter`, `export_quality:pro`, `pages:[N]`) and download them.
+2. `python utils/render_canva_page.py <page.pdf>` — writes full-page, skill-column, and left-column PNGs.
+3. **Read the PNGs.** Check every edited box for **overflow** (text crowding the next label) and **under-fill** (short last line / stranded empty line). Confirm the cover's sign-off is visibly present.
+4. Covers: `python utils/measure_cover_gap.py <cover.pdf>` — target signature gap **7–12pt** (sweet spot ~10).
+5. Iterate trims and fills autonomously until the render is clean, then re-export.
+
+Skipping this is expensive: one skill description once took **five** rounds of human correction (151→184→164→159→146 chars) that a single render would have caught immediately.
+
+**Per-bullet rule:** matching the *box total* to ceiling is not sufficient — a single over-long bullet wraps to an extra line and overflows even when the box total is under. Match each bullet to its proven-good equivalent length (or shorter), not just the box total.
+
+**Wide-word text** (long words like "government", "post-secondary", "institutional") renders wider than char count suggests — aim 10–15 chars UNDER the cap when the copy is wide-word-heavy.
+
+**Under-fill is a flag too.** Skill descriptions should reach ~95–100% of proven capacity; `template_port.py` prints `UNDER-FILL` below 90%.
 
 ## Files
 
-### Utilities (`utils/`) — general-purpose, reuse every port
+### The port primitive (`template/`) — this is the one you use
+| File | Purpose |
+|------|---------|
+| `template_port.py` | **The only current op generator.** `build-manifest` registers a layout variant; `port` measures copy against caps, scans the ban list and slop tells, guards the sign-off, and emits validated ops. |
+| `manifest.json` | Slot map keyed by box position + per-slot capacities, per template variant. Pages auto-match by position fingerprint. **Worked example — recalibrate.** |
+| `port_config.json` | Sign-off name, cover character band, ban list. Shared with `utils/verify_port_signoff.py`. |
+
+### Validation + verification
 | Script | Purpose |
 |--------|---------|
-| `parse_transaction.py` | Parse a truncated Canva transaction JSON. Extracts element IDs, positions, dimensions, run counts, and text for all pages or a target page range. Run this first after `start-editing-transaction` to build the element map. |
-| `read_work_boxes.py` | Read current text from the multi-run work boxes using element_id lookup. Run before building a port to get the current text for find-anchors. |
-| `read_bullets_full.py` | Get the full untruncated bullet block for a work box (when `read_work_boxes.py` truncates at ~120 chars). Pass a unique starting phrase; extracts the whole text value. |
-| `read_bullets_unicode.py` | Get exact Unicode codepoints for bullet text — critical when bullets contain em-dashes (—) or other special chars that must match exactly in `find_text`. |
-| `height_audit.py` | Compare box heights across pairs to detect overflow. Run after every commit. |
+| `validate_canva_ops.py` | Independent check that every op targets a real element in the snapshot. Run between `port` and `perform`. |
+| `utils/verify_port_signoff.py` | **Pre-commit gate.** Confirms each cover's sign-off survived into the stored text. FAIL → cancel the transaction. |
+| `utils/render_canva_page.py` | Renders an exported page to full / skill-column / left-column PNGs for the visual overflow check. |
+| `utils/measure_cover_gap.py` | Measures cover text-bottom to signature-top; target 7–12pt. |
 
-### Builders (`builders/`) — clone one, swap copy, run
-| Script | Best for |
+### Utilities (`utils/`) — occasional, for manual inspection
+| Script | Purpose |
 |--------|---------|
-| `build_EXAMPLE_pair1.py` | **Start here.** Fully commented template — copy and fill in your role copy. |
+| `parse_transaction.py` | Parse a truncated Canva transaction JSON into element IDs, positions, dimensions, run counts, and text. `template_port.py` does this internally; use it standalone when inspecting a layout by hand. |
+| `read_work_boxes.py` | Read current text from multi-run work boxes by element_id lookup. |
+| `read_bullets_full.py` | Get the full untruncated bullet block for a work box. |
+| `read_bullets_unicode.py` | Get exact Unicode codepoints for bullet text — critical when bullets contain em-dashes (—) that must match exactly in `find_text`. |
+| `height_audit.py` | Compare box heights across pairs. Superseded by the render loop for overflow detection; still handy for a quick numeric cross-check. |
 
-**Cloning a new role:** copy the closest builder → change `SNAP` path (new transaction file) → update page numbers → run `parse_transaction.py` to refresh `ID` → run `read_work_boxes.py` to refresh `CURRENT` → swap `SINGLE` copy + `NEW_BULLETS` → run → check `CLEAN MAP: PASS` + bound warnings → apply ops.
+### Builders (`builders/`) — HISTORICAL, do not clone
+Kept only as evidence of how the layout was originally derived. **The builder-cloning workflow is retired** — `template_port.py` replaces it. Do not start a new packet from these.
 
 ### Generated (`generated/`)
-Builder scripts write ops JSON here. Each file is named `<role_slug>_pair<k>_ops.json`. These are ephemeral — commit them if you want a record, but they're always rebuildable from the builder script.
+`template_port.py` writes ops JSON here. These are ephemeral — commit them if you want a record, but they're always rebuildable from the snapshot plus `copy.json`.
 
 ### Viz (`viz/`)
 - `build_job_viz.py` — generates `working/active/job_search_viz.html`: 3D job search pipeline visualization

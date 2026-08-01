@@ -152,22 +152,58 @@ Boxes are **absolutely positioned**, so the *only* layout failure mode is **over
 - **Single-run boxes** (run count = 1: headline, tagline, profile, skill labels, skill descriptions, dividers): uniform style → whole-box **`replace_text`** is safe.
 - **Multi-run boxes** (run count > 1: work-experience entries = bold title/org line + bullets): **never whole-replace** — it flattens the bold title and is what previously **italicized the first bullet**. Keep the title/org lines **byte-identical** and use **per-line `find_and_replace_text`** for each changed bullet only.
 - **Never** emit a `format_text` op with `font_style: italic` (or any restyle) unless explicitly restoring a known prior style. Font *family* changes aren't supported by the API anyway — preserve, don't set.
-- The cover-letter box is multi-run but body-uniform; whole-box `replace_text` is acceptable, but **spot-check its first line's styling** after porting.
+- **All multi-run boxes, including covers, fail closed.** Never assume a multi-run cover is body-uniform. Each replacement must target one complete, unique snapshot run, and the run replacements must reconstruct the intended final text exactly. `template_port.py` enforces this and refuses to emit a whole-box `replace_text` for any box with more than one run.
 - **Cover letters MUST fill a full page (standing rule).** The cover box holds ~3,200–3,400 characters when full. A cover at ~1,800–2,600 reads as light/under-filled and looks weak on the page. **Always draft/expand covers to ~3,200–3,400 chars of substantive content** (concrete examples, a "how I'd approach the role" paragraph, a second proof point) — never filler, never overflow past the page. This applies to every future packet.
 - **Export & filing:** export each application as **separate résumé + cover PDFs**, `export-design` (PDF, `size:letter`, `export_quality:pro`, `pages:[N]` per page). Pro is tiny for text pages (≤~115 KB) → always pro; `pages` skips hidden/stale pages. **File them as** `working/exports/<YYYY-MM (Mon 'YY)>/<YY-MM-DD - Company - Role>/[YOUR_NAME]_Resume.pdf` (+ `_Cover_Letter.pdf`) — monthly folders only, date-first app folders for autosort. Full convention in [`working/scripts/PORTING_RECIPE.md`](working/scripts/PORTING_RECIPE.md).
 - **Known template artifact — italic first bullet:** in each work-experience box the **first bullet is baked italic** (it shows up as its *own run*, separate from bullets 2-n). `find_and_replace_text` *preserves* that italic, so it survives porting. **Fix it as a standard step:** apply `format_text` with **only** `{"font_style": "normal"}` to each work-experience element. This clears italic element-wide **without** touching the bold title, because it only sets the italic attribute (weight per-run is preserved). Verify from the response: the title must remain its **own leading run** (bold intact) and the bullets should **merge into one run** (italic gone). `format_text` is allowed because this is a fixed-page (non-responsive) design.
 - **Run boundaries reveal hidden styling** even though the API doesn't expose style values: a sub-phrase that sits in its *own* `regions` entry has a distinct style (bold/italic) from its neighbours. Use run boundaries to locate styled spans before/after editing.
 - **Length-match won't be pixel-perfect on the first try.** Expect 1-2 lines to overflow by a hair after porting (wrapping differs from char-count prediction). Budget a quick verify pass: shorten the offending bullet(s) by ~one line via `find_and_replace_text`. Overflow = the only thing to fix; under-fill is cosmetic.
+- **…but also FILL the box (under-fill is a flag too).** For **skill descriptions**, target **~95–100% of the box's proven capacity**. A description ported well under cap reads visibly sparse. The proven-capacity reference is the *longest* known-good text that ever fit that box across dups — not the last baseline. Same principle as covers filling the page.
+- **Cover-to-signature gap (part of render-verify).** If your design has a signature image, it has **no element ID exposed by the editing API** (transaction maps are TEXT-only — it cannot be moved programmatically). Control the gap from the text side: after porting a cover, run `python working/scripts/utils/measure_cover_gap.py <cover.pdf>` — **target: signature top 7–12pt below text bottom** (sweet spot ~10pt). Too tight → trim the cover ~1 line; too far → lengthen it within the char band, or drag the signature by hand once in the master pair (dups inherit positions).
 
-### Reusable toolkit (start here — do NOT re-derive)
-The template layout is identical every port; only Canva's element IDs regenerate per dup. The standing toolkit + step-by-step is in [`working/scripts/PORTING_RECIPE.md`](working/scripts/PORTING_RECIPE.md). Builders in `working/scripts/builders/` (clone the closest one); general-purpose utilities in `working/scripts/utils/` (`parse_transaction.py` to map element IDs, `read_work_boxes.py` / `read_bullets_full.py` / `read_bullets_unicode.py` to get current bullet text for find-anchors). Porting a new role = clone a builder, swap find-anchors + role copy, run, apply, commit.
+### RENDER-VERIFY LOOP (MANDATORY — never eyeball fit again)
+Char counts are a **drafting** heuristic only; **pixels decide.** After EVERY port/edit commit:
 
-**Review agents:** reusable interviewer/reviewer personas (hiring manager, recruiter, peer, holistic copy reviewer) live in [`working/scripts/REVIEW_AGENTS.md`](working/scripts/REVIEW_AGENTS.md). **Run them on drafts BEFORE porting** (standing rule) — reuse the persona templates verbatim; don't re-write them. Keep a historical review log there.
+1. `export-design` the edited page(s) to PDF → download to a scratch folder
+2. `python working/scripts/utils/render_canva_page.py <page.pdf>` (pymupdf; renders full page + skill-column + left-column PNGs)
+3. **Read the PNGs** and visually check every edited box for **overflow** (text crowding the next label) and **under-fill** (short last line / empty line)
+4. Iterate trims and fills autonomously until the render is clean — only then report or export
+
+Why this is mandatory: one skill description once took **five** round-trips of human correction (151→184→164→159→146 chars) that a single render would have caught immediately.
+
+Also: **commit within seconds of perform.** A transaction that sits expires and silently drops the edits.
+
+### SIGN-OFF INTEGRITY (MANDATORY — Canva silently clips trailing text)
+When `replace_text` writes a body into a **fixed-height** text box smaller than the new text, Canva **drops the overflow lines with no error**. This once shipped a cover letter missing its `Sincerely, / <name>` block — the body stored fine, the sign-off was clipped away. Defend at three points:
+
+1. **Draft** — every cover body must END with `Sincerely,` then your name on the next line. `template_port.py` hard-fails the CLEAN-MAP if not, and refuses to run at all while `port_config.json` still has the placeholder name.
+2. **Op-gen** — `template_port.py` emits a `resize_element` (width-only → Canva auto-recomputes height) on each cover box **before** its `replace_text`, so the frame grows to fit before the text is stored. Include the same resize for any manual cover edit.
+3. **Pre-commit** — after `perform`, **before `commit`**, run `python working/scripts/utils/verify_port_signoff.py <perform_response.json> <cover_eid…>`. On FAIL, **cancel** the transaction. Never commit a clipped cover.
+
+The render-verify PNG read must also confirm the sign-off line is visibly present on every cover.
+
+### Template port primitive (USE THIS — supersedes per-sprint builder cloning)
+The locked layout is crystallized in [`working/scripts/template/manifest.json`](working/scripts/template/manifest.json) (slot map keyed by box position, geometry-derived capacities, template-variant fingerprints). Porting any number of pairs is:
+
+1. `start-editing-transaction` → snapshot persists to a file (1 MCP call).
+2. Write a `copy.json` (slots + ceo_bullets + cover_body per pair — schema in the script docstring).
+3. `python working/scripts/template/template_port.py port <snapshot> <copy.json>` → measures against manifest caps, scans banned phrases, emits validated ops, prints `CLEAN-MAP CHECK`.
+4. `python working/scripts/validate_canva_ops.py <snapshot> <ops>` must pass.
+5. One `perform-editing-operations` with all ops → verify all cover sign-offs from the response → **commit IMMEDIATELY**.
+6. Render-verify: `render_canva_page.py` per edited page + `measure_cover_gap.py` per cover (target gap 7–12pt).
+
+**First-run setup:** fill in [`working/scripts/template/port_config.json`](working/scripts/template/port_config.json) (sign-off name, cover char band, ban list) — `port` refuses to run until you do — then register your own layout with `template_port.py build-manifest <snapshot> --name v1`. The shipped manifest and the capacities in the script were measured against one specific design; they are a **worked example, not universal**. Recalibrate any slot that overflows on your first render.
+
+Layout changed later? `build-manifest ... --name v2` registers the new variant; pages auto-match by position fingerprint.
+
+**Files under `working/scripts/builders/` are historical examples and must not be cloned for new packets.** They are kept only as evidence of how the layout was originally derived.
+
+**Review agents:** reusable interviewer/reviewer personas (hiring manager, recruiter, peer, holistic copy reviewer, anti-AI-slop reviewer) live in [`working/scripts/REVIEW_AGENTS.md`](working/scripts/REVIEW_AGENTS.md). **Run them on drafts BEFORE porting** (standing rule) — reuse the persona templates verbatim; don't re-write them. Keep a historical review log there; recurring lessons let you pre-empt common flags and save a review cycle.
 
 ### Length-match method (how to hit bounds first try)
-1. From the transaction JSON, parse per-box: `element_id`, width/height, run count, current text + char length (see parser above).
-2. Draft new copy per box, then run a **measure script** that prints before/after char counts, deltas %, and bullet/line counts; **iterate until every box is ≤ original and same line/bullet count.** (The builder scripts in `working/scripts/builders/` do this inline — clone one as the measure script.)
-3. Emit a **porting map** to `working/active/pair<k>_porting_map.md`: per box → op type (`replace_text` vs per-line `find_and_replace_text`) → final text. This is your IDE review artifact.
+1. `start-editing-transaction` and save the snapshot. `template_port.py` parses it tolerantly (the response is truncated near ~100 KB) into per-box `element_id`, width/height, run count, current text and char length.
+2. Draft new copy per box into `copy.json`, then run `template_port.py port`. Its measure table prints each slot's `len/cap` with `PASS`/`OVER`, flags `UNDER-FILL` on descriptions and profile below 90% of cap, and prints `SLOP-WARN` per cover. **Iterate until every box passes.**
+3. The generated ops file plus the packet's copy tables are your IDE review artifact — per box: op type (`replace_text` vs per-line `find_and_replace_text`) and final text. Keep the packet in the application folder, per [`working/templates/PACKET_TEMPLATE.md`](working/templates/PACKET_TEMPLATE.md).
 
 ### Calibrated box-length targets
 
@@ -201,15 +237,19 @@ Before any `perform-editing-operations`, assert **every text box you intend to e
 2. **Claude** runs searches; verifies hiring probability **and the live JD's hard requirements** (kill closed / specialist-gated roles — title fit ≠ surviving the JD).
 3. **Claude** drafts **length-matched** packets (résumé body + cover), measured to fit each box. **Each packet is written immediately into its own application folder** — `working/exports/<YYYY-MM (Mon 'YY)>/<YY-MM-DD - Company - Role>/copy/packet_<slug>_<date>.md` — created at draft time, NOT into `working/active/`. Packets live with their application from the first draft; `working/active/` holds only the live sweep doc + the single most-current interview doc. **Every packet/sprint doc opens with a roster table** — one row per role: **pair cell links to the Canva page**, **role cell links to the live job posting**, plus org, **level vs acceptance bar**, salary estimate, apply-via, and porting status.
 4. **You** review in the IDE, edits/approves (greenlight).
-5. **Claude** ports via MCP **one pair at a time** — run the clean-map check; whole-box `replace_text` for single-run boxes; per-line `find_and_replace_text` for multi-run boxes; **`format_text {font_style: normal}` on each work-experience box** to clear the baked italic first bullet; verify titles stayed bold (own run) from the response; then **`commit-editing-transaction`** (changes are lost if not committed).
-6. **You** spot-check the first textbox (typeface intact?) and flags any line overflow; Claude shortens offenders by ~one line; run the Verification Checklist; export PDF; submit.
+5. **Claude** collates every approved pair into one batch, runs the copy, clean-map, and operation validators, performs once, verifies cover sign-offs and rich-text runs from the response, and **commits immediately**. The greenlight is standing commit authorization for the named packet/pages, including validated text-only corrections found during preview, export, overflow, encoding, or signature-gap checks. Don't ask for commit approval again unless the correction expands scope, changes meaning/facts, or alters layout geometry.
+6. **Claude** runs the render-verify loop on every edited page, fixes any overflow by targeting only the offending run, re-exports, and files the PDFs. **You receive submit-ready PDFs rather than being the overflow detector.**
 
 ---
 
 ## Job Search Execution (HARD RULE — do not waste tokens)
 Run searches as **small, direct, foreground sweeps**: ~4–6 `WebSearch`/`WebFetch` calls the main agent makes itself, then write one consolidated doc in `working/active/`. **NEVER launch background or long-running multi-agent search jobs** — they waste tokens and silently drop/fail (a background research agent once ran, hit the session token limit, and returned nothing). Need more coverage? Run another small sweep — not a bigger agent. **Fail-proof over exhaustive.** Full rule in [`HANDOFF.md`](HANDOFF.md) → Search Execution.
 
-**Sweep-doc format:** the output doc embeds each posting link **inside the table near the top** (hyperlink the role cell) — **no separate "Links" section** at the bottom.
+**JD-verify BEFORE presenting the sweep (HARD RULE).** Every finalist's fit rating must be derived from its **actual JD**, not the title plus an aggregator snippet. Fetch and read each finalist's real posting first; bake the hard requirements and gates (domain gate, specialist gate, function mismatch, level, salary, closed/filled) into the stars **before** writing the shortlist. Never present title-only ratings and leave the JD reading to the human. If a JD can't be fetched, mark the row **"JD unverified"** explicitly rather than assigning stars.
+
+Aggregator titles mislead in both directions — a posting titled as an innovation-programs role can turn out to be a corporate-HR talent-experience role with a completely different function. Some aggregators also 403 automated fetches; resolve those via search to the canonical posting, then fetch that.
+
+**Sweep-doc format:** copy [`working/templates/SWEEP_TEMPLATE.md`](working/templates/SWEEP_TEMPLATE.md). Each posting link goes **inside the table near the top** (hyperlink the role cell) — **no separate "Links" section** at the bottom. Put JD verdicts in the per-role summaries, not in an extra roster column.
 
 ---
 
@@ -218,6 +258,31 @@ Obey and extend this list. Add a new entry whenever you flag a phrase — do not
 - **"I will be straight about where I would ramp"** — and the whole throat-clearing gap-flag pattern: "I will be straight / direct / candid about [my gaps / where I would ramp / fit]." Don't *announce* honesty. State the gap plainly, or reframe to the nearest true positive.
 - **"most people in my space can't think the way I can"** / any "I think better than others" framing — reads arrogant; kills collaborative-competency scoring.
 - **[Add your own banned phrases here as you find them]**
+
+Keep this list and [`working/scripts/template/port_config.json`](working/scripts/template/port_config.json) in sync — the `banned_phrases` array there is what actually fails a port.
+
+---
+
+## Anti-AI-Slop Pass (MANDATORY — generation, review, AND final polish)
+
+All CV/cover copy must survive an anti-slop pass. Wire it in at three points, not as a post-port catch:
+
+1. **Generation** — draft against the ban list below.
+2. **Review** — the anti-slop reviewer persona in [`working/scripts/REVIEW_AGENTS.md`](working/scripts/REVIEW_AGENTS.md) runs on every draft **before porting**, alongside the hiring-manager and recruiter personas.
+3. **Final polish** — `template_port.py` prints `SLOP-WARN` on each cover in the measure table; resolve before commit.
+
+**Kill these LLM tells (especially in covers):**
+
+- Formulaic closer: "I would welcome the chance to discuss how my [X], [Y], and [Z] experience could…" → write a plain, specific, non-templated last line, varied per letter.
+- "Here is how I would approach…" openers → fold the content in naturally instead.
+- Antithesis clichés: "not X, but Y" / "not just a Z" / "I am not adjacent to…, I work at its frontier" → state the point plainly.
+- Parallel label scaffolding: "On the science: … On the partnership discipline: … On the AI: …" → break the template; vary paragraph openers.
+- Tricolon pile-ups (three-item lists stacked in every sentence) → vary the rhythm.
+- Punchy one-word fragments ("I am both.") and "reads like a summary of…".
+- Hollow intensifiers: genuinely, precisely, exactly, truly, at once.
+- Em-dash overuse — cap at roughly 1–2 per cover, and vary sentence and paragraph length so the prose doesn't march.
+
+De-slop is a **voice pass, not a content cut**: keep every fact and strategic hook intact.
 
 ---
 

@@ -1,0 +1,29 @@
+{
+  "_README": [
+    "SET THIS UP BEFORE YOUR FIRST PORT. Shared configuration for",
+    "template_port.py and utils/verify_port_signoff.py so the sign-off name and",
+    "the ban list live in exactly one place.",
+    "",
+    "signoff_name: the name that must appear under 'Sincerely,' at the end of",
+    "  every cover body. Both scripts fail closed while this is the placeholder.",
+    "  Canva silently clips trailing text out of a too-small fixed-height box, so",
+    "  this guard is what stops an unsigned cover from shipping.",
+    "",
+    "cover_char_band: [min, max] characters for a cover that fills the page",
+    "  without overflowing. RECALIBRATE against your own layout: draft one cover",
+    "  at the top of the band, render it, and adjust until it fills the page.",
+    "",
+    "banned_phrases: regex fragments that FAIL the run. Add one every time you",
+    "  catch a phrase that isn't yours, so you never have to correct it twice.",
+    "",
+    "banned_allow: regexes that re-permit a full match caught by banned_phrases",
+    "  (for near-miss casings you legitimately use)."
+  ],
+  "signoff_name": "[YOUR_NAME]",
+  "cover_char_band": [3050, 3387],
+  "banned_phrases": [
+    "I will be straight",
+    "I would welcome the opportunity to leverage"
+  ],
+  "banned_allow": []
+}

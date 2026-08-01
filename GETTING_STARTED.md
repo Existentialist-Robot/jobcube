@@ -206,34 +206,75 @@ Before any Canva porting, Claude posts a checklist of role URLs and asks you to 
 
 ## Step 6 — Port your first application to Canva
 
-Once you've greenlighted a packet (résumé + cover draft), Claude handles the Canva edit in one transaction:
+### First-run setup (once)
 
-1. **`start-editing-transaction`** — opens an editing session and returns all element IDs
-2. **`parse_transaction.py`** — maps element IDs to box names/positions from the persisted transaction file
-3. **Build a builder script** — clone the closest script in `working/scripts/builders/`, swap the role copy and find-anchors (current text used to locate each box), run it to generate an ops JSON
-4. **Clean-map check** — every element ID in the ops must resolve to a real box. The builder prints `CLEAN-MAP CHECK: PASS` or `FAIL`. Never proceed on FAIL.
-5. **`perform-editing-operations`** — apply the ops JSON. Do this immediately after starting the transaction — transactions expire.
-6. **`format_text {font_style: normal}`** — on all work-experience boxes, to clear the baked italic first bullet
-7. **Overflow audit** — run `working/scripts/utils/height_audit.py` on the new transaction snap. Compare box heights across pairs; any box taller than the same-type reference = overflow. Trim the offending bullet(s) and re-apply.
-8. **`commit-editing-transaction`** — changes are lost if you don't commit.
+Before your first port, do two things:
 
-### The builder script pattern
+1. **Fill in `working/scripts/template/port_config.json`** — your sign-off name, the cover
+   character band, and your ban list. `template_port.py port` **refuses to run** while the
+   sign-off name is still `[YOUR_NAME]`. That guard is deliberate: Canva silently clips trailing
+   text out of a too-small box, and without a real name the pipeline can't tell a signed cover
+   from an unsigned one.
+2. **Register your layout:**
+   ```bash
+   python working/scripts/template/template_port.py build-manifest <snapshot.json> --name v1
+   ```
+   where `<snapshot.json>` is a saved `start-editing-transaction` response. The shipped
+   `manifest.json` and the capacities inside `template_port.py` were measured against one
+   specific design — they are a **worked example, not universal**.
 
-Builder scripts (in `working/scripts/builders/`) do four things:
-1. Define a `SNAP` path — the persisted transaction file from the last `start-editing-transaction`
-2. Define `ID` — a dict mapping box names to their element IDs from the transaction
-3. Define `CAP` — character capacity per box (your calibrated targets from CLAUDE.md)
-4. Print a per-box table showing old vs. new char counts, then write the ops JSON
+### The port loop
 
-To port a new role: copy `build_EXAMPLE_pair1.py`, update `SNAP` to your new transaction file, update `ID` with the element IDs from `parse_transaction.py`, swap the role copy, run, check the output table for OVER! flags, trim if needed, then apply.
+Once you've greenlighted a packet (résumé + cover draft), Claude handles the Canva edit in one
+transaction:
 
-### Overflow detection
+1. **`start-editing-transaction`** — opens an editing session; the response persists to a file and
+   is the only source of element IDs.
+2. **Write `copy.json`** — slots, lead-role bullets, and cover body per pair (schema is in the
+   `template_port.py` docstring; the drafting tables are in
+   [`working/templates/PACKET_TEMPLATE.md`](working/templates/PACKET_TEMPLATE.md)).
+3. **Generate ops:**
+   ```bash
+   python working/scripts/template/template_port.py port <snapshot.json> copy.json
+   ```
+   This measures every slot against its manifest cap, flags `UNDER-FILL` on sparse descriptions,
+   scans the ban list, prints `SLOP-WARN` per cover, checks each cover ends with the sign-off, and
+   prints **`CLEAN-MAP CHECK: PASS`** or `FAIL`. **Never proceed on FAIL.**
+4. **Validate:** `python working/scripts/validate_canva_ops.py <snapshot.json> <ops.json>`
+5. **`perform-editing-operations`** — apply all ops in one call, immediately (transactions expire
+   and silently drop edits if they sit).
+6. **Verify sign-offs BEFORE committing:**
+   ```bash
+   python working/scripts/utils/verify_port_signoff.py <perform_response.json> <cover_eid...>
+   ```
+   On FAIL, **cancel** the transaction. Never commit a clipped cover.
+7. **`commit-editing-transaction`** — within seconds of the perform. Changes are lost if you don't
+   commit.
 
-Character count is a rough proxy — proportional fonts render wide words wider regardless of char count. The reliable overflow check is box height comparison:
+`template_port.py` also emits `format_text {font_style: normal}` on work-experience boxes (to clear
+a baked italic first bullet) and a width-only `resize_element` on each cover box before its text is
+written, so the frame grows to fit before Canva can clip it.
 
-1. After committing, start a new transaction and run `height_audit.py`
-2. The **shortest clean box height is the baseline** — any box taller by ≥5 units is overflowing
-3. Trim the longest bullets until heights match
+### Overflow detection — render, don't count
+
+Character count is a **drafting heuristic only**. Proportional fonts render wide words wider
+regardless of char count, so a box that held 184 characters of one wording overflows at 184 of
+another. **Pixels decide.** After every commit:
+
+1. `export-design` the edited page(s) to PDF and download them
+2. ```bash
+   python working/scripts/utils/render_canva_page.py <page.pdf>
+   ```
+   renders the full page plus zoomed skill-column and left-column PNGs
+3. **Read the PNGs.** Check every edited box for overflow (text crowding the next label) and
+   under-fill (a short last line or a stranded empty line). Confirm the cover's sign-off is
+   visibly present.
+4. For covers, also run `python working/scripts/utils/measure_cover_gap.py <cover.pdf>` — target a
+   signature gap of **7–12pt**
+5. Iterate trims and fills until the render is clean, then re-export
+
+Skipping this is expensive: one skill description once took **five** rounds of human correction
+(151→184→164→159→146 chars) that a single render would have caught on the first pass.
 
 ---
 
@@ -291,7 +332,7 @@ Claude will read the key files and give you a status brief before doing anything
 
 **Overflow from wide words.** A bullet that's 5% shorter than its predecessor can still overflow if it uses more long words ("government", "infrastructure", "organizational"). When you're close to the char limit and using wide-word-heavy text, aim 10–15 chars under the limit.
 
-**Hardcoded transaction file paths.** The `SNAP` variable in every utility and builder script must point to a file that exists on your machine. After each `start-editing-transaction`, update `SNAP` in the scripts you're about to run.
+**Stale transaction snapshots.** `template_port.py` takes the snapshot path as an argument, so pass the file from the `start-editing-transaction` you *just* ran. Porting against an older snapshot means porting against stale element IDs — the clean-map check will fail, which is the point. The older `utils/` inspection scripts still use a hardcoded `SNAP` variable; update it before running one of those by hand.
 
 **Committing without committing.** The Canva transaction is not saved until you call `commit-editing-transaction`. If the session ends or errors, all edits are lost. Always commit immediately after applying ops.
 
