@@ -115,6 +115,12 @@ JOBS = [
          note="US role — confirm work authorization before drafting"),
 ]
 
+# Half-star fits (4.5) are legal in the data and are what build_job_viz_three.py
+# renders; this legacy path indexes and multiplies by fit in several places, so
+# floor it once here rather than coercing at each use site.
+for _j in JOBS:
+    _j["fit"] = int(_j.get("fit", 1))
+
 xs = [j["x"] for j in JOBS]
 ys = [j["y"] for j in JOBS]
 zs = [j["z"] for j in JOBS]
@@ -170,6 +176,9 @@ STATUS_MAP = {
     "Queued":"#74c476",
     "Drafted":"#fc8d59",
     "Target":"#22d3ee",      # cyan — archetypal/search-focus roles
+    "Declined":"#7f8795",    # keep in step with STATUS_COLORS in
+    "Closed":"#5c5350",      # build_job_viz_three.py — a status only defined
+                             # there raises KeyError on this path
 }
 # normalize legacy status names from the data
 _STATUS_ALIAS = {"File-ready":"Ready","Canva-ported":"Ported"}
