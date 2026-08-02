@@ -72,6 +72,85 @@ LEGS = {
     "bomber": (BOMBER, "Bomber — warm intro"),
 }
 
+# ── measured geometry ───────────────────────────────────────────────────────
+# Alpha-weighted centroid and enclosing ink radius of each glyph, in the 64-unit
+# viewBox. Measured by rendering each at 512px and taking the centroid of the
+# rendered alpha, so partial opacity counts the way the eye counts it.
+#
+# These are why the spokes looked wrong. Every glyph's ink sits BELOW its box
+# centre -- boomer by 6.3 units, silo by 4.3 -- because the hull and the ground
+# slab are the heavy parts. Centring the boxes therefore pointed each spoke
+# above the thing it was supposed to connect to. Re-measure if a glyph changes.
+METRICS = {
+    "trefoil": {"cx": 31.94, "cy": 31.98, "r": 23.16},
+    "silo":    {"cx": 31.94, "cy": 36.34, "r": 35.47},
+    "boomer":  {"cx": 31.49, "cy": 38.34, "r": 31.33},
+    "bomber":  {"cx": 31.94, "cy": 33.72, "r": 33.92},
+}
+
+# Layout, in the triad's own 360x310 coordinate space.
+TW, TH = 360, 300
+CX, CY = 180.0, 176.0
+HUB_SCALE = 1.6      # the mark, deliberately larger than the legs
+LEG_SCALE = 0.75
+SPOKE = 120.0        # centroid-to-centroid distance
+GAP = 14.0           # clear space at both ends of every spoke
+
+# angle, glyph, label, which side the label sits on
+ARMS = [
+    (-90.0, "silo", "SILO", "above"),
+    (30.0, "boomer", "BOOMER", "below"),
+    (150.0, "bomber", "BOMBER", "below"),
+]
+
+
+def _place(name: str, px: float, py: float, scale: float) -> str:
+    """Translate a glyph so its measured centroid lands exactly on (px, py)."""
+    m = METRICS[name]
+    return (
+        f'<use href="#{name}" transform="translate('
+        f'{px - m["cx"] * scale:.2f},{py - m["cy"] * scale:.2f}) scale({scale})"/>'
+    )
+
+
+def triad_group(label_size: float = 10.5) -> str:
+    """Spokes and glyphs, aligned centroid-to-centroid with uniform gaps."""
+    import math
+
+    hub_r = METRICS["trefoil"]["r"] * HUB_SCALE
+    spokes, glyphs, labels = [], [], []
+
+    for deg, name, text, side in ARMS:
+        rad = math.radians(deg)
+        ux, uy = math.cos(rad), math.sin(rad)
+        leg_r = METRICS[name]["r"] * LEG_SCALE
+
+        # The spoke runs between the two ink edges, inset by GAP at each end,
+        # so the visible gap is identical on every arm even though the glyphs
+        # are different sizes.
+        r0, r1 = hub_r + GAP, SPOKE - leg_r - GAP
+        spokes.append(
+            f'<path d="M{CX + ux * r0:.2f},{CY + uy * r0:.2f} '
+            f'L{CX + ux * r1:.2f},{CY + uy * r1:.2f}"/>'
+        )
+
+        px, py = CX + ux * SPOKE, CY + uy * SPOKE
+        glyphs.append("  " + _place(name, px, py, LEG_SCALE))
+
+        ly = py - leg_r - GAP * 0.8 if side == "above" else py + leg_r + GAP * 1.15
+        labels.append(f'<text x="{px:.2f}" y="{ly:.2f}">{text}</text>')
+
+    nl = "\n    "
+    return f"""  <g stroke="{DIM}" stroke-width="1.6" opacity=".5" stroke-linecap="round" fill="none">
+    {nl.join(spokes)}
+  </g>
+{chr(10).join(glyphs)}
+  {_place("trefoil", CX, CY, HUB_SCALE)}
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="{label_size}"
+     letter-spacing="1.5" fill="{DIM}" text-anchor="middle">
+    {nl.join(labels)}
+  </g>"""
+
 
 def icon(frag: str, label: str) -> str:
     return (
@@ -80,43 +159,26 @@ def icon(frag: str, label: str) -> str:
     )
 
 
+def _defs() -> str:
+    out = [f'    <g id="trefoil">\n{TREFOIL}\n    </g>']
+    out += [f'    <g id="{name}">\n{frag}\n    </g>' for name, (frag, _) in LEGS.items()]
+    return "\n".join(out)
+
+
 def triad() -> str:
-    defs = "\n".join(
-        f'    <g id="{name}">\n{frag}\n    </g>' for name, (frag, _) in LEGS.items()
-    )
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 300" width="460" height="300"
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {TW} {TH}" width="{TW}" height="{TH}"
      role="img" aria-label="The three delivery legs on the mark's blade axes">
   <title>The jobcube triad — silo, boomer, bomber</title>
   <defs>
-    <g id="trefoil">
-{TREFOIL}
-    </g>
-{defs}
+{_defs()}
   </defs>
 
-  <g stroke="{DIM}" stroke-width="1.6" opacity=".5" stroke-linecap="round" fill="none">
-    <path d="M230,150 L230,74"/><path d="M230,150 L296,188"/><path d="M230,150 L164,188"/>
-  </g>
-
-  <use href="#trefoil" transform="translate(198,118)"/>
-  <use href="#silo"    transform="translate(206,26) scale(0.75)"/>
-  <use href="#boomer"  transform="translate(272,190) scale(0.75)"/>
-  <use href="#bomber"  transform="translate(140,190) scale(0.75)"/>
-
-  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10.5"
-     letter-spacing="1.5" fill="{DIM}" text-anchor="middle">
-    <text x="230" y="18">SILO</text>
-    <text x="296" y="256">BOOMER</text>
-    <text x="164" y="256">BOMBER</text>
-  </g>
+{triad_group()}
 </svg>
 """
 
 
 def social() -> str:
-    defs = "\n".join(
-        f'    <g id="{name}">\n{frag}\n    </g>' for name, (frag, _) in LEGS.items()
-    )
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640"
      role="img" aria-label="jobcube — second-strike capability for job applications">
   <title>jobcube</title>
@@ -124,10 +186,7 @@ def social() -> str:
     <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
       <path d="M64,0 L0,0 0,64" fill="none" stroke="{VIOLET}" stroke-opacity="0.055" stroke-width="1"/>
     </pattern>
-    <g id="trefoil">
-{TREFOIL}
-    </g>
-{defs}
+{_defs()}
   </defs>
 
   <rect width="1280" height="640" fill="{GROUND}"/>
@@ -145,20 +204,10 @@ def social() -> str:
   <text x="99" y="424" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
         font-size="34" fill="#a49cbe">Second-strike capability for job applications.</text>
 
-  <g transform="translate(792,138)">
-    <g stroke="{DIM}" stroke-width="2" opacity=".45" stroke-linecap="round" fill="none">
-      <path d="M182,182 L182,88"/><path d="M182,182 L263,229"/><path d="M182,182 L101,229"/>
-    </g>
-    <use href="#trefoil" transform="translate(142,142) scale(1.25)"/>
-    <use href="#silo"    transform="translate(150,26)"/>
-    <use href="#boomer"  transform="translate(231,226)"/>
-    <use href="#bomber"  transform="translate(69,226)"/>
-    <g font-family="'Cascadia Mono',Consolas,monospace" font-size="14"
-       letter-spacing="2.4" fill="{DIM}" text-anchor="middle">
-      <text x="182" y="14">PORTAL</text>
-      <text x="263" y="316">OUTREACH</text>
-      <text x="101" y="316">WARM INTRO</text>
-    </g>
+  <!-- Same triad geometry as triad.svg, scaled. Component names rather than the
+       icon nicknames: a shared link has no table to explain silo/boomer/bomber. -->
+  <g transform="translate(800,112) scale(1.18)">
+{triad_group(label_size=13).replace("SILO", "PORTAL").replace("BOOMER", "OUTREACH").replace("BOMBER", "WARM INTRO")}
   </g>
 </svg>
 """

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 300" width="460" height="300"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300" width="360" height="300"
      role="img" aria-label="The three delivery legs on the mark's blade axes">
   <title>The jobcube triad — silo, boomer, bomber</title>
   <defs>
@@ -32,18 +32,18 @@
   </defs>
 
   <g stroke="#8d85a8" stroke-width="1.6" opacity=".5" stroke-linecap="round" fill="none">
-    <path d="M230,150 L230,74"/><path d="M230,150 L296,188"/><path d="M230,150 L164,188"/>
+    <path d="M180.00,124.94 L180.00,96.60"/>
+    <path d="M224.22,201.53 L251.45,217.25"/>
+    <path d="M135.78,201.53 L110.23,216.28"/>
   </g>
-
-  <use href="#trefoil" transform="translate(198,118)"/>
-  <use href="#silo"    transform="translate(206,26) scale(0.75)"/>
-  <use href="#boomer"  transform="translate(272,190) scale(0.75)"/>
-  <use href="#bomber"  transform="translate(140,190) scale(0.75)"/>
-
+  <use href="#silo" transform="translate(156.04,28.74) scale(0.75)"/>
+  <use href="#boomer" transform="translate(260.31,207.25) scale(0.75)"/>
+  <use href="#bomber" transform="translate(52.12,210.71) scale(0.75)"/>
+  <use href="#trefoil" transform="translate(128.90,124.83) scale(1.6)"/>
   <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10.5"
      letter-spacing="1.5" fill="#8d85a8" text-anchor="middle">
-    <text x="230" y="18">SILO</text>
-    <text x="296" y="256">BOOMER</text>
-    <text x="164" y="256">BOMBER</text>
+    <text x="180.00" y="18.20">SILO</text>
+    <text x="283.92" y="275.60">BOOMER</text>
+    <text x="76.08" y="277.54">BOMBER</text>
   </g>
 </svg>
