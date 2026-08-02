@@ -24,9 +24,9 @@ and judgment; it supplies search, screening, drafting, layout, verification, and
 
 The name is not decorative. The search space really is modelled as a cube — sector ×
 focus × seniority, every cell a numbered coordinate — and a good deal of the tooling
-exists to stop you wandering back into rooms you have already cleared. That the reference
-also involves a large number of identical rooms, unexplained traps, and nobody in charge
-is not something this repository is able to fix.
+exists to stop you wandering back into cells you have already covered. The grid exists
+because memory does not scale: somewhere around the fortieth application you will swear a
+cell is fresh while sitting on the notes from the last time you searched it.
 
 > **This is a template.** Fork it and fill in your own profile. Every personal value is a
 > `[BRACKETED]` placeholder — there is no real person's data in here.
@@ -42,7 +42,7 @@ once, and usually late enough to hurt.
 |---|---|
 | Postings that stay listed long after they close | An **open-status gate**: nothing gets drafted until you confirm the role live in its own portal. Three roles died mid-pipeline before this rule existed. They had been closed the entire time. |
 | Job titles that describe a different job | **JD-verify before rating.** Every finalist's stars come from reading the actual posting, with the hard gates — level, salary, domain, work authorization — folded in. A title plus a search snippet is a rumour, not a requirement. |
-| Six seconds of human attention, if you're lucky | **Length-matched copy, verified in pixels.** Layout boxes are absolutely positioned, so one extra wrapped line lands on top of the box below. Character counts are a drafting heuristic; the exported PDF is rendered to PNG and *looked at* before anything ships. Throwing a boot into the room first tells you something. It does not tell you the room is safe. |
+| Six seconds of human attention, if you're lucky | **Length-matched copy, verified in pixels.** Layout boxes are absolutely positioned, so one extra wrapped line lands on top of the box below. Character counts are a drafting heuristic; the exported PDF is rendered to PNG and *looked at* before anything ships. A forecast is not an observation, and the rendered page is the only version the recruiter will ever see. |
 | Design tools that fail quietly | Canva drops text that overflows a fixed-height box and reports nothing. This once shipped a cover letter with the sign-off clipped off the bottom — confident, anonymous, gone. The sign-off is now guarded at three separate points, and a failed check cancels the transaction rather than committing it. |
 | Screeners who can smell a language model at forty paces | An **anti-slop pass** at generation, at review, and at final polish, plus a ban list you extend the first time a phrase makes you wince. "I would welcome the opportunity to leverage" is already in there. |
 | Applicant #482 in the queue | **Outreach before submission.** Scope the decision chain, verify handles, connect, and send exactly one short message — then apply. Strictly paced, because a restricted LinkedIn account costs more than any single application is worth. |
@@ -147,9 +147,9 @@ drafts; you read the drafts in your IDE and greenlight; Claude does the layout, 
 verification, and the exports. You are the judgment in the loop, not the overflow
 detector.
 
-### The room numbers
+### The targeting grid
 
-> *Cleared rooms stay cleared.*
+> *A cell searched twice counts once.*
 
 `working/scripts/viz/build_sweep_viz.py` is the steering wheel. It holds where you have
 already looked and where you have not, plotted as a cube of sector × focus × seniority,
@@ -157,10 +157,10 @@ and `deep sweep` searches exactly the regions flagged `new=True`.
 
 Move a region into the explored list once you've swept it. Skip that and the map starts
 lying to you, and a map that lies is worse than no map — you will re-mine the same seam
-for a month and call it thorough. Rooms move, too: boards add bot protection, postings
-close, an employer quietly stops hiring. `/add-portal --recheck` re-verifies a board that
-has gone quiet, on the theory that silence usually means the corridor changed rather than
-the market did.
+for a month and call it thorough. Targets move, too: boards add bot protection, postings
+close, an employer keeps a listing up after quietly deciding not to fill it.
+`/add-portal --recheck` re-verifies a board that has gone quiet, on the theory that
+silence usually means the delivery route changed rather than the market did.
 
 ---
 
@@ -232,9 +232,9 @@ and neither do you.
 
 It is worth being clear about what you are escalating against. There is no committee
 coordinating the hiring market, no strategy, nobody at the top of it who could call the
-whole thing off if asked nicely. It is a headless system that grew, and the traps in it
-are mostly not aimed at anyone in particular — which is worse than malice, and the reason
-the doctrine is what it is. Against something with no intent, a gate that fails closed
+whole thing off if asked nicely. It is a headless system that grew, and the unexploded
+ordnance in it is mostly not aimed at anyone in particular — which is worse than malice,
+and the reason the doctrine is what it is. Against something with no intent, a gate that fails closed
 beats a clever heuristic every time. Nobody wins an arms race. You just avoid losing it
 badly, on a Tuesday, to a posting that closed in March.
 
