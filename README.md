@@ -8,13 +8,20 @@ format for parsers. Employers deployed AI screening, and applicants — reasonab
 reached for AI too. Your application is now written by a model, ranked by a model, and
 declined by a model, and somewhere in that loop a person may briefly glance at it.
 
-This repository does not fix that. Nobody gets to fix that unilaterally. What it does is
-make sure the applicant side of the exchange is the competent one: every claim true,
-every posting confirmed open before you spend an evening on it, every page laid out so it
-survives contact with a recruiter's screen.
+Disarmament would be lovely. It is also not on the table, because neither side can verify
+the other has stopped. So this is an escalation, and it makes no particular claim to being
+a noble one. What it does claim is discipline: every fact true, every posting confirmed
+open before you spend an evening on it, every page laid out so it survives contact with a
+recruiter's screen. Parity, achieved responsibly.
 
 It is a Claude Code workspace. You supply a real profile and judgment; it supplies
 search, screening, drafting, layout, verification, and filing.
+
+The name is not decorative. The search space really is modelled as a cube — sector ×
+focus × seniority, every cell a numbered coordinate — and a good deal of the tooling
+exists to stop you wandering back into rooms you have already cleared. That the reference
+also involves a large number of identical rooms, unexplained traps, and nobody in charge
+is not something this repository is able to fix.
 
 > **This is a template.** Fork it and fill in your own profile. Every personal value is a
 > `[BRACKETED]` placeholder — there is no real person's data in here.
@@ -30,14 +37,16 @@ once, and usually late enough to hurt.
 |---|---|
 | Postings that stay listed long after they close | An **open-status gate**: nothing gets drafted until you confirm the role live in its own portal. Three roles died mid-pipeline before this rule existed. They had been closed the entire time. |
 | Job titles that describe a different job | **JD-verify before rating.** Every finalist's stars come from reading the actual posting, with the hard gates — level, salary, domain, work authorization — folded in. A title plus a search snippet is a rumour, not a requirement. |
-| Six seconds of human attention, if you're lucky | **Length-matched copy, verified in pixels.** Layout boxes are absolutely positioned, so one extra wrapped line lands on top of the box below. Character counts are a drafting heuristic; the exported PDF is rendered to PNG and *looked at* before anything ships. |
+| Six seconds of human attention, if you're lucky | **Length-matched copy, verified in pixels.** Layout boxes are absolutely positioned, so one extra wrapped line lands on top of the box below. Character counts are a drafting heuristic; the exported PDF is rendered to PNG and *looked at* before anything ships. Throwing a boot into the room first tells you something. It does not tell you the room is safe. |
 | Design tools that fail quietly | Canva drops text that overflows a fixed-height box and reports nothing. This once shipped a cover letter with the sign-off clipped off the bottom — confident, anonymous, gone. The sign-off is now guarded at three separate points, and a failed check cancels the transaction rather than committing it. |
 | Screeners who can smell a language model at forty paces | An **anti-slop pass** at generation, at review, and at final polish, plus a ban list you extend the first time a phrase makes you wince. "I would welcome the opportunity to leverage" is already in there. |
 | Applicant #482 in the queue | **Outreach before submission.** Scope the decision chain, verify handles, connect, and send exactly one short message — then apply. Strictly paced, because a restricted LinkedIn account costs more than any single application is worth. |
 
 The unifying rule: **every gate fails closed.** A validator that isn't sure stops the
-run. This is deliberate. The failure mode of an automated job search is not doing too
-little — it is confidently doing the wrong thing at volume.
+run rather than proceeding on the balance of probabilities. This is deliberate, and it is
+the one design decision worth stealing even if you use none of the rest: the failure mode
+of an automated job search is not doing too little, it is confidently doing the wrong
+thing at volume. Trust, but verify. Mostly verify.
 
 ---
 
@@ -58,23 +67,35 @@ git clone --recurse-submodules https://github.com/<you>/<your-fork>.git
 
 `--recurse-submodules` matters: the LinkedIn CLI is vendored as one.
 
-Then, in order:
+Then drop your real documents into `documents/` — CV, LinkedIn export, references,
+transcripts. Contents are gitignored; only the folder structure is tracked. See
+[`documents/README.md`](documents/README.md).
 
-1. **Drop your real documents into `documents/`** — CV, LinkedIn export, references,
-   transcripts. The contents are gitignored; only the folder structure is tracked. See
-   [`documents/README.md`](documents/README.md).
-2. **Fill in [`CLAUDE.md`](CLAUDE.md).** Replace every `[YOUR_...]` placeholder. This is
-   the file Claude reads before doing anything and the source of every claim in every
-   application you send. Vague inputs produce generic applications; the pipeline cannot
-   invent specifics it was never given.
-3. **Set your name in
-   [`working/scripts/template/port_config.json`](working/scripts/template/port_config.json).**
-   The port primitive refuses to run while it is still `[YOUR_NAME]` — without a real
-   name the sign-off guard cannot tell a signed cover letter from an unsigned one.
-4. **Build your Canva design**: N identical résumé + cover-letter pairs, where pair *k* is
-   page 2k−1 (résumé) and page 2k (cover). Record the design ID in `CLAUDE.md`.
-5. **Read [`GETTING_STARTED.md`](GETTING_STARTED.md).** It is the real walkthrough — box
-   calibration, the render-verify loop, and the filing convention.
+Then run:
+
+```
+/setup
+```
+
+It reads those documents, interviews you for the parts no CV contains, and fills in the
+four things the pipeline cannot run without:
+
+1. **Your profile** in [`CLAUDE.md`](CLAUDE.md) — the source of every claim in every
+   application you send. It will not invent anything; missing facts stay blank and get
+   asked about. Where your CV and your LinkedIn export disagree — and they will, usually
+   about end dates — it surfaces the conflict rather than picking one.
+2. **Your sign-off name** in
+   [`port_config.json`](working/scripts/template/port_config.json). The porting tools
+   refuse to start while this is a placeholder, on the grounds that a tool which will not
+   run is a better outcome than a cover letter that ships unsigned.
+3. **Your Canva design** — N identical résumé + cover-letter pairs, where pair *k* is page
+   2k−1 (résumé) and page 2k (cover).
+4. **Your search space** — the cube's axes, the first regions to sweep, your level and
+   salary floor, and your market's job boards.
+
+Re-run `/setup` whenever you add documents; it enriches rather than overwrites. Then read
+[`GETTING_STARTED.md`](GETTING_STARTED.md), which is the real walkthrough — box
+calibration, the render-verify loop, and the filing convention.
 
 ---
 
@@ -82,6 +103,7 @@ Then, in order:
 
 | Invocation | What happens |
 |---|---|
+| `/setup` | Onboarding, and re-runnable as your document pile grows. `--profile`, `--layout`, `--search`, `--check` re-run one part. |
 | `deep sweep` | Searches the regions you've queued in `build_sweep_viz.py`, JD-verifies the finalists, and writes one gated sweep doc. Proposes only — it never applies to anything. |
 | `/pipeline` | The full run: discover → evaluate → draft → review → port → export → file. Takes `--confirm`, `--auto`, `--search-only`, `--min-stars=N`. |
 | `/search` | Discovery on its own, deduplicated against everything you've already seen. |
@@ -93,13 +115,18 @@ drafts; you read the drafts in your IDE and greenlight; Claude does the layout, 
 verification, and the exports. You are the judgment in the loop, not the overflow
 detector.
 
-### Aiming it
+### The room numbers
 
 `working/scripts/viz/build_sweep_viz.py` is the steering wheel. It holds where you have
 already looked and where you have not, plotted as a cube of sector × focus × seniority,
-and `deep sweep` searches exactly the regions flagged `new=True`. Move a region into the
-explored list once you've swept it, or the map starts lying to you and the search quietly
-re-mines the same seam for a month.
+and `deep sweep` searches exactly the regions flagged `new=True`.
+
+Move a region into the explored list once you've swept it. Skip that and the map starts
+lying to you, and a map that lies is worse than no map — you will re-mine the same seam
+for a month and call it thorough. Rooms move, too: boards add bot protection, postings
+close, an employer quietly stops hiring. `/add-portal --recheck` re-verifies a board that
+has gone quiet, on the theory that silence usually means the corridor changed rather than
+the market did.
 
 ---
 
@@ -123,7 +150,7 @@ working/
     viz/               3D coverage visualisation + sweep data
     outreach/          Log scaffolder + paced LinkedIn wrapper
 .claude/skills/        job-scraper · pipeline · deep-sweep · linkedin-outreach
-.claude/commands/      /add-portal
+.claude/commands/      /setup · /add-portal
 tools/                 Linter, security guards, upstream-drift checker
 ```
 
@@ -165,7 +192,14 @@ hard-stops on a rate limit or a security checkpoint. When it stops, stop for the
 
 **Honest limits.** This gets your application in front of a human in good shape. It does
 not know whether the role was earmarked for an internal candidate before it was posted,
-and neither do you. Automating the arms race further is not the same as winning it.
+and neither do you.
+
+It is worth being clear about what you are escalating against. There is no committee
+coordinating the hiring market, no strategy, nobody at the top of it who could call the
+whole thing off if asked nicely. It is a headless system that grew, and the traps in it
+are mostly not aimed at anyone in particular — which is worse than malice, and exactly why
+a gate that fails closed beats a clever heuristic. Nobody wins an arms race. You just
+avoid losing it badly, on a Tuesday, to a posting that closed in March.
 
 ---
 

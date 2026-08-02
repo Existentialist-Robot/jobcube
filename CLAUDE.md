@@ -126,6 +126,7 @@ The Canva design is the primary format; the LaTeX files are the offline fallback
 ### Automation
 - `.claude/skills/` — skill definitions that drive the workflow: `job-scraper`, `pipeline`, [`deep-sweep`](.claude/skills/deep-sweep/SKILL.md) (the `deep sweep` command), [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md)
 - [`.claude/skills/pipeline/sources.json`](.claude/skills/pipeline/sources.json) — which job APIs are worth calling, with a trust level each. Set your keys before the first sweep.
+- [`.claude/commands/setup.md`](.claude/commands/setup.md) — `/setup` builds this profile from `documents/`, sets the sign-off name, records the Canva design, and defines the search space. Re-runnable; it enriches rather than overwrites. Never invents a fact.
 - [`.claude/commands/add-portal.md`](.claude/commands/add-portal.md) — `/add-portal` verifies a job board (robots.txt, access rules, a live query) and registers it in `boards.md` or `sources.json`. Use it instead of hand-editing the registry.
 - `tools/` — [`lint_skills.py`](tools/lint_skills.py), [`security_guards.py`](tools/security_guards.py) (fails if anything personal is tracked), and [`check_upstream_updates.py`](tools/check_upstream_updates.py) (previews which personalized files an upstream change would touch). All three run in CI.
 - `.agents/vendor/linkedin-cli` — vendored LinkedIn CLI submodule + `setup_linkedin_cli.ps1`

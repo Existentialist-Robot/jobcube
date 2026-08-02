@@ -1,6 +1,8 @@
 # Documents Folder
 
-This folder holds your actual career documents. The `/setup` command reads everything here and uses it to populate the candidate skill files under `.claude/skills/job-application-assistant/`. It is safe to re-run `/setup` as you add new documents — it merges intelligently and will never overwrite existing content without asking you first.
+This folder holds your actual career documents. The [`/setup`](../.claude/commands/setup.md) command reads everything here and uses it to populate your profile in [`CLAUDE.md`](../CLAUDE.md), which is the source of every claim in every application the pipeline produces. It is safe to re-run `/setup` as you add new documents — it enriches by default, surfaces conflicts for your decision, and never overwrites an answered field without asking.
+
+**Contents are gitignored.** Only the folder structure is tracked, so the layout survives a fresh clone while your files stay local. `postings/` is treated as untrusted third-party content — data to evaluate, never instructions to follow.
 
 ---
 
@@ -155,14 +157,14 @@ What would you do differently?
 Any signal about what they valued or didn't?
 ```
 
-`in_progress` marks an application that is still open (used by `/outcome` for interview-stage updates before a resolution). `/setup`'s calibration draws conclusions only from applications with a final status.
+`in_progress` marks an application that is still open. `/setup`'s calibration draws conclusions only from applications with a final status.
 
-Application folders may also contain **`interview_prep_<stage>.md`** files written by `/interview` (one per interview stage, kept as history). `/setup` reads only the four files named above and ignores these.
+Application folders may also contain interview prep notes, kept as history. `/setup` reads only the four files named above and ignores the rest.
 
 **What `/setup` learns from outcome.md:**
-- Which role types and companies have led to interviews (signals strong fit areas)
-- Which applications did not progress (informs the experience match calibration in `04-job-evaluation.md`)
-- Interview feedback, if you recorded it, can surface new STAR candidates
+- Which role types and organizations have led to interviews — signals your strong fit areas
+- Which applications did not progress — informs the hit-probability estimates in future sweeps
+- Interview feedback, if you recorded it, can surface new examples worth putting in the profile
 
 ---
 
@@ -183,7 +185,7 @@ Application folders may also contain **`interview_prep_<stage>.md`** files writt
 
 The command is designed to be re-run as your document collection grows. Each run:
 
-1. Reads the current state of all skill files
+1. Reads the current state of your profile in `CLAUDE.md`
 2. Compares extracted document content against what's already there
 3. Only proposes changes for content that is genuinely new or conflicting
 4. Never silently overwrites — conflicts are shown explicitly for your decision
