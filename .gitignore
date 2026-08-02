@@ -53,6 +53,8 @@ working/outreach/**
 *.jpeg
 *.png
 !cover_letters/OpenFonts/fonts/**
+# ...but brand assets are the repo's own artwork, not personal photos.
+!assets/*.png
 
 # OS files
 .DS_Store

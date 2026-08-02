@@ -1,6 +1,10 @@
+<img src="assets/logo.svg" alt="" width="76" align="left" hspace="18" vspace="4" />
+
 # jobcube
 
-**An escalation on the applicant side of the hiring arms race.**
+**Second-strike capability for job applications.**
+
+<br clear="left" />
 
 Hiring has become a race condition. Employers deployed keyword filters, so applicants
 learned to stuff keywords. Employers deployed ATS ranking, so applicants learned to
@@ -48,6 +52,25 @@ sure stops the run rather than proceeding on the balance of probabilities. This 
 deliberate, and it is the one design decision worth stealing even if you use none of the
 rest: the failure mode of an automated job search is not doing too little, it is
 confidently doing the wrong thing at volume. Trust, but verify. Mostly verify.
+
+---
+
+## Three ways in
+
+<img src="assets/triad.svg" alt="The three delivery legs: silo, boomer, bomber" width="420" />
+
+One delivery route can be defended against; three can't. An application reaches a human by
+exactly three paths, and the pipeline treats them as separate legs because they fail
+separately:
+
+| | Leg | Route | Character |
+|---|---|---|---|
+| <img src="assets/icon-silo.svg" alt="" width="30" /> | **Silo** | Portal submission | Fixed address, hardened, everyone knows where it is. Still works. |
+| <img src="assets/icon-boomer.svg" alt="" width="30" /> | **Boomer** | LinkedIn outreach | Quiet, mobile, surfaces once. Rate-limited on purpose. |
+| <img src="assets/icon-bomber.svg" alt="" width="30" /> | **Bomber** | Warm intro | Slow, visible, and the only leg you can recall after launch. |
+
+The mark is the same diagram at lower resolution: an isometric cube's three faces radiate at
+120°, which is exactly where the three legs sit.
 
 ---
 
@@ -162,6 +185,7 @@ working/
 .claude/skills/        job-scraper · pipeline · deep-sweep · linkedin-outreach
 .claude/commands/      /setup · /add-portal
 tools/                 Linter, security guards, upstream-drift checker
+assets/                Logo, three leg icons, triad emblem, social preview
 ```
 
 ---

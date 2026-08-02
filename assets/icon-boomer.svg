@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Boomer — LinkedIn outreach">
+  <title>Boomer — LinkedIn outreach</title>
+  <rect fill="#8d85a8" opacity=".2" x="4" y="32" width="56" height="27" rx="3"/>
+  <rect fill="#8d85a8" opacity=".55" x="4" y="30" width="56" height="3" rx="1.5"/>
+  <path fill="#b98cff" d="M8,42 C8,36.5 17,34.5 32,34.5 C47,34.5 56,36.5 56,42 C56,47.5 47,49.5 32,49.5 C17,49.5 8,47.5 8,42 Z"/>
+  <rect fill="#b98cff" x="28.5" y="21" width="7" height="15" rx="2"/>
+  <rect fill="#3fca7d" x="28.5" y="19" width="7" height="6" rx="1.5"/>
+</svg>

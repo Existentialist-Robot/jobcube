@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Bomber — warm intro">
+  <title>Bomber — warm intro</title>
+  <path fill="#8d85a8" opacity=".22" d="M4,50 C18,42 46,42 60,50 L60,56 L4,56 Z"/>
+  <path fill="#b98cff" d="M32,9 L58,44 L38,39.5 L32,48 L26,39.5 L6,44 Z"/>
+  <rect fill="#3fca7d" x="29" y="14" width="6" height="7" rx="1.5"/>
+</svg>

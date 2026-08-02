@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="jobcube">
+  <title>jobcube</title>
+  <polygon fill="#b98cff" points="32,8.8 51.8,19.5 32,30.3 12.2,19.5"/>
+  <polygon fill="#b98cff" points="10.6,22.1 30.4,32.9 30.4,54.4 10.6,43.6"/>
+  <polygon fill="#b98cff" points="53.4,22.1 33.6,32.9 33.6,54.4 53.4,43.6"/>
+  <circle fill="#3fca7d" cx="32" cy="33.5" r="3.6"/>
+</svg>
