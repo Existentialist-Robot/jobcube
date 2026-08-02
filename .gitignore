@@ -44,6 +44,10 @@ working/archive/viz/*.html
 # original lives in assets/vendor/; this is a build artifact.
 working/active/vendor/
 
+# floorprice's harvested salary observations. The postings are public, but the
+# set of them maps exactly which roles and employers you are targeting.
+working/scripts/floorprice/observations.json
+
 # Outreach logs name real third-party people (hiring managers, panellists).
 # Keep the folder structure; never commit the logs themselves.
 working/outreach/**
