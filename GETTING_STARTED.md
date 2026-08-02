@@ -7,7 +7,7 @@
 
 ## What this repo does
 
-jobcube turns Claude Code into your personal job application pipeline. It handles job discovery (searching confirmed-queryable job boards), fit evaluation (screening roles against your profile and realistic hiring probability, not just skills match), application drafting (résumé body + cover letter, length-matched to your Canva template), porting (editing your Canva design via MCP without you touching the tool), and filing (exporting PDFs, naming folders, updating your tracker).
+jobcube turns a coding agent — Claude Code or Codex — into your personal job application pipeline. It handles job discovery (searching confirmed-queryable job boards), fit evaluation (screening roles against your profile and realistic hiring probability, not just skills match), application drafting (résumé body + cover letter, length-matched to your Canva template), porting (editing your Canva design via MCP without you touching the tool), and filing (exporting PDFs, naming folders, updating your tracker).
 
 The design principle is **one conversation = one sprint** — you open Claude Code, say `/pipeline`, and Claude handles search → evaluate → draft → port → export. You review drafts in your IDE, greenlight, and Claude does the Canva edits and PDF exports. The output is submission-ready PDFs filed in `working/exports/`, a running `job_search_tracker.csv`, and a searchable 3D visualization of your entire pipeline.
 
@@ -19,8 +19,8 @@ The system is built for a specific workflow: a **Canva resume template with mult
 
 Before you start:
 
-1. **Claude Code** installed and running (`claude` CLI — see [claude.ai/code](https://claude.ai/code))
-2. **Canva account** with MCP integration enabled in Claude Code settings (this is what lets Claude edit your design without a browser)
+1. **A coding agent** — [Claude Code](https://claude.ai/code) (`claude` CLI) or [Codex](https://openai.com/codex). The scripts and gates run under either; only the slash-command layer is Claude Code-specific. Codex users start from [`AGENTS.md`](AGENTS.md).
+2. **Canva account** with the MCP connector enabled in your agent's settings (this is what lets the agent edit your design without a browser)
 3. **Python 3.11+** for the helper scripts (`pip install plotly` for the viz)
 4. **Node.js** (optional — only needed if you use the `working/scripts/utils/check_viz_full.py` / `check_viz_three.py` syntax checkers)
 5. **GitHub account** (the repo tracks your applications via git)

@@ -104,6 +104,7 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 - [`GETTING_STARTED.md`](GETTING_STARTED.md) — the full step-by-step setup walkthrough
 - `CLAUDE.md` (this file) — your profile and the rules Claude must follow
 - [`HANDOFF.md`](HANDOFF.md) — current sprint state, carried between sessions
+- [`AGENTS.md`](AGENTS.md) — entry point for agents that don't read this file by convention (Codex). Points back here; lists what's portable and what's Claude Code-only
 
 ### Your private inputs
 - `documents/` — **drop your real files here; contents are gitignored.** Subfolders: `cv/`, `linkedin/`, `diplomas/`, `references/`, `postings/`, `applications/`. The folder structure is tracked so the layout survives a clone; the files you put in it never get committed. See [`documents/README.md`](documents/README.md).
@@ -312,7 +313,7 @@ De-slop is a **voice pass, not a content cut**: keep every fact and strategic ho
 4. **Verify both documents** (see Verification Checklist below)
 5. Prepare interview talking points based on the role requirements and your strengths
 
-**Important:** When mentioning agentic coding or AI tooling in CVs/cover letters, explicitly reference **Claude Code** by name.
+**Important:** When mentioning agentic coding or AI tooling in CVs/cover letters, name the specific tool you actually use — **Claude Code**, **Codex**, whichever it is. "AI tooling" is a claim anyone can make; a named tool is a checkable one, and it is the difference between sounding current and sounding like you have shipped something.
 
 ---
 
@@ -337,7 +338,7 @@ After creating or updating a CV or cover letter, re-read the generated content a
 
 ### Quality
 - [ ] No spelling or grammar errors
-- [ ] Agentic coding / AI tooling references mention **Claude Code** by name
+- [ ] Agentic coding / AI tooling references name the specific tool (Claude Code, Codex, …), not just "AI"
 - [ ] Cover letter is addressed to the correct person (or "Dear Hiring Manager" if unknown)
 - [ ] Cover letter fills approximately one page (~3,050–3,300 chars in Canva template)
 - [ ] All box lengths are within calibrated targets (see table above)

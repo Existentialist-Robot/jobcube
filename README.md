@@ -14,8 +14,9 @@ a noble one. What it does claim is discipline: every fact true, every posting co
 open before you spend an evening on it, every page laid out so it survives contact with a
 recruiter's screen. Parity, achieved responsibly.
 
-It is a Claude Code workspace. You supply a real profile and judgment; it supplies
-search, screening, drafting, layout, verification, and filing.
+It is an agent workspace — built for [Claude Code](https://claude.ai/code) and
+[Codex](https://openai.com/codex), and not really tied to either. You supply a real profile
+and judgment; it supplies search, screening, drafting, layout, verification, and filing.
 
 The name is not decorative. The search space really is modelled as a cube — sector ×
 focus × seniority, every cell a numbered coordinate — and a good deal of the tooling
@@ -52,8 +53,16 @@ confidently doing the wrong thing at volume. Trust, but verify. Mostly verify.
 
 ## Setup
 
-**You need:** [Claude Code](https://claude.ai/code) · a Canva account with the MCP
-connector enabled · Python 3.11+ (`pip install plotly pymupdf`).
+**You need:** a coding agent — [Claude Code](https://claude.ai/code) or
+[Codex](https://openai.com/codex) · a Canva account with the MCP connector enabled ·
+Python 3.11+ (`pip install plotly pymupdf`).
+
+**Which agent, honestly.** The parts that do the work — the validators, the port primitive,
+the render-verify loop, the coverage map — are plain Python and plain Markdown, and run
+under either. What is *not* portable is the invocation layer: `.claude/skills/` and
+`.claude/commands/` are Claude Code mechanisms, so `deep sweep` and `/pipeline` autoload
+there and nowhere else. Under Codex you read [`AGENTS.md`](AGENTS.md) and run the same
+procedures by name. Same pipeline, same gates, one fewer keyboard shortcut.
 
 **Optional:** Adzuna / Jooble API keys for wider search coverage · PyYAML (the linter
 falls back to its own parser without it) · MiKTeX or TeX Live for the LaTeX fallback —
@@ -133,7 +142,8 @@ the market did.
 ## The map
 
 ```
-CLAUDE.md              Your profile + the rules Claude follows   ← edit this first
+CLAUDE.md              Your profile + the rules the agent follows ← edit this first
+AGENTS.md              Entry point for Codex; points back at CLAUDE.md
 GETTING_STARTED.md     The full walkthrough
 HANDOFF.md             Sprint state, carried between sessions
 documents/             Your private inputs (contents gitignored)
