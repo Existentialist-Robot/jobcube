@@ -10,7 +10,12 @@ every application this repo produces. This file exists so an agent that does not
 
 ## What is portable and what is not
 
-The work is done by plain Python and plain Markdown, and runs under any agent:
+Nothing here pins a model or a vendor. The scripts are stdlib Python and the rules are
+Markdown, so any agent that can read files and run a shell will work; what varies is
+judgment, and the JD-verification and anti-slop passes are the first things to degrade on a
+weaker one.
+
+The work itself is done by plain Python and plain Markdown:
 
 | Portable | Where |
 |---|---|
