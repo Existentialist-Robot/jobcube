@@ -28,7 +28,7 @@
 
 | Role | Org | Reason |
 |------|-----|--------|
-| [Title](url) | Org | [Why excluded: already applied / below level / salary / closed / etc.] |
+| [Role Title](https://posting-url) | Org | [Why excluded: already applied / below level / salary / closed / etc.] |
 
 ---
 

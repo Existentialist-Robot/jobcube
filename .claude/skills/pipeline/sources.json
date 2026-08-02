@@ -1,0 +1,49 @@
+{
+  "_README": [
+    "Machine-readable registry of job-data sources, for sweeps to read instead of",
+    "rediscovering which APIs are worth calling.",
+    "",
+    "TWO THINGS TO DO BEFORE YOUR FIRST SWEEP:",
+    "1. Set have_key to true for each API you have actually registered for, and put",
+    "   the key in .env (gitignored). Every entry ships have_key:false — a sweep",
+    "   should skip a source rather than fail on a missing key.",
+    "2. Replace ats_verified with the boards YOU care about, and re-verify. Slugs go",
+    "   stale: companies migrate ATS, get acquired, or close their public board.",
+    "   Anything unverified for a few months should be treated as unknown.",
+    "",
+    "trust: 3 = full mirrored posting text, safe to rate from. 2 = partial or",
+    "aggregated, verify against the source posting. 1 = discovery only, never rate",
+    "or present from this alone.",
+    "",
+    "ATS endpoints (no key, JSON, far better signal than any aggregator):",
+    "  Greenhouse  https://boards-api.greenhouse.io/v1/boards/<slug>/jobs",
+    "  Lever       https://api.lever.co/v0/postings/<slug>?mode=json",
+    "  Ashby       https://api.ashbyhq.com/posting-api/job-board/<slug>",
+    "Find a slug from the careers-page URL, then confirm it returns JSON before",
+    "recording it here."
+  ],
+  "apis": {
+    "adzuna":   {"key_needed": true,  "have_key": false, "note": "CA+US via --country; full mirrored posting text; good primary aggregator", "trust": 3},
+    "jooble":   {"key_needed": true,  "have_key": false, "note": "discovery-only, snippet text, noisy; never accept a jooble-only hit", "trust": 1},
+    "jsearch":  {"key_needed": true,  "have_key": false, "note": "RapidAPI, small free tier; Google Jobs aggregate incl. ZipRecruiter/Indeed/LinkedIn; set RAPIDAPI_KEY in .env", "trust": 2},
+    "themuse":  {"key_needed": false, "have_key": true,  "note": "level+category filters; medium/large firms; keyless", "trust": 3},
+    "remotive": {"key_needed": false, "have_key": true,  "note": "remote tech/AI only; keyless", "trust": 3},
+    "hn":       {"key_needed": false, "have_key": true,  "note": "HN Who's-Hiring via Algolia (author whoishiring); unstructured, verify hard; keyless", "trust": 2}
+  },
+  "ats_verified": {
+    "_README": [
+      "EXAMPLE ENTRIES — replace with your own targets and verify each slug live.",
+      "Keep the note field for what the org is and why it is on your list; do not",
+      "record application history here (that belongs in your tracker)."
+    ],
+    "_example_greenhouse": {"ats": "greenhouse", "slug": "<board-slug>", "note": "what they do; why they are a target", "verified": "YYYY-MM-DD"},
+    "_example_lever":      {"ats": "lever",      "slug": "<board-slug>", "note": "what they do; why they are a target", "verified": "YYYY-MM-DD"},
+    "_example_ashby":      {"ats": "ashby",      "slug": "<board-slug>", "note": "what they do; why they are a target", "verified": "YYYY-MM-DD"}
+  },
+  "ats_unverified_todo": [],
+  "not_worth_it": [
+    "LinkedIn Jobs — no free API. linkedin-cli is people-search and outreach only, not jobs.",
+    "Indeed — killed its public API.",
+    "ZipRecruiter / Glassdoor — gated; JSearch covers ZipRecruiter indirectly."
+  ]
+}
