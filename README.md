@@ -149,6 +149,8 @@ detector.
 
 ### The room numbers
 
+> *Cleared rooms stay cleared.*
+
 `working/scripts/viz/build_sweep_viz.py` is the steering wheel. It holds where you have
 already looked and where you have not, plotted as a cube of sector × focus × seniority,
 and `deep sweep` searches exactly the regions flagged `new=True`.
