@@ -117,13 +117,15 @@ The Canva design is the primary format; the LaTeX files are the offline fallback
 
 ### Working area
 - `working/templates/` — reusable starting points: [`SWEEP_TEMPLATE.md`](working/templates/SWEEP_TEMPLATE.md), [`PACKET_TEMPLATE.md`](working/templates/PACKET_TEMPLATE.md), [`OUTREACH_LOG_TEMPLATE.md`](working/templates/OUTREACH_LOG_TEMPLATE.md). Copy, never edit in place.
-- `working/active/` — the live sweep doc + the single most-current interview doc. Keep it small.
+- `working/active/` — the live sweep doc + the single most-current interview doc. Keep it small. Generated HTML here is gitignored build output; see [`working/active/README.md`](working/active/README.md).
+- `working/outreach/` — one folder per org you run pre-application LinkedIn outreach against. **The logs are gitignored** — they name real third-party people. See [`working/outreach/README.md`](working/outreach/README.md).
 - `working/exports/` — filed applications: `<YYYY-MM (Mon 'YY)>/<YY-MM-DD - Company - Role>/`, résumé + cover PDFs and a `copy/` packet.
 - `working/archive/` — finished sprints, sweeps, and packets.
-- `working/scripts/` — the tooling: `template/` (port primitive), `utils/` (render + verify), `viz/` (3D pipeline viz), `builders/` (historical examples — do not clone for new work).
+- `working/scripts/` — the tooling: `template/` (port primitive), `utils/` (render + verify), `viz/` (3D pipeline viz + sweep-coverage data), `outreach/` (log scaffolder + paced LinkedIn wrapper), `builders/` (historical examples — do not clone for new work). [`validate_job_sweep.py`](working/scripts/validate_job_sweep.py) gates every sweep doc.
 
 ### Automation
-- `.claude/skills/` — skill definitions (`job-scraper`, `pipeline`) that drive the workflow
+- `.claude/skills/` — skill definitions that drive the workflow: `job-scraper`, `pipeline`, [`deep-sweep`](.claude/skills/deep-sweep/SKILL.md) (the `deep sweep` command), [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md)
+- [`.claude/skills/pipeline/sources.json`](.claude/skills/pipeline/sources.json) — which job APIs are worth calling, with a trust level each. Set your keys before the first sweep.
 - `.agents/vendor/linkedin-cli` — vendored LinkedIn CLI submodule + `setup_linkedin_cli.ps1`
 
 ---
@@ -249,12 +251,26 @@ Run searches as **small, direct, foreground sweeps**: ~4–6 `WebSearch`/`WebFet
 
 Aggregator titles mislead in both directions — a posting titled as an innovation-programs role can turn out to be a corporate-HR talent-experience role with a completely different function. Some aggregators also 403 automated fetches; resolve those via search to the canonical posting, then fetch that.
 
-**Sweep-doc format:** copy [`working/templates/SWEEP_TEMPLATE.md`](working/templates/SWEEP_TEMPLATE.md). Each posting link goes **inside the table near the top** (hyperlink the role cell) — **no separate "Links" section** at the bottom. Put JD verdicts in the per-role summaries, not in an extra roster column.
+**Sweep-doc format:** copy [`working/templates/SWEEP_TEMPLATE.md`](working/templates/SWEEP_TEMPLATE.md). Each posting link goes **inside the table near the top** (hyperlink the role cell) — **no separate "Links" section** at the bottom. Put JD verdicts in the per-role summaries, not in an extra roster column. Before presenting, run `python -B working/scripts/validate_job_sweep.py <sweep-path>` and require `PASS`.
+
+**Aiming the next sweep.** The [`deep-sweep`](.claude/skills/deep-sweep/SKILL.md) skill reads its threads from the `new=True` entries in [`working/scripts/viz/build_sweep_viz.py`](working/scripts/viz/build_sweep_viz.py), which also plots where you have already looked. Edit those entries to re-aim the search, and move a thread into `SWEEPS` once it has been run — otherwise the search quietly re-mines the same seam.
+
+---
+
+## LinkedIn Outreach (pre-application)
+
+Once a role is confirmed open and its packet is drafted, run outreach **before** submitting. Full process in [`.claude/skills/linkedin-outreach/SKILL.md`](.claude/skills/linkedin-outreach/SKILL.md):
+
+**scope** the decision chain (web research: probable hiring manager, their boss, adjacent leads) → **resolve** LinkedIn handles (`search`, then `profile` to verify — never connect to an unverified handle) → **connect** in priority order (≤5 per org per day, ≤10 per day total) → **message** once accepted (one short message, ≤300 chars, no follow-ups) → **then submit the application.**
+
+Don't block on it. If connections haven't landed in 3–5 days, submit anyway — outreach is a booster, never a gate.
+
+**All live LinkedIn commands are run by you, not by Claude unattended.** Claude scaffolds the log (`python working/scripts/outreach/scope_targets.py "<Org>" "<Role>"`), preps the exact commands, and records results. Batches go through the paced wrapper [`working/scripts/outreach/run_outreach.ps1`](working/scripts/outreach/run_outreach.ps1), which spaces calls 30–60s apart and hard-stops on `connection_limit` or `checkpoint_challenge` — when it stops, stop for the day rather than retrying. A restricted account costs more than any single application gains.
 
 ---
 
 ## Never-Use Words & Phrases (banned in ALL CV/cover/copy)
-Obey and extend this list. Add a new entry whenever you flag a phrase — do not make you correct it twice.
+Obey and extend this list. Add a new entry the first time a phrase gets flagged, so nobody has to correct it twice.
 - **"I will be straight about where I would ramp"** — and the whole throat-clearing gap-flag pattern: "I will be straight / direct / candid about [my gaps / where I would ramp / fit]." Don't *announce* honesty. State the gap plainly, or reframe to the nearest true positive.
 - **"most people in my space can't think the way I can"** / any "I think better than others" framing — reads arrogant; kills collaborative-competency scoring.
 - **[Add your own banned phrases here as you find them]**

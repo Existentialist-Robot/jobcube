@@ -68,6 +68,32 @@ working/exports/<YYYY-MM (Mon 'YY)>/<YY-MM-DD - Company - Role>/
 
 ---
 
+## Interview Prep
+
+The live answer bank stays in `working/active/`; everything else is filed with the
+application under `working/exports/<month>/<date - company - role>/`.
+
+- **Role:** _[title, org, competition number if any]_
+- **Panel:** _[names and titles from the invite — research each before the interview]_
+- **Process contact:** _[recruiter/coordinator]_
+- **Constraints from the invite:** _[e.g. no AI tools, search engines, outside help, or
+  recording during the interview — in which case prep is advance-study only]_
+- **Docs:** _[link the live answer bank, plus the filed prep and any HR/red-flag pass]_
+
+---
+
+## Outreach In Flight
+
+One row per org where connection requests are out but the application hasn't gone in yet.
+Full process in [`.claude/skills/linkedin-outreach/SKILL.md`](.claude/skills/linkedin-outreach/SKILL.md);
+the per-org logs live in `working/outreach/` and are gitignored.
+
+| Org | Role | Targets contacted | Accepted | Messaged | Submit by |
+|-----|------|-------------------|----------|----------|-----------|
+| [Org] | [Role] | 0/3 | 0 | 0 | [date — 3–5 days out; submit regardless] |
+
+---
+
 ## Repo Structure
 
 ```text
@@ -78,13 +104,19 @@ ai-job-search/
 |-- job_search_tracker.csv
 |-- working/
 |   |-- active/                 # live work only (current interview doc + fresh search)
+|   |-- outreach/               # per-org LinkedIn outreach logs (gitignored — real names)
 |   |-- exports/                # FINALS ARCHIVE: every submitted app (PDFs + drafts), by month/date
 |   |-- archive/                # superseded multi-app sprint notes + intermediate reviews
-|   `-- scripts/                # Canva helper scripts + viz
+|   |-- templates/              # SWEEP / PACKET / OUTREACH_LOG starting points
+|   `-- scripts/                # Canva port primitive, validators, viz, outreach
+|       |-- template/           # template_port.py + manifest + port_config
+|       |-- utils/              # render, sign-off verify, cover-gap measure
+|       |-- viz/                # 3D pipeline viz + sweep-coverage data
+|       |-- outreach/           # log scaffolder + paced linkedin-cli wrapper
 |       `-- generated/          # generated operation/copy JSON
 |-- cv/
 |-- cover_letters/
-`-- .claude/skills/
+`-- .claude/skills/             # job-scraper, pipeline, deep-sweep, linkedin-outreach
 ```
 
 ---
@@ -136,6 +168,22 @@ Your bridge into target sectors:
 - **Fit** = ★★★★★ stars; **P(int)** and **P(hire\|int)** = conservative estimates — NEVER omit
 - After the table: 1–2 sentence **Probability rationale**
 - Sections below the table: Role Summaries · Strong-but-not-included · Boards checked/blocked
+
+Copy [`working/templates/SWEEP_TEMPLATE.md`](working/templates/SWEEP_TEMPLATE.md) rather than
+rebuilding that shape by hand, and gate it before presenting:
+
+```powershell
+python -B working/scripts/validate_job_sweep.py working/active/<sweep>.md
+```
+
+It must print `PASS`. It checks the column set, that every Role cell in every table is a
+real hyperlink, star ratings, and well-formed probabilities.
+
+**Aiming the next sweep.** `deep sweep` (the [`deep-sweep`](.claude/skills/deep-sweep/SKILL.md)
+skill) reads its threads from the `new=True` entries in
+[`working/scripts/viz/build_sweep_viz.py`](working/scripts/viz/build_sweep_viz.py). That file
+also records where you have already looked, so edit it as you go — a thread that stays in
+`FUTURE` after being swept makes the coverage map lie.
 
 ### Job Boards to Search
 

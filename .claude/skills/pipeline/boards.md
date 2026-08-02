@@ -2,7 +2,11 @@
 
 All boards below have been verified as returning plain HTML — no JS rendering, no headless browser required. Queryable via WebFetch directly.
 
-Last verified: 2025
+**Last verified: 2025.** Treat that date as an expiry, not a guarantee — boards add bot protection, move behind JS, and change URL patterns without notice. Re-verify a board the first time a sweep gets nothing from it, and move it to Known Failures rather than retrying it every sweep.
+
+This file is the hand-maintained, human-readable list. Its machine-readable twin is [`sources.json`](sources.json), which holds the API keys' status, per-source trust levels, and the ATS endpoint patterns. Keep the two in step.
+
+The registry is Canada-weighted because the rest of this template is. Swap in your own country's portals — the value here is the *pattern* (verify HTML-fetchability once, record the search-URL shape, record what fails and why), not this particular list.
 
 ---
 
@@ -10,16 +14,16 @@ Last verified: 2025
 
 | # | Board | Base URL | Search URL Pattern | Sector Focus | Notes |
 |---|-------|----------|--------------------|--------------|-------|
-| 1 | **GoA Alberta** | jobpostings.alberta.ca | `https://jobpostings.alberta.ca/search/?q={keywords}&l={location}&startrow=0` | Provincial government, APS | Edmonton-centric; full HTML pagination |
+| 1 | **Your provincial government portal** | *(example: jobpostings.alberta.ca)* | `https://jobpostings.alberta.ca/search/?q={keywords}&l={location}&startrow=0` | Provincial/state government | Replace with your own province's portal. Most run the same SuccessFactors pattern, so the `?q=&l=&startrow=` shape usually transfers |
 | 2 | **Charity Village** | charityvillage.com | `https://www.charityvillage.com/jobs/?q={keywords}&l={location}` | Nonprofit, charity, social sector | 1,400+ active jobs; structured data including salary + close dates |
 | 3 | **Work In Nonprofits** | workinnonprofits.ca | `https://workinnonprofits.ca/jobs/list-by/region/{region_id}` | Regional nonprofit | Limited filtering but clean HTML |
 | 4 | **MINJobs** | municipalinfonet.com | `https://municipalinfonet.com/jobs?q={keywords}&province={province}` | Municipal government | Sortable; good for regional director roles |
 | 5 | **GoodWork** | goodwork.ca | `https://www.goodwork.ca/jobs.php?prov={prov}&q={keywords}&type=full` | Green economy, nonprofits, social enterprise | Mix of nonprofit + mission-driven private |
-| 6 | **Search-first: Tech/Startup ATS** | Google → Greenhouse/Ashby/Lever | `WebSearch: "{keywords}" site:boards.greenhouse.io OR site:jobs.ashbyhq.com Alberta Canada {year}` → WebFetch individual results | Tech, startup, scaleup, industry | Individual ATS pages ARE fetchable (HTML); only aggregate hubs block. |
+| 6 | **Search-first: Tech/Startup ATS** | Google → Greenhouse/Ashby/Lever | `WebSearch: "{keywords}" site:boards.greenhouse.io OR site:jobs.ashbyhq.com {province} {country} {year}` → WebFetch individual results | Tech, startup, scaleup, industry | Individual ATS pages ARE fetchable (HTML); only aggregate hubs block. |
 | 7 | **Search-first: Corporate/Industry** | Google → company career pages | `WebSearch: "director" OR "VP" partnerships strategy innovation {province} Canada {year} careers -site:linkedin.com -site:glassdoor.com` → WebFetch individual results | Corporate, mid-market, tech-adjacent industry | Surfaces company career pages not on ATS platforms. |
 | 8 | **Eluta.ca** | eluta.ca | `https://www.eluta.ca/search?q={keywords}&l={location}` | Aggregator — government, post-secondary, corporate | Aggregates from employer sites; SPL links expire fast, use category pages |
 | 9 | **BC Public Service** | bcpublicservice.hua.hrsmart.com | `https://bcpublicservice.hua.hrsmart.com/hr/ats/JobSearch/search` | BC provincial government | Relevant for remote-eligible or relocation roles |
-| 10 | **ReachHire** | reachhire.ca | `https://reachhire.ca/jobs/?search={keywords}&location={location}` | Alberta nonprofit sector | Powered by Careerleaf |
+| 10 | **ReachHire** | reachhire.ca | `https://reachhire.ca/jobs/?search={keywords}&location={location}` | Nonprofit sector (Alberta-weighted) | Powered by Careerleaf |
 | 11 | **GC Jobs — individual poster pages** | emploisfp-psjobs.cfp-psc.gc.ca | `https://emploisfp-psjobs.cfp-psc.gc.ca/psrs-srfp/applicant/page1800?poster={POSTER_ID}` | Federal government | Individual posting pages are plain HTML. **Cannot search directly** — search portal is JS-gated. Workflow: WebSearch to surface poster IDs, then WebFetch each page. |
 
 ---
@@ -62,15 +66,23 @@ Run 2–3 keyword variations per board per sweep. Prioritize your highest-signal
 
 ## Secondary Sources (org-specific — check as supplemental only)
 
+Orgs you want to work for badly enough to check directly, whether or not they
+post to a board. Keep this short — a long list stops getting checked.
+
 | Board | URL | Notes |
 |-------|-----|-------|
 | [Your target org 1] | `[career page URL]` | Check weekly |
 | [Your target org 2] | `[career page URL]` | Check weekly |
-| Alberta Innovates | `careers.albertainnovates.ca/go/Opportunities-at-Alberta-Innovates/2571817/` | Direct AI careers page |
+| [Your target org 3] | `[career page URL]` | Check weekly |
 
 ---
 
 ## Free API Access — Register for These
+
+Record what you have registered for in [`sources.json`](sources.json) (`have_key`),
+and put the keys themselves in `.env`, which is gitignored. A sweep reads that
+file to decide which sources to call, and skips any source whose key is missing
+rather than failing the run.
 
 | API | Register | Coverage | Free Tier | Best For |
 |-----|----------|----------|-----------|---------|

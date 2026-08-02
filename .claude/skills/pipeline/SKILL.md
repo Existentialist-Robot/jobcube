@@ -224,7 +224,10 @@ After each state change, update the corresponding `dict(...)` entry in `working/
 | Submitted to portal/email | `"Applied"` |
 | Interview scheduled or completed | `"Interview"` |
 
-Run `python working/scripts/viz/build_job_viz.py` after every update.
+Run `python working/scripts/viz/build_job_viz.py` after every update. It delegates to
+`build_job_viz_three.py`, which also pulls the sweep-coverage layer from
+`build_sweep_viz.py`. Set `loc` on each job ("Toronto, ON" / "Remote") or it plots as
+Remote.
 
 ---
 
@@ -233,6 +236,7 @@ Run `python working/scripts/viz/build_job_viz.py` after every update.
 After each successfully filed application:
 1. Add to any applied roles log
 2. Add/update row in `job_search_tracker.csv`
+3. Mark the role applied in `job_scraper/seen_jobs.json` so future sweeps drop it
 
 ---
 
@@ -245,3 +249,17 @@ After each successfully filed application:
 5. **Anti-signal filter is mandatory** — never present or draft for already-applied roles
 6. **Use PowerShell for all file moves/downloads** — never Bash for paths with spaces/parentheses
 7. **Transaction expires** — start transaction and apply ops in the same turn; never let it sit idle
+
+---
+
+## Porting Pair Assignment Reference
+
+Fresh duplicate pairs in your Canva design all start from the same baseline, so porting a
+role means transforming that baseline rather than filling a blank.
+
+- Read the live `page_count` from `get-design` **before every session**. It grows each time
+  you seed more pairs — never hardcode it.
+- Pair *k* = page (2k−1) résumé + page (2k) cover letter. "The first pair" is pages 1–2.
+- Work from the lowest unoccupied pair upward.
+- Record which pair went to which role in the sprint doc's roster table, with the pair cell
+  linking to the Canva page and the role cell linking to the live posting.
