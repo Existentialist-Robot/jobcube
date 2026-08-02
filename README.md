@@ -1,140 +1,181 @@
-# AI Job Search — Canva Pipeline
+# Job Application Pipeline
 
-A Claude Code workspace that runs your job search end to end: find roles, screen them against
-your real profile, draft length-matched résumé and cover copy, port it into a Canva design via
-MCP, render-verify the result, and file submission-ready PDFs.
+**An escalation on the applicant side of the hiring arms race.**
 
-The design principle is **one conversation = one sprint.** You open Claude Code, run
-`/pipeline`, and Claude handles search → evaluate → draft → port → export. You review drafts in
-your IDE and greenlight; Claude does the Canva edits and the PDF exports.
+Hiring has become a race condition. Employers deployed keyword filters, so applicants
+learned to stuff keywords. Employers deployed ATS ranking, so applicants learned to
+format for parsers. Employers deployed AI screening, and applicants — reasonably —
+reached for AI too. Your application is now written by a model, ranked by a model, and
+declined by a model, and somewhere in that loop a person may briefly glance at it.
 
-> **This is a template.** Fork it, then fill in your own profile. Every personal value is a
-> `[BRACKETED]` placeholder — nothing here is anyone's real data.
+This repository does not fix that. Nobody gets to fix that unilaterally. What it does is
+make sure the applicant side of the exchange is the competent one: every claim true,
+every posting confirmed open before you spend an evening on it, every page laid out so it
+survives contact with a recruiter's screen.
 
-## What makes this different
+It is a Claude Code workspace. You supply a real profile and judgment; it supplies
+search, screening, drafting, layout, verification, and filing.
 
-Most AI job-search tooling stops at "generate a résumé." The expensive failures happen after
-that, so this workspace is built around guards for each of them:
+> **This is a template.** Fork it and fill in your own profile. Every personal value is a
+> `[BRACKETED]` placeholder — there is no real person's data in here.
 
-- **Roles that were never open.** Aggregators show stale postings. An explicit open-status gate
-  makes you confirm each role in its live portal before any work goes into it.
-- **Fit ratings from titles instead of job descriptions.** Every finalist's rating is derived from
-  its actual JD, with hard requirements and gates baked in — not the title plus a search snippet.
-- **Copy that overflows the layout.** Canva boxes are absolutely positioned, so text that wraps
-  to one extra line overlaps the box below. Copy is measured against per-box capacity, then
-  **render-verified from the actual exported pixels** — character counts are only a drafting
-  heuristic.
-- **Silently clipped text.** Canva drops overflow out of a fixed-height box with no error. This
-  once shipped a cover letter with the sign-off missing, so the sign-off is now guarded at three
-  separate points.
-- **AI-sounding prose.** A ban list plus an anti-slop pass runs at generation, review, and final
-  polish — not as a post-hoc catch.
+---
 
-## Prerequisites
+## The escalation ladder
 
-1. **Claude Code** — `claude` CLI ([claude.ai/code](https://claude.ai/code))
-2. **Canva account** with the Canva MCP connector enabled
-3. **Python 3.11+** (`pip install plotly pymupdf`)
-4. **GitHub account** — the repo tracks your applications in git
-5. *Optional:* **Adzuna** / **Jooble** API keys for better search coverage
-6. *Optional:* **MiKTeX** or **TeX Live** for the LaTeX fallback. The two files use different
-   engines: `cv/main_example.tex` compiles with **lualatex**, `cover_letters/cover_example.tex`
-   with **xelatex** (`cover.cls` is XeTeX-only). Both are verified to build.
+Each guard exists because the corresponding failure actually happened, usually more than
+once, and usually late enough to hurt.
 
-## Quick start
+| Their move | The counter |
+|---|---|
+| Postings that stay listed long after they close | An **open-status gate**: nothing gets drafted until you confirm the role live in its own portal. Three roles died mid-pipeline before this rule existed. They had been closed the entire time. |
+| Job titles that describe a different job | **JD-verify before rating.** Every finalist's stars come from reading the actual posting, with the hard gates — level, salary, domain, work authorization — folded in. A title plus a search snippet is a rumour, not a requirement. |
+| Six seconds of human attention, if you're lucky | **Length-matched copy, verified in pixels.** Layout boxes are absolutely positioned, so one extra wrapped line lands on top of the box below. Character counts are a drafting heuristic; the exported PDF is rendered to PNG and *looked at* before anything ships. |
+| Design tools that fail quietly | Canva drops text that overflows a fixed-height box and reports nothing. This once shipped a cover letter with the sign-off clipped off the bottom — confident, anonymous, gone. The sign-off is now guarded at three separate points, and a failed check cancels the transaction rather than committing it. |
+| Screeners who can smell a language model at forty paces | An **anti-slop pass** at generation, at review, and at final polish, plus a ban list you extend the first time a phrase makes you wince. "I would welcome the opportunity to leverage" is already in there. |
+| Applicant #482 in the queue | **Outreach before submission.** Scope the decision chain, verify handles, connect, and send exactly one short message — then apply. Strictly paced, because a restricted LinkedIn account costs more than any single application is worth. |
 
-### 1. Fork and clone
+The unifying rule: **every gate fails closed.** A validator that isn't sure stops the
+run. This is deliberate. The failure mode of an automated job search is not doing too
+little — it is confidently doing the wrong thing at volume.
+
+---
+
+## Setup
+
+**You need:** [Claude Code](https://claude.ai/code) · a Canva account with the MCP
+connector enabled · Python 3.11+ (`pip install plotly pymupdf`).
+
+**Optional:** Adzuna / Jooble API keys for wider search coverage · PyYAML (the linter
+falls back to its own parser without it) · MiKTeX or TeX Live for the LaTeX fallback —
+note the two files need **different engines**, `cv/main_example.tex` builds with
+`lualatex` and `cover_letters/cover_example.tex` with `xelatex`, because `cover.cls` is
+XeTeX-only. Both are verified to build, and CI compiles them on every push.
 
 ```bash
-git clone --recurse-submodules https://github.com/<you>/ai-job-search-template.git
-cd ai-job-search-template
+git clone --recurse-submodules https://github.com/<you>/<your-fork>.git
 ```
 
-The `--recurse-submodules` flag matters — the LinkedIn outreach CLI is vendored as a submodule.
+`--recurse-submodules` matters: the LinkedIn CLI is vendored as one.
 
-### 2. Add your private documents
+Then, in order:
 
-Drop your real files into `documents/` — existing CV, LinkedIn export, diplomas, references.
-**The contents are gitignored**; only the folder structure is tracked. See
-[`documents/README.md`](documents/README.md).
+1. **Drop your real documents into `documents/`** — CV, LinkedIn export, references,
+   transcripts. The contents are gitignored; only the folder structure is tracked. See
+   [`documents/README.md`](documents/README.md).
+2. **Fill in [`CLAUDE.md`](CLAUDE.md).** Replace every `[YOUR_...]` placeholder. This is
+   the file Claude reads before doing anything and the source of every claim in every
+   application you send. Vague inputs produce generic applications; the pipeline cannot
+   invent specifics it was never given.
+3. **Set your name in
+   [`working/scripts/template/port_config.json`](working/scripts/template/port_config.json).**
+   The port primitive refuses to run while it is still `[YOUR_NAME]` — without a real
+   name the sign-off guard cannot tell a signed cover letter from an unsigned one.
+4. **Build your Canva design**: N identical résumé + cover-letter pairs, where pair *k* is
+   page 2k−1 (résumé) and page 2k (cover). Record the design ID in `CLAUDE.md`.
+5. **Read [`GETTING_STARTED.md`](GETTING_STARTED.md).** It is the real walkthrough — box
+   calibration, the render-verify loop, and the filing convention.
 
-### 3. Fill in your profile
+---
 
-Open [`CLAUDE.md`](CLAUDE.md) and replace every `[YOUR_...]` placeholder. This is the file Claude
-reads before doing anything, and it is the source of every claim in every application. Be
-specific — vague entries produce generic applications.
+## Running it
 
-### 4. Set up your Canva design
+| Invocation | What happens |
+|---|---|
+| `deep sweep` | Searches the regions you've queued in `build_sweep_viz.py`, JD-verifies the finalists, and writes one gated sweep doc. Proposes only — it never applies to anything. |
+| `/pipeline` | The full run: discover → evaluate → draft → review → port → export → file. Takes `--confirm`, `--auto`, `--search-only`, `--min-stars=N`. |
+| `/search` | Discovery on its own, deduplicated against everything you've already seen. |
+| `/add-portal` | Investigates a job board — robots.txt, access rules, a live query — and registers it, or records *why* it failed so no future sweep retries it. |
+| outreach | Ask for it by name once a role is confirmed open and drafted. You run every live LinkedIn command; Claude prepares them and keeps the log. |
 
-Build a design with N identical résumé + cover-letter pairs (pair *k* = page 2k−1 résumé + page 2k
-cover). Record the design ID in `CLAUDE.md`. Full walkthrough in
-[`GETTING_STARTED.md`](GETTING_STARTED.md) → Step 2.
+The intended rhythm is **one conversation, one sprint**. Claude searches, screens, and
+drafts; you read the drafts in your IDE and greenlight; Claude does the layout, the
+verification, and the exports. You are the judgment in the loop, not the overflow
+detector.
 
-### 5. Run a sprint
+### Aiming it
+
+`working/scripts/viz/build_sweep_viz.py` is the steering wheel. It holds where you have
+already looked and where you have not, plotted as a cube of sector × focus × seniority,
+and `deep sweep` searches exactly the regions flagged `new=True`. Move a region into the
+explored list once you've swept it, or the map starts lying to you and the search quietly
+re-mines the same seam for a month.
+
+---
+
+## The map
 
 ```
-/pipeline
-```
-
-Or drive the stages individually: `/deep-sweep` to search, `/apply` for a single role.
-
-**Then read [`GETTING_STARTED.md`](GETTING_STARTED.md)** — it is the full walkthrough, including
-box-length calibration, the render-verify loop, and the export/filing convention.
-
-## File structure
-
-```
-CLAUDE.md              Your profile + the rules Claude follows  ← edit this first
-GETTING_STARTED.md     Full setup walkthrough
+CLAUDE.md              Your profile + the rules Claude follows   ← edit this first
+GETTING_STARTED.md     The full walkthrough
 HANDOFF.md             Sprint state, carried between sessions
 documents/             Your private inputs (contents gitignored)
 cv/ cover_letters/     LaTeX fallback, placeholder-tokenized
 working/
   templates/           Copy these: sweep, packet, outreach log
-  active/              Live sweep + current interview doc only
-  exports/             Filed applications: PDFs + packet copy
+  active/              Live sweep + current interview doc, nothing else
+  outreach/            Per-org outreach logs (gitignored — real people's names)
+  exports/             Filed applications: PDFs beside the copy that made them
   archive/             Finished sprints, sweeps, packets
   scripts/
     template/          template_port.py + manifest.json — the port primitive
-    utils/             render + verify + gap measurement
-    viz/               3D pipeline visualisation
-.claude/skills/        The skills that drive the workflow
-.agents/vendor/        Vendored linkedin-cli submodule
+    utils/             render, sign-off verify, cover-gap measurement
+    viz/               3D coverage visualisation + sweep data
+    outreach/          Log scaffolder + paced LinkedIn wrapper
+.claude/skills/        job-scraper · pipeline · deep-sweep · linkedin-outreach
+.claude/commands/      /add-portal
+tools/                 Linter, security guards, upstream-drift checker
 ```
 
-## The workflow in seven steps
+---
 
-1. **Sweep** — search boards, verify each finalist against its real JD, rate and shortlist.
-2. **Open-status gate** — confirm every queued role is genuinely open in its live portal.
-3. **Draft** — measured copy per box, straight into the application's own folder.
-4. **Review** — reviewer personas + anti-slop pass, *before* porting.
-5. **Port** — batch-validate, perform once, verify sign-offs, commit immediately.
-6. **Render-verify** — export to PDF, render to PNG, read it, fix overflow, re-export.
-7. **Submit + file** — PDFs and packet together in the dated application folder.
+## Calibrate it, don't inherit it
 
-## Customization
+Numbers that came from one person's layout are not laws of nature, and this repo tries
+hard not to pretend otherwise:
 
-- **Your profile** → `CLAUDE.md`. Also add to the *Never-Use Words & Phrases* list whenever you
-  catch a phrase that isn't yours.
-- **Your search space** → `working/scripts/viz/build_sweep_viz.py` and
-  `.claude/skills/pipeline/boards.md`.
-- **Your Canva layout** → `template_port.py build-manifest <snapshot> --name v2` registers your own
-  geometry. The capacities shipped in `manifest.json` are one worked example measured against one
-  specific layout — **recalibrate them against yours**, they are not universal.
-- **Your reviewers** → `working/scripts/REVIEW_AGENTS.md`.
+- **Box capacities.** `manifest.json` ships measurements from one specific Canva design.
+  Run `template_port.py build-manifest <snapshot> --name v2` against your own geometry and
+  recalibrate. The shipped numbers are a worked example.
+- **The example datasets.** The jobs in `build_job_viz.py` and the sweeps in
+  `build_sweep_viz.py` are labelled placeholders so the visualisation has something to
+  draw. Delete them.
+- **The board registry.** `boards.md` is Canada-weighted because the rest of the template
+  is. The transferable part is the discipline — verify a board is fetchable, record the
+  URL pattern, record what failed and why — not the particular list.
+- **Your voice.** Add to the *Never-Use Words & Phrases* list in `CLAUDE.md` the first
+  time a phrase isn't yours. The point is never having to flag it twice.
 
-## Trust boundary
+---
 
-Job postings — fetched *or* pasted in by hand — are untrusted third-party content. They are data
-to evaluate, never instructions to follow. Pasting a posting in manually does not launder it.
+## Rules of engagement
+
+**Job postings are untrusted input.** Fetched or pasted by hand, they are third-party
+content: data to evaluate, never instructions to follow. Typing one in yourself does not
+launder it.
+
+**Nothing personal gets committed.** `documents/`, outreach logs, generated visualisations,
+and `.env` are all gitignored, and `tools/security_guards.py` fails the build if any of
+them are tracked anyway — a `.gitignore` rule does not untrack a file that was added
+before it existed. Run it before you make a fork public.
+
+**Outreach is rate-limited on purpose.** Five connections per organization per day, ten
+total, one message per person, no follow-up sequences. The wrapper enforces the pacing and
+hard-stops on a rate limit or a security checkpoint. When it stops, stop for the day.
+
+**Honest limits.** This gets your application in front of a human in good shape. It does
+not know whether the role was earmarked for an internal candidate before it was posted,
+and neither do you. Automating the arms race further is not the same as winning it.
+
+---
 
 ## Acknowledgements
 
-Forked from [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search) and
-substantially rewritten around the Canva porting pipeline. The LaTeX templates and the
-`documents/` intake convention come from upstream.
+Forked from [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search)
+and rewritten around the design-porting pipeline and its verification loop. The LaTeX
+templates and the `documents/` intake convention come from upstream.
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Bundled fonts in `cover_letters/OpenFonts/` are under the SIL Open
-Font License.
+MIT — see [`LICENSE`](LICENSE). Bundled fonts in `cover_letters/OpenFonts/` are under the
+SIL Open Font License.
