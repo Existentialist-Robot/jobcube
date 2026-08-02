@@ -44,13 +44,10 @@
     <tspan fill="#e9e6f5" stroke="#e9e6f5" stroke-width="4">job</tspan><tspan fill="#b98cff" stroke="#b98cff" stroke-width="4">cube</tspan>
   </text>
 
-  <rect x="99" y="356" width="86" height="4" rx="2" fill="#b98cff"/>
+  <rect x="99" y="360" width="104" height="5" rx="2.5" fill="#b98cff"/>
 
-  <text x="99" y="412" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
-        font-size="30" fill="#8d85a8">Second-strike capability for job applications.</text>
-
-  <text x="99" y="470" font-family="'Cascadia Mono',Consolas,monospace"
-        font-size="16" letter-spacing="3.2" fill="#6f6889">EVERY GATE FAILS CLOSED</text>
+  <text x="99" y="424" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
+        font-size="34" fill="#a49cbe">Second-strike capability for job applications.</text>
 
   <!-- ── right: the triad emblem ────────────────────────── -->
   <g transform="translate(792,138)">
@@ -62,10 +59,10 @@
     <use href="#boomer" transform="translate(231,226) scale(1.0)"/>
     <use href="#bomber" transform="translate(69,226) scale(1.0)"/>
     <g font-family="'Cascadia Mono',Consolas,monospace" font-size="14"
-       letter-spacing="2.4" fill="#6f6889" text-anchor="middle">
-      <text x="182" y="14">SILO</text>
-      <text x="263" y="316">BOOMER</text>
-      <text x="101" y="316">BOMBER</text>
+       letter-spacing="2.4" fill="#8d85a8" text-anchor="middle">
+      <text x="182" y="14">PORTAL</text>
+      <text x="263" y="316">OUTREACH</text>
+      <text x="101" y="316">WARM INTRO</text>
     </g>
   </g>
 </svg>
