@@ -38,6 +38,8 @@ documents/**
 # working/scripts/viz/build_job_viz_three.py rather than committing 100+ KB of
 # regenerable HTML that conflicts on every merge.
 working/active/*.html
+# ...and the dated backups the builder makes of the previous viz.
+working/archive/viz/*.html
 
 # Outreach logs name real third-party people (hiring managers, panellists).
 # Keep the folder structure; never commit the logs themselves.
