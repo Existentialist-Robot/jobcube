@@ -34,6 +34,13 @@ documents/**
 !documents/README.md
 !documents/**/.gitkeep
 
+# Outreach logs name real third-party people (hiring managers, panellists).
+# Keep the folder structure; never commit the logs themselves.
+working/outreach/**
+!working/outreach/**/
+!working/outreach/.gitkeep
+!working/outreach/README.md
+
 # Personal photos and signatures
 *.jpg
 *.jpeg
