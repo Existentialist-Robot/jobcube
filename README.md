@@ -42,11 +42,11 @@ once, and usually late enough to hurt.
 | Screeners who can smell a language model at forty paces | An **anti-slop pass** at generation, at review, and at final polish, plus a ban list you extend the first time a phrase makes you wince. "I would welcome the opportunity to leverage" is already in there. |
 | Applicant #482 in the queue | **Outreach before submission.** Scope the decision chain, verify handles, connect, and send exactly one short message — then apply. Strictly paced, because a restricted LinkedIn account costs more than any single application is worth. |
 
-The unifying rule: **every gate fails closed.** A validator that isn't sure stops the
-run rather than proceeding on the balance of probabilities. This is deliberate, and it is
-the one design decision worth stealing even if you use none of the rest: the failure mode
-of an automated job search is not doing too little, it is confidently doing the wrong
-thing at volume. Trust, but verify. Mostly verify.
+There is exactly one doctrine here: **every gate fails closed.** A validator that isn't
+sure stops the run rather than proceeding on the balance of probabilities. This is
+deliberate, and it is the one design decision worth stealing even if you use none of the
+rest: the failure mode of an automated job search is not doing too little, it is
+confidently doing the wrong thing at volume. Trust, but verify. Mostly verify.
 
 ---
 
@@ -197,9 +197,10 @@ and neither do you.
 It is worth being clear about what you are escalating against. There is no committee
 coordinating the hiring market, no strategy, nobody at the top of it who could call the
 whole thing off if asked nicely. It is a headless system that grew, and the traps in it
-are mostly not aimed at anyone in particular — which is worse than malice, and exactly why
-a gate that fails closed beats a clever heuristic. Nobody wins an arms race. You just
-avoid losing it badly, on a Tuesday, to a posting that closed in March.
+are mostly not aimed at anyone in particular — which is worse than malice, and the reason
+the doctrine is what it is. Against something with no intent, a gate that fails closed
+beats a clever heuristic every time. Nobody wins an arms race. You just avoid losing it
+badly, on a Tuesday, to a posting that closed in March.
 
 ---
 
