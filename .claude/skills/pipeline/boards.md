@@ -6,6 +6,8 @@ All boards below have been verified as returning plain HTML — no JS rendering,
 
 This file is the hand-maintained, human-readable list. Its machine-readable twin is [`sources.json`](sources.json), which holds the API keys' status, per-source trust levels, and the ATS endpoint patterns. Keep the two in step.
 
+**Adding a board:** run [`/add-portal`](../../commands/add-portal.md) rather than writing a row by hand. It checks robots.txt and access rules, works out the search-URL pattern, runs a live query, and only then writes the row — or files the board under Known Failures with the reason. `/add-portal --list` prints the current registry; `/add-portal --recheck <board>` re-verifies one that has gone quiet.
+
 The registry is Canada-weighted because the rest of this template is. Swap in your own country's portals — the value here is the *pattern* (verify HTML-fetchability once, record the search-URL shape, record what fails and why), not this particular list.
 
 ---
