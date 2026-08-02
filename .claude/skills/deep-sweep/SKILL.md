@@ -5,6 +5,8 @@ description: >
   working/scripts/viz/build_sweep_viz.py. Trigger on the two-word command "deep sweep" (or /deep-sweep).
   Small, direct, FOREGROUND sweeps only — never background/multi-agent jobs. JD-verify + dedup before presenting.
   Triggers on: "deep sweep", "init sweep", "run the sweep", "next sweep".
+allowed-tools: Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Bash
+framework_version: 1.0.0
 ---
 
 # deep-sweep — two-word sweep initializer

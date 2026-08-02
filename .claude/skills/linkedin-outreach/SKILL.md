@@ -1,8 +1,16 @@
-# LinkedIn Outreach (Pre-Application)
+---
+name: linkedin-outreach
+description: >
+  Pre-application LinkedIn outreach: scope the decision chain at a target org (hiring manager,
+  their boss, adjacent leads), resolve LinkedIn handles, send connection requests, and message
+  once connected — all BEFORE the application is submitted.
+  Triggers on: outreach, hiring manager, decision chain, connection request, LinkedIn scoping,
+  "who would I report to", warm intro, linkedin-cli.
+allowed-tools: Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Bash, PowerShell
+framework_version: 1.0.0
+---
 
-**name:** linkedin-outreach
-**description:** Pre-application LinkedIn outreach: scope the decision chain at a target org (hiring manager, their boss, adjacent leads), resolve LinkedIn handles, send connection requests, and message once connected — all BEFORE the application is submitted. Triggers on: outreach, hiring manager, decision chain, connection request, LinkedIn scoping, "who would I report to", warm intro, linkedin-cli.
-**allowed-tools:** Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Bash, PowerShell
+# LinkedIn Outreach (Pre-Application)
 
 ---
 

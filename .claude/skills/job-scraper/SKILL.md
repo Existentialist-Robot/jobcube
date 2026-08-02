@@ -1,8 +1,15 @@
-# Job Search
+---
+name: job-scraper
+description: >
+  Searches job sources for new positions matching the candidate's profile, using WebSearch and
+  WebFetch. Deduplicates against roles already seen or applied to, and applies a minimum
+  hiring-probability filter before presenting anything.
+  Triggers on: job search, find jobs, search jobs, new jobs, any new positions, /search, /scrape
+allowed-tools: Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Agent, TodoWrite
+framework_version: 1.0.0
+---
 
-**name:** job-search
-**description:** Searches Canadian job sources for new positions matching the candidate's profile. Uses WebSearch + WebFetch. Triggers on: job search, find jobs, search jobs, new jobs, any new positions, /search, /scrape
-**allowed-tools:** Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Agent, TodoWrite
+# Job Search
 
 ---
 

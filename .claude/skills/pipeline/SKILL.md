@@ -1,8 +1,15 @@
-# Full Application Pipeline
+---
+name: pipeline
+description: >
+  End-to-end job application pipeline: discover, evaluate, optional confirm gate, draft, review,
+  port to Canva, export PDFs, file the application folder. Runs from a confirmed list of
+  queryable job boards.
+  Triggers on: run the pipeline, apply to, full application, draft and port, /pipeline
+allowed-tools: Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Agent, Bash, TodoWrite, mcp__claude_ai_Canva__*
+framework_version: 1.0.0
+---
 
-**name:** pipeline
-**description:** End-to-end job application pipeline: discover → evaluate → (optional confirm gate) → draft → review → port Canva → export PDFs → file application folder. Runs from a confirmed list of queryable job boards.
-**allowed-tools:** Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Agent, Bash, TodoWrite, mcp__claude_ai_Canva__*
+# Full Application Pipeline
 
 ---
 
