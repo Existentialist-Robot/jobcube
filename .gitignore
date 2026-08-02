@@ -34,6 +34,11 @@ documents/**
 !documents/README.md
 !documents/**/.gitkeep
 
+# Generated visualizations are build output — rebuild with
+# working/scripts/viz/build_job_viz_three.py rather than committing 100+ KB of
+# regenerable HTML that conflicts on every merge.
+working/active/*.html
+
 # Outreach logs name real third-party people (hiring managers, panellists).
 # Keep the folder structure; never commit the logs themselves.
 working/outreach/**
