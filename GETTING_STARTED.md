@@ -1,13 +1,13 @@
-# Getting Started — Claude-Assisted Job Search Workspace
+# Getting Started with jobcube
 
-> **Start with [`README.md`](README.md)** for the short version — what this is, prerequisites, and a
-> five-step quick start. This file is the deep walkthrough: it takes you from a fresh clone to a
-> filed, submission-ready application, and explains *why* each guard exists. Work through it once,
-> in order.
+> **Start with [`README.md`](README.md)** for the short version — what this is, what you need, and
+> the one command that sets it up. This file is the deep walkthrough: it takes you from a fresh
+> clone to a filed, submission-ready application, and explains *why* each guard exists. Work
+> through it once, in order.
 
 ## What this repo does
 
-This workspace turns Claude Code into your personal job application pipeline. It handles job discovery (searching confirmed-queryable job boards), fit evaluation (screening roles against your profile and realistic hiring probability, not just skills match), application drafting (résumé body + cover letter, length-matched to your Canva template), porting (editing your Canva design via MCP without you touching the tool), and filing (exporting PDFs, naming folders, updating your tracker).
+jobcube turns Claude Code into your personal job application pipeline. It handles job discovery (searching confirmed-queryable job boards), fit evaluation (screening roles against your profile and realistic hiring probability, not just skills match), application drafting (résumé body + cover letter, length-matched to your Canva template), porting (editing your Canva design via MCP without you touching the tool), and filing (exporting PDFs, naming folders, updating your tracker).
 
 The design principle is **one conversation = one sprint** — you open Claude Code, say `/pipeline`, and Claude handles search → evaluate → draft → port → export. You review drafts in your IDE, greenlight, and Claude does the Canva edits and PDF exports. The output is submission-ready PDFs filed in `working/exports/`, a running `job_search_tracker.csv`, and a searchable 3D visualization of your entire pipeline.
 
@@ -345,7 +345,7 @@ Claude will read the key files and give you a status brief before doing anything
 ## Directory Reference
 
 ```
-ai-job-search-template/
+jobcube/
 ├── README.md                   # front door: what this is + quick start
 ├── CLAUDE.md                   # candidate profile + workflow rules (AI reads this first)
 ├── GETTING_STARTED.md          # this file — the deep walkthrough

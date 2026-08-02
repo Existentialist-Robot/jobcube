@@ -97,7 +97,7 @@ the per-org logs live in `working/outreach/` and are gitignored.
 ## Repo Structure
 
 ```text
-ai-job-search/
+jobcube/
 |-- HANDOFF.md                  # this file: state + workflow + rules
 |-- CLAUDE.md                   # candidate profile, Canva workflow, verification checklist
 |-- GETTING_STARTED.md          # setup guide + agent onboarding

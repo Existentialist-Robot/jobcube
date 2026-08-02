@@ -1,4 +1,4 @@
-# Job Application Pipeline
+# jobcube
 
 **An escalation on the applicant side of the hiring arms race.**
 
