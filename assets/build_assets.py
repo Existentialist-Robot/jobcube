@@ -96,11 +96,15 @@ LEG_SCALE = 0.75
 SPOKE = 120.0        # centroid-to-centroid distance
 GAP = 14.0           # clear space at both ends of every spoke
 
-# angle, glyph, label, which side the label sits on
+# angle, glyph, label, which side the label sits on.
+# Ordered by altitude: the aircraft flies, so it takes the top arm; the silo
+# sits on the ground and the boomer runs beneath the surface, so both take the
+# lower two. The arrangement is arbitrary geometrically and obvious visually,
+# which is the good kind of arbitrary.
 ARMS = [
-    (-90.0, "silo", "SILO", "above"),
+    (-90.0, "bomber", "BOMBER", "above"),
     (30.0, "boomer", "BOOMER", "below"),
-    (150.0, "bomber", "BOMBER", "below"),
+    (150.0, "silo", "SILO", "below"),
 ]
 
 
