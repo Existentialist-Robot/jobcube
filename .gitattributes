@@ -1,0 +1,6 @@
+﻿# Vendored third-party code is committed byte-for-byte. No line-ending
+# translation, and no diff noise when a platform disagrees about newlines.
+assets/vendor/** -text -diff linguist-vendored
+
+# Generated raster assets.
+*.png binary

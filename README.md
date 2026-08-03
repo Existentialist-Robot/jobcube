@@ -166,9 +166,43 @@ drafts; you read the drafts in your IDE and greenlight; Claude does the layout, 
 verification, and the exports. You are the judgment in the loop, not the overflow
 detector.
 
+### Serving it
+
+Don't open the HTML off the filesystem. Rebuild and serve:
+
+```bash
+python -B tools/serve.py          # http://localhost:8000
+```
+
+That regenerates the visualization from the current data, writes an index of whatever is
+in `working/active/`, and serves it with caching off — so a refresh is always the current
+build rather than whichever version your browser kept. `working/active/` is the document
+root, which means `documents/` and `working/outreach/` sit outside the served tree on
+purpose.
+
+Or in a container, if you would rather not argue with a local Python install:
+
+```bash
+docker compose up                     # same thing, http://localhost:8000
+docker compose run --rm checks        # the gates CI runs, before you push
+```
+
+Compose binds the port to `127.0.0.1` deliberately. The served directory lists the roles
+you are applying for, so it stays on your machine unless you change that line yourself.
+Nothing personal is baked into the image — `documents/`, the outreach logs and the tracker
+are all in `.dockerignore`, and the profile is mounted read-only at run time.
+
+**three.js is vendored** at `assets/vendor/`, not fetched from a CDN. A local-first repo
+whose headline visualization needed the network to render was an inconsistency worth
+fixing; it now renders with the network switched off, which is verified rather than assumed.
+
 ### The targeting grid
 
 > *A cell searched twice counts once.*
+
+<img src="assets/screenshot-viz.png" alt="The coverage map: roles plotted in a sector by focus by seniority cube, with filters, a timeline scrubber and a role detail panel" width="100%" />
+
+*Shipped with seven example roles. Yours replaces them.*
 
 `working/scripts/viz/build_sweep_viz.py` is the steering wheel. It holds where you have
 already looked and where you have not, plotted as a cube of sector × focus × seniority,
@@ -205,8 +239,11 @@ working/
     outreach/          Log scaffolder + paced LinkedIn wrapper
 .claude/skills/        job-scraper · pipeline · deep-sweep · linkedin-outreach
 .claude/commands/      /setup · /add-portal
-tools/                 Linter, security guards, upstream-drift checker
-assets/                Logo, three leg icons, triad emblem, social preview
+tools/                 Linter, security guards, upstream-drift checker, serve.py
+assets/                Logo, leg icons, triad emblem, social preview, vendored three.js
+Dockerfile             Runs the tooling and serves the viz
+docker-compose.yml     `up` to serve, `run --rm checks` for the gates
+requirements.txt        plotly · pymupdf · pyyaml — everything else is stdlib
 ```
 
 ---

@@ -40,6 +40,9 @@ documents/**
 working/active/*.html
 # ...and the dated backups the builder makes of the previous viz.
 working/archive/viz/*.html
+# ...and the three.js copy the builder places beside the output. The tracked
+# original lives in assets/vendor/; this is a build artifact.
+working/active/vendor/
 
 # Outreach logs name real third-party people (hiring managers, panellists).
 # Keep the folder structure; never commit the logs themselves.

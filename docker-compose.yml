@@ -1,0 +1,35 @@
+# docker compose up      → rebuild the viz and serve it at http://localhost:8000
+# docker compose run --rm checks   → run the gates CI runs
+
+services:
+  viz:
+    build: .
+    # 127.0.0.1 on the host side is the point: the served directory contains the
+    # roles you are applying for, so it stays on this machine unless you change
+    # this line on purpose.
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      # Live-mount the parts you edit, so a rebuild is a page refresh rather
+      # than an image rebuild.
+      - ./working:/app/working
+      - ./assets:/app/assets
+      - ./tools:/app/tools
+      - ./CLAUDE.md:/app/CLAUDE.md:ro
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+
+  # Same image, different entrypoint. Runs what CI runs, so you can find out
+  # before pushing rather than after.
+  checks:
+    build: .
+    profiles: ["tools"]
+    volumes:
+      - ./:/app
+    command: >
+      sh -c "python -B tools/lint_skills.py &&
+             python -B tools/security_guards.py &&
+             python -B working/scripts/validate_job_sweep.py working/templates/SWEEP_TEMPLATE.md &&
+             python -m compileall -q tools working/scripts &&
+             echo '' && echo 'all checks passed'"

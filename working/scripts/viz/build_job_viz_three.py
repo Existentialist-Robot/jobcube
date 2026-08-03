@@ -312,7 +312,7 @@ def build_html(jobs: list[dict]) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Job Search Space</title>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="vendor/three.min.js"></script>
   <style>
     :root {
       color-scheme: dark;
@@ -2840,12 +2840,32 @@ def build_html(jobs: list[dict]) -> str:
     return html.replace("__PAYLOAD__", payload)
 
 
+def vendor_three() -> None:
+    """Place three.js beside the output so the viz never needs a network.
+
+    The library used to load from a CDN, which quietly made the headline
+    visualization of a local-first repo depend on jsdelivr being up and on the
+    machine being online. It is vendored at assets/vendor/ and copied next to
+    the generated HTML, so the same relative path works opened as a file and
+    served over HTTP.
+    """
+    src = ROOT / "assets" / "vendor" / "three.min.js"
+    dest = OUT.parent / "vendor" / "three.min.js"
+    if not src.exists():
+        print(f"!! {src.relative_to(ROOT).as_posix()} missing — the viz will not render.")
+        return
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if not dest.exists() or dest.stat().st_size != src.stat().st_size:
+        shutil.copy2(src, dest)
+
+
 def main() -> None:
     jobs = enrich_jobs(load_legacy_jobs())
     backup_existing()
     html = build_html(jobs)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(html, encoding="utf-8", newline="\n")
+    vendor_three()
     center = job_center(jobs)
     print(f"Written: {OUT}")
     print(f"Three.js job viz: {len(jobs)} roles; center X={center['x']:.2f} Y={center['y']:.2f} Z={center['z']:.2f}")

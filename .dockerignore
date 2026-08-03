@@ -1,0 +1,26 @@
+# Nothing personal goes into an image layer.
+documents/**
+!documents/README.md
+working/outreach/**
+!working/outreach/README.md
+working/exports/**
+!working/exports/README.md
+working/active/*.html
+working/active/vendor/
+working/archive/viz/*.html
+job_search_tracker.csv
+.env
+profile.json
+
+# Not needed at runtime.
+.git
+.github
+.claude/projects
+**/__pycache__
+**/*.pyc
+.venv
+venv
+cv/*.pdf
+cover_letters/*.pdf
+cover_letters/*.aux
+cover_letters/*.log
