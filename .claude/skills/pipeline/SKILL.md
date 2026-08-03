@@ -190,17 +190,29 @@ Incorporate fixes before porting.
 
 **Pair selection — ASK, never probe.** Do NOT spend tokens calling `get-design-content` / starting transactions to hunt for a free pair. Just ask "[which pair?]" (one line) and port there.
 
-Follow `working/scripts/PORTING_RECIPE.md` exactly:
-1. `start-editing-transaction` → parse element IDs from persisted file
-2. Run `build_{role}_pair{k}.py` → generates ops JSON + CLEAN-MAP CHECK
-3. `perform-editing-operations` → apply immediately after starting transaction (don't let it expire)
-4. `format_text {font_style: normal}` on all work-experience boxes (italic fix)
-5. `commit-editing-transaction` — changes lost if not committed
-6. **Overflow audit (MANDATORY):** run `python working/scripts/utils/height_audit.py`
+Follow [`working/scripts/PORTING_RECIPE.md`](../../../working/scripts/PORTING_RECIPE.md) exactly:
+
+1. `start-editing-transaction` → the snapshot persists to a file; element IDs come from there and nowhere else
+2. Write the `copy.json` for the pair (slots + lead-role bullets + cover body)
+3. `python -B working/scripts/template/template_port.py port <snapshot> <copy.json> --out <ops.json>` → measures against the manifest, scans banned phrases, prints **CLEAN-MAP CHECK**
+4. `python -B working/scripts/validate_canva_ops.py <snapshot> <ops.json>` → must pass
+5. One `perform-editing-operations` with all ops
+6. `format_text {font_style: normal}` on every work-experience box (clears the baked italic first bullet)
+7. **Sign-off check, before committing:** `python -B working/scripts/utils/verify_port_signoff.py <perform_response.json> <cover_eid…>`. On FAIL, **cancel** the transaction — never commit a clipped cover.
+8. `commit-editing-transaction` — immediately. A transaction left sitting expires and drops the edits silently.
+9. **Render-verify (MANDATORY):** export each edited page, `render_canva_page.py` it, and *look* at the PNG. `measure_cover_gap.py` each cover; target 7–12pt.
+
+> Do not clone a per-role builder. `working/scripts/builders/` is historical evidence only —
+> `template_port.py` is the current and only op generator. Character counts are a drafting
+> heuristic; the render is what decides.
 
 ### 6d. Export
 
-**MANDATORY GATE — do not export PDFs without an explicit greenlight.** Report that Canva is done and wait. After visual confirmation, run:
+The packet greenlight already covers this. Do not ask again: it is standing authorization
+through porting, render-verify and export for the pages it named, including text-only
+corrections found during those checks. Ask again only if a correction changes meaning,
+expands scope, or alters layout geometry.
+
 ```
 export-design → type:pdf, size:letter, export_quality:pro, pages:[2k-1]  → resume
 export-design → type:pdf, size:letter, export_quality:pro, pages:[2k]    → cover letter
