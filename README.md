@@ -6,9 +6,9 @@
 
 <br clear="left" />
 
-Hiring has become a race condition. Employers deployed keyword filters, so applicants
+Hiring has become an arms race. Employers deployed keyword filters, so applicants
 learned to stuff keywords. Employers deployed ATS ranking, so applicants learned to
-format for parsers. Employers deployed AI screening, and applicants — reasonably —
+format for parsers. Employers deployed AI screening, and applicants reasonably
 reached for AI too. Your application is now written by a model, ranked by a model, and
 declined by a model, and somewhere in that loop a person may briefly glance at it.
 
@@ -16,7 +16,7 @@ Disarmament would be lovely. It is also not on the table, because neither side c
 the other has stopped. So this is an escalation, and it makes no particular claim to being
 a noble one. What it does claim is discipline: every fact true, every posting confirmed
 open before you spend an evening on it, every page laid out so it survives contact with a
-recruiter's screen. Parity, achieved responsibly.
+recruiter's screen.
 
 It is an agent workspace — built for [Claude Code](https://claude.ai/code) and
 [Codex](https://openai.com/codex), and not really tied to either. You supply a real profile
@@ -43,7 +43,7 @@ once, and usually late enough to hurt.
 | Their move | The counter |
 |---|---|
 | Postings that stay listed long after they close | An **open-status gate**: nothing gets drafted until you confirm the role live in its own portal. Three roles died mid-pipeline before this rule existed. They had been closed the entire time. |
-| Job titles that describe a different job | **JD-verify before rating.** Every finalist's stars come from reading the actual posting, with the hard gates — level, salary, domain, work authorization — folded in. A title plus a search snippet is a rumour, not a requirement. |
+| Job titles that describe a different job | **JD-verify before rating.** Every finalist's stars come from reading the actual posting, with the hard gates (level, salary, domain, work authorization) folded in. A title plus a search snippet is a rumour, not a requirement. |
 | Six seconds of human attention, if you're lucky | **Length-matched copy, verified in pixels.** Layout boxes are absolutely positioned, so one extra wrapped line lands on top of the box below. Character counts are a drafting heuristic; the exported PDF is rendered to PNG and *looked at* before anything ships. A forecast is not an observation, and the rendered page is the only version the recruiter will ever see. |
 | Design tools that fail quietly | Canva drops text that overflows a fixed-height box and reports nothing. This once shipped a cover letter with the sign-off clipped off the bottom — confident, anonymous, gone. The sign-off is now guarded at three separate points, and a failed check cancels the transaction rather than committing it. |
 | Screeners who can smell a language model at forty paces | An **anti-slop pass** at generation, at review, and at final polish, plus a ban list you extend the first time a phrase makes you wince. "I would welcome the opportunity to leverage" is already in there. |
@@ -53,7 +53,7 @@ There is exactly one doctrine here: **every gate fails closed.** A validator tha
 sure stops the run rather than proceeding on the balance of probabilities. This is
 deliberate, and it is the one design decision worth stealing even if you use none of the
 rest: the failure mode of an automated job search is not doing too little, it is
-confidently doing the wrong thing at volume. Trust, but verify. Mostly verify.
+confidently doing the wrong thing at volume.
 
 ---
 
@@ -66,13 +66,13 @@ exactly three paths, and they fail separately — an ATS can black-hole you with
 your outreach, and a hiring manager who ignores a connection request may still take a
 referral.
 
-**Targeting and delivery are halves of one doctrine, not two ideas.** The grid decides
+**Targeting and delivery are two halves of the same job.** The grid decides
 which roles are worth an evening. The triad decides how the application reaches a person.
 Neither is worth much alone: a flawless target list you can only mail into an ATS is a
 single route, and three routes to a role that closed in March is three wasted evenings.
 The visualization belongs to the targeting half — it is not one of the legs below.
 
-Here is what each leg actually corresponds to in the repo, including where it doesn't:
+What each leg corresponds to in the repo, including where nothing does:
 
 | | Leg | | Route | What runs it | Covered? |
 |---|---|---|---|---|---|
@@ -88,7 +88,7 @@ exists to avoid. It stays on the diagram because leaving it off would suggest tw
 all there are, and a referral is the one that most often actually works.
 
 The mark is the same diagram at lower resolution: an isometric cube's three faces radiate at
-120°, which is exactly where the three legs sit.
+120°, which is where the three legs sit.
 
 ---
 
@@ -98,9 +98,9 @@ The mark is the same diagram at lower resolution: an isometric cube's three face
 [Codex](https://openai.com/codex) · a Canva account with the MCP connector enabled ·
 Python 3.11+ (`pip install plotly pymupdf`).
 
-**Which agent, honestly.** The parts that do the work — the validators, the port primitive,
-the render-verify loop, the coverage map — are plain Python and plain Markdown, and run
-under either. What is *not* portable is the invocation layer: `.claude/skills/` and
+**Which agent, honestly.** The parts that do the work are plain Python and plain Markdown,
+and run under either: the validators, the port primitive, the render-verify loop, the
+coverage map. What is *not* portable is the invocation layer: `.claude/skills/` and
 `.claude/commands/` are Claude Code mechanisms, so `deep sweep` and `/pipeline` autoload
 there and nowhere else. Under Codex you read [`AGENTS.md`](AGENTS.md) and run the same
 procedures by name. Same pipeline, same gates, one fewer keyboard shortcut.
@@ -132,8 +132,8 @@ four things the pipeline cannot run without:
 
 1. **Your profile** in [`CLAUDE.md`](CLAUDE.md) — the source of every claim in every
    application you send. It will not invent anything; missing facts stay blank and get
-   asked about. Where your CV and your LinkedIn export disagree — and they will, usually
-   about end dates — it surfaces the conflict rather than picking one.
+   asked about. Where your CV and your LinkedIn export disagree (they will, usually about
+   end dates), it surfaces the conflict rather than picking one.
 2. **Your sign-off name** in
    [`port_config.json`](working/scripts/template/port_config.json). The porting tools
    refuse to start while this is a placeholder, on the grounds that a tool which will not
@@ -260,8 +260,8 @@ hard not to pretend otherwise:
   `build_sweep_viz.py` are labelled placeholders so the visualisation has something to
   draw. Delete them.
 - **The board registry.** `boards.md` is Canada-weighted because the rest of the template
-  is. The transferable part is the discipline — verify a board is fetchable, record the
-  URL pattern, record what failed and why — not the particular list.
+  is. The transferable part is the discipline: verify a board is fetchable, record the
+  URL pattern, record what failed and why. The list itself does not transfer.
 - **Your voice.** Add to the *Never-Use Words & Phrases* list in `CLAUDE.md` the first
   time a phrase isn't yours. The point is never having to flag it twice.
 

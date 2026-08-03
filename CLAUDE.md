@@ -79,7 +79,7 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 - **Thrives in:** [e.g. high-autonomy, mission-driven environments; organizations that value both thinking and doing]
 
 ### What Excites You
-*(2–3 sentences: what problems or missions you genuinely care about. The AI uses this in cover letter closings and "why this role" paragraphs.)*
+*(2–3 sentences: what problems or missions you would work on regardless. The AI uses this in cover letter closings and "why this role" paragraphs.)*
 
 [YOUR_MOTIVATION]
 
@@ -245,7 +245,7 @@ Before any `perform-editing-operations`, assert **every text box you intend to e
 3. **Claude** drafts **length-matched** packets (résumé body + cover), measured to fit each box. **Each packet is written immediately into its own application folder** — `working/exports/<YYYY-MM (Mon 'YY)>/<YY-MM-DD - Company - Role>/copy/packet_<slug>_<date>.md` — created at draft time, NOT into `working/active/`. Packets live with their application from the first draft; `working/active/` holds only the live sweep doc + the single most-current interview doc. **Every packet/sprint doc opens with a roster table** — one row per role: **pair cell links to the Canva page**, **role cell links to the live job posting**, plus org, **level vs acceptance bar**, salary estimate, apply-via, and porting status.
 4. **You** review in the IDE, edits/approves (greenlight).
 5. **Claude** collates every approved pair into one batch, runs the copy, clean-map, and operation validators, performs once, verifies cover sign-offs and rich-text runs from the response, and **commits immediately**. The greenlight is standing commit authorization for the named packet/pages, including validated text-only corrections found during preview, export, overflow, encoding, or signature-gap checks. Don't ask for commit approval again unless the correction expands scope, changes meaning/facts, or alters layout geometry.
-6. **Claude** runs the render-verify loop on every edited page, fixes any overflow by targeting only the offending run, re-exports, and files the PDFs. **You receive submit-ready PDFs rather than being the overflow detector.**
+6. **Claude** runs the render-verify loop on every edited page, fixes any overflow by targeting only the offending run, re-exports, and files the PDFs. **You receive submit-ready PDFs.**
 
 ---
 

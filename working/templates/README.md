@@ -23,7 +23,7 @@ is accumulating files, they belong in `working/exports/` or `working/archive/`.
 ## The order of operations
 
 1. **Sweep** — find roles, verify each finalist against its **real JD**, rate, shortlist.
-2. **Open-status gate** — confirm every queued role is genuinely open in its live portal.
+2. **Open-status gate** — confirm every queued role is open in its live portal.
 3. **Packet** — draft measured copy per box; run the reviewer personas and the anti-slop pass.
 4. **Outreach** — scope the decision chain and connect *before* submitting.
 5. **Port** — batch-validate, perform once, verify sign-offs, commit immediately.

@@ -187,7 +187,7 @@ The command is designed to be re-run as your document collection grows. Each run
 
 1. Reads the current state of your profile in `CLAUDE.md`
 2. Compares extracted document content against what's already there
-3. Only proposes changes for content that is genuinely new or conflicting
+3. Only proposes changes for content that is new or conflicting
 4. Never silently overwrites — conflicts are shown explicitly for your decision
 
 **When to re-run:**

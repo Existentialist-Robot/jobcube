@@ -6,10 +6,10 @@ Each term below had to pass two tests: it names something the repo **actually do
 file behind it, and it is native to the Cold War deterrence lexicon. A word that passes only
 one is decoration, and there is a list of those at the bottom.
 
-The point is not atmosphere. It is that a term which is precisely true in both domains
-becomes documentation — you can reason about the mechanism from the word.
+A term that is true in both domains stops being atmosphere and becomes
+documentation: you can reason about the mechanism from the word.
 
-Three tiers, because the doctrine has three. **Targeting** decides what to pursue. **The
+Three tiers. **Targeting** decides what to pursue. **The
 triad** decides how it reaches a person. **Command and control** governs all of it. Tier one
 runs once per role rather than once per route, which is why it sits above the legs instead of
 inside them.
@@ -67,7 +67,7 @@ command yourself.
 A referral from someone already inside. The leg valued because there is judgment on board.
 
 **There is nothing here, on purpose.** A referral comes from a relationship you either have
-or you don't, and tooling that claimed to manufacture one would be the exact overclaim this
+or you don't, and tooling that claimed to manufacture one would be the overclaim this
 document exists to prevent. The leg stays on the diagram because dropping it would imply two
 routes are all there are, and a referral is the one that most often actually works.
 

@@ -34,7 +34,7 @@ The CLI is vendored at `.agents/vendor/linkedin-cli` (submodule; see its `llms.t
 
 **HARD RULE — Claude never runs live LinkedIn commands unattended.** All `search`/`profile`/`status`/`connect`/`message` calls are run by **you**, or by Claude only with you watching and having explicitly approved that specific batch. Claude's default job is Stages 1 and 5 (research + logging) and preparing exact commands for you to paste.
 
-This is not ceremony. An automated-looking session gets the account restricted, and a restricted LinkedIn account costs more than any single application gains.
+The caution is load-bearing: an automated-looking session gets the account restricted, and a restricted LinkedIn account costs more than any single application gains.
 
 ---
 

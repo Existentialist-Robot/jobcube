@@ -31,8 +31,8 @@ inventing threads.
 - **JD-verify before presenting.** Read each finalist's real posting and bake the hard gates
   — level, salary floor, close date, domain/specialist requirements, work authorization,
   on-site expectations — into the rating *before* writing the shortlist. Titles and
-  aggregator snippets mislead constantly; a title-only rating makes you the JD reader
-  instead of the assistant.
+  aggregator snippets mislead constantly; a title-only rating hands the JD
+  reading back to the human.
 - **Dedup** against `job_scraper/seen_jobs.json`, your applied-roles tracker, and project
   memory before listing anything. A role you already applied to or already rejected should
   never surface twice.

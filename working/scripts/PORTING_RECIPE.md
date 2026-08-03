@@ -42,7 +42,7 @@ Character count is an imprecise proxy: proportional fonts render wide words wide
 4. Covers: `python utils/measure_cover_gap.py <cover.pdf>` — target signature gap **7–12pt** (sweet spot ~10).
 5. Iterate trims and fills autonomously until the render is clean, then re-export.
 
-Skipping this is expensive: one skill description once took **five** rounds of human correction (151→184→164→159→146 chars) that a single render would have caught immediately.
+Skipping this is expensive — see [`GETTING_STARTED.md`](../../GETTING_STARTED.md) for what it costs.
 
 **Per-bullet rule:** matching the *box total* to ceiling is not sufficient — a single over-long bullet wraps to an extra line and overflows even when the box total is under. Match each bullet to its proven-good equivalent length (or shorter), not just the box total.
 

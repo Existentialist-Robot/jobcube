@@ -90,7 +90,7 @@ These are what make the pipeline's judgment good, and no CV has them. Ask
 directly:
 
 - **Behavioural profile.** How they make decisions, how they communicate, how
-  they prefer to work, where they are strongest, and what genuinely drains them.
+  they prefer to work, where they are strongest, and what drains them.
   Used for interview prep and culture-fit assessment.
 - **What actually excites them.** The thing they would work on regardless. This
   ends up in cover letters and it is the part that does not sound generated.
