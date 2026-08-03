@@ -47,7 +47,8 @@ If `--confirm` was passed: set `GATE=true`. If `--auto` was passed: set `GATE=fa
 Then read these files:
 - `.claude/skills/pipeline/boards.md` — confirmed queryable boards + keyword strategy
 - `working/scripts/PORTING_RECIPE.md` — Canva porting rules
-- `working/scripts/REVIEW_AGENTS.md` — review agent personas
+- `working/scripts/review-agent-library.json` — review agents: slotted prompts, tags, reuse thresholds
+- `working/scripts/REVIEW_AGENTS.md` — the same personas in prose, plus the review log
 
 ---
 
