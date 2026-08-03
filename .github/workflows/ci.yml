@@ -51,6 +51,9 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -B tools/security_guards.py
+      # A committed conflict marker passes every other gate: the file still parses
+      # as Markdown and its links still resolve. One shipped in DOCTRINE.md.
+      - run: python -B tools/check_conflict_markers.py
 
   python-tooling:
     name: Python tooling compiles and runs

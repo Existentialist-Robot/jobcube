@@ -241,7 +241,7 @@ working/
     outreach/          Log scaffolder + paced LinkedIn wrapper
 .claude/skills/        job-scraper · pipeline · deep-sweep · linkedin-outreach
 .claude/commands/      /setup · /add-portal
-tools/                 Linter, security guards, upstream-drift checker, serve.py
+tools/                 Linter, security guards, conflict-marker check, upstream drift, serve.py
 assets/                Logo, leg icons, triad emblem, social preview, vendored three.js
 Dockerfile             Runs the tooling and serves the viz
 docker-compose.yml     `up` to serve, `run --rm checks` for the gates

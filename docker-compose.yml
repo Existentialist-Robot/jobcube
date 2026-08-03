@@ -30,6 +30,7 @@ services:
     command: >
       sh -c "python -B tools/lint_skills.py &&
              python -B tools/security_guards.py &&
+             python -B tools/check_conflict_markers.py &&
              python -B working/scripts/validate_job_sweep.py working/templates/SWEEP_TEMPLATE.md &&
              python -m compileall -q tools working/scripts &&
              echo '' && echo 'all checks passed'"
