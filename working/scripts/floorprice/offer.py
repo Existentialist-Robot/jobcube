@@ -128,9 +128,12 @@ def price(offer: dict) -> tuple[list[tuple[str, float, str]], list[tuple[str, st
     for label, value in (offer.get("other") or {}).items():
         priced.append((label, float(value), "as stated"))
 
-    if offer.get("equity"):
+    equity = str(offer.get("equity") or "").strip()
+    # "none" is an answer, not an unpriced term. Listing it as one would put an
+    # item with no value on the list of things worth negotiating over.
+    if equity and equity.lower() not in {"none", "n/a", "na", "no", "0", "-"}:
         unpriced.append(
-            ("equity", f"{offer['equity']} — never priced here; see the note in this script")
+            ("equity", f"{equity} — never priced here; see the note in this script")
         )
     for item in offer.get("unpriced") or []:
         unpriced.append((item, "recorded as unpriced"))

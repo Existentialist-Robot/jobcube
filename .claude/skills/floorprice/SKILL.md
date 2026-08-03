@@ -52,8 +52,14 @@ yourself is circular, and it is the single easiest way to walk into a room confi
 
    Expect the base salary and the guaranteed value to disagree about which of two offers is
    better. That is the ordinary case, and it is the reason to run this before you answer.
-4. **Rehearse** before the call. Have ready: the number, the two postings you would cite if
-   pushed, and what you say when asked for your expectations first.
+4. **Rehearse** — `python -B working/scripts/floorprice/brief.py --role "<substring>"
+   [--offer <org>.offer.json]`. Assembles the one page you read before the call: the number to
+   ask, the two postings you cite if pushed, the prepared answers to "what are your
+   expectations" and "what do you make now", and — with an offer — where that offer sits in
+   the band and whether the gap is worth a counter.
+
+   It refuses on thin data for the same reason `band.py` does. Rehearsing a figure you cannot
+   defend is worse than walking in without one.
 
 ## Talking points that hold up
 

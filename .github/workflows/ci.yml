@@ -93,6 +93,15 @@ jobs:
           fi
       - name: floorprice prices the example offer
         run: python -B working/scripts/floorprice/offer.py working/scripts/floorprice/offer.example.json
+      - name: floorprice briefs from the example dataset
+        run: python -B working/scripts/floorprice/brief.py --offer working/scripts/floorprice/offer.example.json
+      - name: floorprice refuses to brief on thin data
+        run: |
+          # Same refusal as band.py. A rehearsal built on two postings teaches you
+          # to say a number you cannot defend.
+          if python -B working/scripts/floorprice/brief.py --role zzz-no-such-role; then
+            echo "brief.py produced a brief with nothing behind it"; exit 1
+          fi
       - name: Run tests when present
         run: |
           if [ -d tests ]; then
