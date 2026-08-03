@@ -33,4 +33,9 @@ services:
              python -B tools/check_conflict_markers.py &&
              python -B working/scripts/validate_job_sweep.py working/templates/SWEEP_TEMPLATE.md &&
              python -m compileall -q tools working/scripts &&
+             python -B working/scripts/floorprice/collect.py &&
+             python -B working/scripts/floorprice/offer.py working/scripts/floorprice/offer.example.json > /dev/null &&
+             if python -B working/scripts/floorprice/band.py --role zzz-no-such-role > /dev/null 2>&1;
+               then echo 'FAIL: band.py reported a band with nothing behind it'; exit 1; fi &&
+             echo 'floorprice: collects, prices, and refuses on thin data' &&
              echo '' && echo 'all checks passed'"

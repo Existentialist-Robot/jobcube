@@ -225,7 +225,10 @@ Quick reference — highest-signal sources:
 ## Hard Rules
 
 - Never fabricate job postings.
-- Salary floor: $[YOUR_FLOOR]. Real target: $[YOUR_TARGET_RANGE].
+- Salary floor: $[YOUR_FLOOR]. Real target: $[YOUR_TARGET_RANGE]. Never state a negotiation
+  number `floorprice/band.py` has not backed with four posted ranges; relay the refusal instead.
+- Run `python -B working/scripts/floorprice/collect.py` after every sweep, so the band keeps up
+  with the roles you just looked at.
 - No specialist-domain applications unless there is a clear, realistic bridge.
 - Keep outputs direct and tight.
 

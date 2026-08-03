@@ -92,7 +92,11 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 
 ### Deal-breakers
 - [e.g. Purely rote/administrative roles with no mandate for creative or strategic contribution]
-- Salary below $[YOUR_FLOOR] annually (target: $[YOUR_TARGET_RANGE])
+- Salary below $[YOUR_FLOOR] annually (target: $[YOUR_TARGET_RANGE]). Never state a number in a
+  negotiation that `working/scripts/floorprice/band.py` has not backed with at least four posted
+  ranges — it refuses below that, and the refusal is to be relayed rather than talked around.
+  Estimates you wrote into a sweep are excluded from every band on purpose: quoting your own
+  guess back to yourself is circular.
 - [Any other hard no — role type, sector, location, etc.]
 
 ---
@@ -123,10 +127,10 @@ The Canva design is the primary format; the LaTeX files are the offline fallback
 - `working/outreach/` — one folder per org you run pre-application LinkedIn outreach against. **The logs are gitignored** — they name real third-party people. See [`working/outreach/README.md`](working/outreach/README.md).
 - `working/exports/` — filed applications: `<YYYY-MM (Mon 'YY)>/<YY-MM-DD - Company - Role>/`, résumé + cover PDFs and a `copy/` packet.
 - `working/archive/` — finished sprints, sweeps, and packets.
-- `working/scripts/` — the tooling: `template/` (port primitive), `utils/` (render + verify), `viz/` (3D pipeline viz + sweep-coverage data), `outreach/` (log scaffolder + paced LinkedIn wrapper), `builders/` (historical examples — do not clone for new work). [`validate_job_sweep.py`](working/scripts/validate_job_sweep.py) gates every sweep doc.
+- `working/scripts/` — the tooling: `template/` (port primitive), `utils/` (render + verify), `viz/` (3D pipeline viz + sweep-coverage data), `outreach/` (log scaffolder + paced LinkedIn wrapper), `floorprice/` (salary band from your own sweeps, offer pricing, negotiation brief), `builders/` (historical examples — do not clone for new work). [`validate_job_sweep.py`](working/scripts/validate_job_sweep.py) gates every sweep doc.
 
 ### Automation
-- `.claude/skills/` — skill definitions that drive the workflow: `job-scraper`, `pipeline`, [`deep-sweep`](.claude/skills/deep-sweep/SKILL.md) (the `deep sweep` command), [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md)
+- `.claude/skills/` — skill definitions that drive the workflow: `job-scraper`, `pipeline`, [`deep-sweep`](.claude/skills/deep-sweep/SKILL.md) (the `deep sweep` command), [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md), [`floorprice`](.claude/skills/floorprice/SKILL.md) (what to ask for, and what an offer is worth)
 - [`.claude/skills/pipeline/sources.json`](.claude/skills/pipeline/sources.json) — which job APIs are worth calling, with a trust level each. Set your keys before the first sweep.
 - [`.claude/commands/setup.md`](.claude/commands/setup.md) — `/setup` builds this profile from `documents/`, sets the sign-off name, records the Canva design, and defines the search space. Re-runnable; it enriches rather than overwrites. Never invents a fact.
 - [`.claude/commands/add-portal.md`](.claude/commands/add-portal.md) — `/add-portal` verifies a job board (robots.txt, access rules, a live query) and registers it in `boards.md` or `sources.json`. Use it instead of hand-editing the registry.

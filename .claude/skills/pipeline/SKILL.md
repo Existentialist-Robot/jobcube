@@ -85,7 +85,9 @@ For each verified-open role that passes the anti-signal filter:
 
 **Hard filters** — always drop regardless of star rating:
 - Requires specialist credential the candidate doesn't have (P.Eng, CPA, legal, clinical license, etc.)
-- Salary below floor confirmed in posting
+- Salary below floor confirmed in posting. Where the posting shows a range, check it against
+  what the market actually posts: `python -B working/scripts/floorprice/band.py --role "<frag>"`.
+  A role at the bottom of its own market is a different decision from one below your floor.
 - Another CEO/ED role (if candidate has concurrent org — check CLAUDE.md Deal-breakers)
 - APS internal-only posting (explicitly states preference for current employees)
 
@@ -132,7 +134,10 @@ For each verified-open role that passes the anti-signal filter:
 
 **Column rules:**
 - **Role** — hyperlink the title to the live posting URL (Adzuna mirror URL is fine if that has the full text)
-- **Salary** — posted range if available; otherwise `Not listed (~$X–Y est.)` with a calibrated estimate
+- **Salary** — posted range if available; otherwise `Not listed (~$X–Y est.)` with a calibrated
+  estimate. **Keep that exact wording for estimates.** `floorprice/collect.py` parses this column
+  and uses `est.` / `~` / `Not listed` to mark the row `posted: false`, which excludes it from
+  every band. Drop the marker and your own guess starts coming back to you as evidence.
 - **Posted / Closes** — actual dates; `⚠️ VERIFY` if close date absent; `⚠️ URGENT` if ≤3 days out
 - **Fit** — ★★★★★ scale: 5★=80–100%, 4★=65–79%, 3★=50–64%; minimum to include is 3★ (or `--min-stars` override)
 - **P(int) / P(hire\|int)** — conservative calibrated estimates; NEVER omit these columns
@@ -286,3 +291,17 @@ role means transforming that baseline rather than filling a blank.
 - Work from the lowest unoccupied pair upward.
 - Record which pair went to which role in the sprint doc's roster table, with the pair cell
   linking to the Canva page and the role cell linking to the live posting.
+
+---
+
+## After the sweep, and after an offer
+
+Two hand-offs out of this skill, both to [`floorprice`](../floorprice/SKILL.md):
+
+1. **After every sweep, refresh the observations.** `python -B working/scripts/floorprice/collect.py`
+   harvests the Salary column of the shortlist you just wrote. Skip it and the band goes stale
+   against your own newest data.
+2. **When an offer arrives, do not answer it from this skill.** `brief.py` assembles the number,
+   the two postings to cite, and where that offer sits in the band; `offer.py` prices the terms
+   past base salary. Both refuse or report `UNPRICED` rather than estimating, and relaying the
+   refusal is the correct behaviour.

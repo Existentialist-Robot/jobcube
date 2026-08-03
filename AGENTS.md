@@ -24,6 +24,7 @@ The work itself is done by plain Python and plain Markdown:
 | Sweep validator, ops validator | `working/scripts/` |
 | Coverage map + 3D viz | `working/scripts/viz/` |
 | Outreach scaffolder + paced wrapper | `working/scripts/outreach/` |
+| Salary band, offer pricing, negotiation brief | `working/scripts/floorprice/` |
 | Lint, security guards, upstream drift | `tools/` |
 | Every rule, gate, and convention | `CLAUDE.md`, `GETTING_STARTED.md`, `HANDOFF.md` |
 | The vocabulary for all of the above | [`DOCTRINE.md`](DOCTRINE.md) |
@@ -40,6 +41,7 @@ scripts rather than prompts.
 | The full application run | [`.claude/skills/pipeline/SKILL.md`](.claude/skills/pipeline/SKILL.md) |
 | Discovery only | [`.claude/skills/job-scraper/SKILL.md`](.claude/skills/job-scraper/SKILL.md) |
 | Pre-application outreach | [`.claude/skills/linkedin-outreach/SKILL.md`](.claude/skills/linkedin-outreach/SKILL.md) |
+| What to ask for, or what an offer is worth | [`.claude/skills/floorprice/SKILL.md`](.claude/skills/floorprice/SKILL.md) |
 | First-time setup | [`.claude/commands/setup.md`](.claude/commands/setup.md) |
 | Register a job board | [`.claude/commands/add-portal.md`](.claude/commands/add-portal.md) |
 
@@ -63,6 +65,10 @@ failure:
    fire them unattended.
 7. **Nothing personal gets committed.** Run `python -B tools/security_guards.py` before
    pushing anywhere public.
+8. **Never state a salary number the data does not support.** `floorprice` refuses below four
+   posted ranges and you must relay the refusal rather than talking around it. An estimate the
+   user wrote in a sweep is not evidence — quoting it back is circular, and it is the easiest
+   way to walk into a negotiation confidently wrong.
 
 ## Verify before reporting done
 
@@ -70,9 +76,11 @@ failure:
 python -B tools/lint_skills.py          # skill/command frontmatter
 python -B tools/security_guards.py      # nothing personal tracked, gitignore intact
 python -B working/scripts/validate_job_sweep.py <sweep.md>
+python -B working/scripts/floorprice/collect.py    # after any sweep, before any band
 ```
 
 The first two also run in CI. If you changed a doc, check the relative links still resolve.
+`docker compose run --rm checks` runs the same set in a container.
 
 ## House style
 

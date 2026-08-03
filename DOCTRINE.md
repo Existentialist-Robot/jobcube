@@ -35,6 +35,13 @@ Upstream of all three legs.
 | **Deconfliction** | An applied or rejected role never resurfaces. One cell, one strike, permanently logged. | `job_scraper/seen_jobs.json`, tracker |
 | **Minutes to midnight** | A posting closing within three days is flagged urgent — a published dial whose only job is showing distance to a hard deadline. | sweep doc close-date column |
 | **Go/No-Go poll** | A sweep is not presented unless it passes. Every console answers GO, and one NO scrubs the run. | `working/scripts/validate_job_sweep.py` |
+| **National technical means** | Verification by your own instruments rather than the other side's declarations — the mechanism arms-control treaties actually ran on. Every posted range a sweep sees is collected, and the band is built from those and nothing else. What an employer says the market pays is a declaration. | `floorprice/collect.py`, `band.py` |
+
+National technical means is the only instrument here read twice: once during targeting, where a
+salary floor kills a role before you spend an evening on it, and again after a leg lands, when
+the same band is what you argue an offer against. Note the pairing with **on-site inspection**
+two rows up — treaties ran on both, and for the same reason. Reading a JD is the inspection;
+collecting what employers publish is the sensor that works whether or not anyone lets you in.
 
 ---
 
@@ -88,6 +95,26 @@ Applies to everything above. Not a leg, and not per-role.
 | **Positive control** | Silence never means go. Absent an authenticated answer, the run turns back — an uncertain check stops rather than proceeding on the balance of probabilities. This is the one doctrine. | every gate |
 | **Born classified** | Some categories are classified at creation, regardless of author. `documents/`, `working/outreach/`, any `.env` and generated output are untrackable by category, not by review. | `tools/security_guards.py` |
 | **Portal monitoring** | Treaty inspectors sat at the factory gate and itemized everything passing through. This sits at the merge gate and does the same. | `tools/check_upstream_updates.py` |
+
+---
+
+## Outside the tiers
+
+Two capabilities do not fit the three, and forcing them in would be the dishonesty this
+document is for. The tiers describe reaching a person. These describe what happens once you
+have, which is a different problem and the only part of the process with someone on the other
+side of the table.
+
+| Term | What it is | Where |
+|---|---|---|
+| **Throw weight** | What a delivery system actually puts on target, as against how many launchers you can count. The headline number is not the capability: base salary is the launcher count, and the pension, the leave above statutory and the employer premium are the throw weight. Guaranteed value is reported apart from at-target, because a target bonus is a forecast about someone else's discretion. | `floorprice/offer.py` |
+| **War game** | You rehearse an exchange before it happens, against your own best reading of the other side. Assembles the number, the two postings you would cite if pushed, and the prepared answers to the two questions always asked first. It composes and never computes — no number is invented in the rehearsal that was not already in the data. | `floorprice/brief.py` |
+
+The war game refuses below four posted ranges, the same threshold and reasoning as the band
+itself: a rehearsal built on two postings teaches you to say a figure you cannot defend, which
+is worse than walking in without one. Throw weight needs no observations, because it reads only
+the offer in front of you — but it will not estimate a missing term either. An unpriced item is
+reported as unpriced and never as zero, and equity is never priced at all.
 
 ---
 

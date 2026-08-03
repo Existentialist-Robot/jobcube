@@ -80,7 +80,7 @@ Open `CLAUDE.md` and replace every `[YOUR_...]` placeholder with your real infor
 **Fields that need special attention:**
 - `[YOUR_ORGANIZATION]` — if you have a concurrent venture, nonprofit, or consultancy that will run alongside your new job, describe it here so Claude can frame it as complementary, not conflicting.
 - `Target Sectors` — list the specific agencies, org types, and companies you want to apply to. Claude uses this to bias search queries.
-- `Deal-breakers` — including your salary floor. Claude will silently skip any role below this threshold.
+- `Deal-breakers` — including your salary floor. Claude will silently skip any role below this threshold. The floor is yours to set, but once you have swept a few dozen roles `floorprice` can tell you what the market actually posts for them — see [Step 8](#step-8--what-to-ask-for).
 - `Behavioral Profile` — write this in the first person, as you'd actually describe yourself. Claude uses it to make cover letters sound like you.
 
 ---
@@ -315,6 +315,53 @@ Month folders sort chronologically; app folders are date-first for autosort. PDF
 
 ---
 
+## Step 8 — What to ask for
+
+This one is not part of the application loop. It runs on the exhaust from it.
+
+Every sweep records a Salary column, and after a few dozen roles that is a small comp dataset
+with two properties nothing you can look up has: it is specific to the roles you actually want,
+and you know where every number came from.
+
+```bash
+python -B working/scripts/floorprice/collect.py            # after every sweep
+python -B working/scripts/floorprice/band.py --role "Dir"  # floor, midpoint, and the receipts
+```
+
+`--role` is a plain substring match, so try the abbreviation the postings use. The shipped
+example says `Dir, Economic Development`, and `--role director` finds nothing.
+
+**It refuses below four posted ranges, and that refusal is the feature.** Early in a search it
+will refuse most of the time, which is the honest state of a search that has just started. A
+figure you invented and then repeated in a salary conversation is worse than saying you will
+come back to them on it — you can recover from the second and not from the first.
+
+Estimates never count. A sweep row reading `Not listed (~$95–110k est.)` is your own guess,
+stored with `posted: false` and excluded from every band. Keep that wording when you write
+sweeps; the marker is what keeps your guess from becoming your evidence.
+
+### When an offer arrives
+
+```bash
+cp working/scripts/floorprice/offer.example.json acme.offer.json   # *.offer.json is gitignored
+python -B working/scripts/floorprice/offer.py acme.offer.json      # what it is actually worth
+python -B working/scripts/floorprice/brief.py --role "Dir" --offer acme.offer.json
+```
+
+`offer.py` prices the pension, the leave above statutory, the employer premium and the PD budget,
+and reports a guaranteed annual figure apart from an at-target one. Leave a field out rather than
+guessing it — a missing term is reported `UNPRICED`, which is the state that sends you back to
+ask, whereas a guess quietly becomes part of a total you then quote out loud. Equity is never
+priced.
+
+Expect base salary and total value to disagree about which of two offers is better. That is the
+ordinary case: a public-sector offer $12k behind on base can be $13k ahead once the pension and
+the leave are counted. `brief.py` is the page you read before the call — the number, the two
+postings to cite if pushed, and the prepared answers to "what are your expectations" and "what
+do you make now".
+
+---
+
 ## Agent Onboarding
 
 When starting a new Claude Code session on this repo, paste this prompt to orient the agent quickly:
@@ -382,20 +429,37 @@ jobcube/
 │   │   ├── sweeps/             # past sweep docs (move here after sprint ends)
 │   │   ├── sprints/            # past sprint plans
 │   │   └── packets/            # intermediate multi-app drafts
+│   ├── outreach/               # one folder per org — GITIGNORED, names real people
 │   └── scripts/
 │       ├── PORTING_RECIPE.md   # step-by-step Canva porting guide
 │       ├── REVIEW_AGENTS.md    # reviewer persona reference + your review log
 │       ├── review-agent-library.json  # same personas, machine-readable + reuse thresholds
+│       ├── validate_job_sweep.py      # gates every sweep doc
+│       ├── validate_canva_ops.py      # gates every batch of Canva ops
 │       ├── template/           # template_port.py + manifest.json (the port primitive)
 │       ├── utils/              # render, verify sign-off, measure gap, audits
-│       ├── viz/                # visualization generators
+│       ├── viz/                # visualization generators + sweep-coverage data
+│       ├── outreach/           # log scaffolder + paced LinkedIn wrapper
+│       ├── floorprice/         # salary band, offer pricing, negotiation brief
 │       ├── builders/           # historical examples — do NOT clone for new work
 │       └── generated/          # output JSON from the port primitive
 ├── cv/                         # LaTeX CV fallback (legacy), placeholder-tokenized
 ├── cover_letters/              # LaTeX cover letter fallback (legacy) + bundled fonts
+├── tools/                      # lint, security guards, upstream drift, serve.py
+├── assets/                     # logo, leg icons, triad emblem, vendored three.js
+├── AGENTS.md                   # entry point for Codex; points back at CLAUDE.md
+├── DOCTRINE.md                 # the vocabulary, and which tier each capability sits in
+├── requirements.txt            # plotly · pymupdf · pyyaml — everything else stdlib
+├── Dockerfile                  # runs the tooling and serves the viz
+├── docker-compose.yml          # `up` to serve, `run --rm checks` for the gates
 ├── .agents/vendor/             # vendored linkedin-cli submodule + setup script
+├── .claude/commands/           # /setup · /add-portal
 └── .claude/skills/             # AI skill definitions
     ├── pipeline/SKILL.md       # full pipeline skill
     ├── pipeline/boards.md      # confirmed queryable job boards
-    └── job-scraper/SKILL.md    # job search skill
+    ├── pipeline/sources.json   # which job APIs are worth calling, with trust levels
+    ├── job-scraper/SKILL.md    # discovery on its own
+    ├── deep-sweep/SKILL.md     # the `deep sweep` command
+    ├── linkedin-outreach/SKILL.md   # pre-application outreach
+    └── floorprice/SKILL.md     # what to ask for, and what an offer is worth
 ```

@@ -47,6 +47,7 @@ once, and usually late enough to hurt.
 | Six seconds of human attention, if you're lucky | **Length-matched copy, verified in pixels.** Layout boxes are absolutely positioned, so one extra wrapped line lands on top of the box below. Character counts are a drafting heuristic; the exported PDF is rendered to PNG and *looked at* before anything ships. A forecast is not an observation, and the rendered page is the only version the recruiter will ever see. |
 | Design tools that fail quietly | Canva drops text that overflows a fixed-height box and reports nothing. This once shipped a cover letter with the sign-off clipped off the bottom — confident, anonymous, gone. The sign-off is now guarded at three separate points, and a failed check cancels the transaction rather than committing it. |
 | Screeners who can smell a language model at forty paces | An **anti-slop pass** at generation, at review, and at final polish, plus a ban list you extend the first time a phrase makes you wince. "I would welcome the opportunity to leverage" is already in there. |
+| "What are your salary expectations?", asked first, every time | **A band built from postings you have actually seen.** Every sweep collects the ranges employers published; `floorprice` reports a floor, a midpoint and the two postings you would cite if pushed. Below four posted ranges it refuses to state a number, because a figure you invented and then repeated is worse than not having one. |
 | Applicant #482 in the queue | **Outreach before submission.** Scope the decision chain, verify handles, connect, and send exactly one short message — then apply. Strictly paced, because a restricted LinkedIn account costs more than any single application is worth. |
 
 There is exactly one doctrine here: **every gate fails closed.** A validator that isn't
@@ -161,6 +162,7 @@ calibration, the render-verify loop, and the filing convention.
 | `/search` | Discovery on its own, deduplicated against everything you've already seen. |
 | `/add-portal` | Investigates a job board — robots.txt, access rules, a live query — and registers it, or records *why* it failed so no future sweep retries it. |
 | outreach | Ask for it by name once a role is confirmed open and drafted. You run every live LinkedIn command; Claude prepares them and keeps the log. |
+| `floorprice` | What the role should pay, from the ranges your own sweeps have seen. Prices an offer past its base salary, and refuses to state a number on thin data. |
 
 The intended rhythm is **one conversation, one sprint**. Claude searches, screens, and
 drafts; you read the drafts in your IDE and greenlight; Claude does the layout, the
@@ -239,7 +241,8 @@ working/
     utils/             render, sign-off verify, cover-gap measurement
     viz/               3D coverage visualisation + sweep data
     outreach/          Log scaffolder + paced LinkedIn wrapper
-.claude/skills/        job-scraper · pipeline · deep-sweep · linkedin-outreach
+    floorprice/        Salary band from your own sweeps, offer pricing, negotiation brief
+.claude/skills/        job-scraper · pipeline · deep-sweep · linkedin-outreach · floorprice
 .claude/commands/      /setup · /add-portal
 tools/                 Linter, security guards, conflict-marker check, upstream drift, serve.py
 assets/                Logo, leg icons, triad emblem, social preview, vendored three.js
