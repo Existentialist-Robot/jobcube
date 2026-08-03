@@ -14,8 +14,11 @@
 FROM python:3.12-slim
 
 # tini so Ctrl-C reaches the server instead of being swallowed by PID 1.
+# git because the guards shell out to it: security_guards.py reads `git ls-files`
+# to check nothing personal is tracked, and check_upstream_updates.py diffs
+# against a remote. Without it the checks service dies on FileNotFoundError.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends tini \
+    && apt-get install -y --no-install-recommends tini git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -31,6 +34,13 @@ RUN useradd --create-home --uid 10001 jobcube \
     && mkdir -p working/active \
     && chown -R jobcube:jobcube /app/working
 USER jobcube
+
+# The repo is bind-mounted from the host, so its files are owned by a uid git
+# does not recognise and it refuses the directory as "dubious ownership". That
+# made security_guards.py print "not a git repository" and SKIP the tracked-file
+# check — its most important one — while still reporting OK. A guard that
+# silently no-ops is worse than no guard.
+RUN git config --global --add safe.directory /app
 
 EXPOSE 8000
 
