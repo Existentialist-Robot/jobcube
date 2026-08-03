@@ -14,6 +14,12 @@ triad** decides how it reaches a person. **Command and control** governs all of 
 runs once per role rather than once per route, which is why it sits above the legs instead of
 inside them.
 
+<img src="assets/triad-network.svg" alt="Three tiers: targeting above, the triad in the middle with silo, patrol and bomber, command and control below. Each leg branches to the files that run it." width="100%" />
+
+Every filename in that diagram is generated from
+[`assets/build_assets.py`](assets/build_assets.py), so the picture cannot drift from the
+tables below without someone editing both.
+
 ---
 
 ## Tier 1 — Targeting

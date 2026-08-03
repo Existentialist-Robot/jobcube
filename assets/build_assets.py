@@ -37,11 +37,16 @@ TREFOIL = f"""\
 # Blast doors belong at GROUND level, thrown open either side of the opening —
 # not partway up the missile, where they read as handles. The hardened tube is
 # what makes it a silo rather than a rocket on a launch pad.
+#
+# The doors hinge at their OUTER edge and lift, so each one is low where it meets
+# the ground slab and high where it meets the opening. They sloped the other way
+# for three commits, which read as two ramps running down into the hole rather
+# than as a closure thrown open.
 SILO = f"""\
   <rect fill="{DIM}" opacity=".28" x="2" y="46" width="60" height="13" rx="2"/>
   <rect fill="{DIM}" opacity=".55" x="21" y="34" width="22" height="16" rx="2"/>
-  <path fill="{DIM}" opacity=".85" d="M19,38 L4,32 L2,38 L18,44 Z"/>
-  <path fill="{DIM}" opacity=".85" d="M45,38 L60,32 L62,38 L46,44 Z"/>
+  <path fill="{DIM}" opacity=".85" d="M19,38 L4,44 L2,38 L18,32 Z"/>
+  <path fill="{DIM}" opacity=".85" d="M45,38 L60,44 L62,38 L46,32 Z"/>
   <rect fill="{VIOLET}" x="26" y="8" width="12" height="34" rx="2.5"/>
   <path fill="{GREEN}" d="M26,16 L26,10.5 A2.5,2.5 0 0 1 28.5,8 L35.5,8 A2.5,2.5 0 0 1 38,10.5 L38,16 Z"/>"""
 
@@ -117,12 +122,19 @@ def _place(name: str, px: float, py: float, scale: float) -> str:
     )
 
 
-def triad_group(label_size: float = 10.5) -> str:
-    """Spokes and glyphs, aligned centroid-to-centroid with uniform gaps."""
+def triad_group(label_size: float = 10.5, label_fill: str = DIM) -> str:
+    """Spokes and glyphs, aligned centroid-to-centroid with uniform gaps.
+
+    Labels on the same side share one baseline. Offsetting each from its own ink
+    radius looked correct in the code and wrong on the page: silo's radius is
+    35.5 and patrol's is 31.3, so the two lower labels landed 4px apart and read
+    as a misalignment rather than a pair.
+    """
     import math
 
     hub_r = METRICS["trefoil"]["r"] * HUB_SCALE
-    spokes, glyphs, labels = [], [], []
+    spokes, glyphs = [], []
+    placed: list[tuple[float, float, float, str, str]] = []
 
     for deg, name, text, side in ARMS:
         rad = math.radians(deg)
@@ -140,9 +152,18 @@ def triad_group(label_size: float = 10.5) -> str:
 
         px, py = CX + ux * SPOKE, CY + uy * SPOKE
         glyphs.append("  " + _place(name, px, py, LEG_SCALE))
+        placed.append((px, py, leg_r, text, side))
 
-        ly = py - leg_r - GAP * 0.8 if side == "above" else py + leg_r + GAP * 1.15
-        labels.append(f'<text x="{px:.2f}" y="{ly:.2f}">{text}</text>')
+    # One baseline per side: the outermost ink edge on that side, plus the gap.
+    below = [py + leg_r for px, py, leg_r, _, side in placed if side == "below"]
+    above = [py - leg_r for px, py, leg_r, _, side in placed if side == "above"]
+    below_y = max(below) + GAP * 1.15 + label_size * 0.55 if below else 0.0
+    above_y = min(above) - GAP * 0.8 if above else 0.0
+
+    labels = [
+        f'<text x="{px:.2f}" y="{(below_y if side == "below" else above_y):.2f}">{text}</text>'
+        for px, py, leg_r, text, side in placed
+    ]
 
     nl = "\n    "
     return f"""  <g stroke="{DIM}" stroke-width="1.6" opacity=".5" stroke-linecap="round" fill="none">
@@ -151,7 +172,7 @@ def triad_group(label_size: float = 10.5) -> str:
 {chr(10).join(glyphs)}
   {_place("trefoil", CX, CY, HUB_SCALE)}
   <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="{label_size}"
-     letter-spacing="1.5" fill="{DIM}" text-anchor="middle">
+     letter-spacing="1.5" fill="{label_fill}" text-anchor="middle">
     {nl.join(labels)}
   </g>"""
 
@@ -198,23 +219,279 @@ def social() -> str:
 
   <!-- Weight comes from a matched stroke rather than font-weight, so the mark
        renders identically wherever Consolas Bold is absent. -->
-  <text x="96" y="322" font-family="Consolas, 'Cascadia Mono', 'JetBrains Mono', monospace"
+  <!-- Everything sits 44px lower than it used to. The ink spanned y=100..452 on a
+       640 canvas, so the composition was high in the frame with a dead band along
+       the bottom; 44 puts its centre on the card's. -->
+  <text x="96" y="366" font-family="Consolas, 'Cascadia Mono', 'JetBrains Mono', monospace"
         font-size="108" letter-spacing="-2" paint-order="stroke fill" stroke-linejoin="round">
     <tspan fill="{PAPER}" stroke="{PAPER}" stroke-width="4">job</tspan><tspan fill="{VIOLET}" stroke="{VIOLET}" stroke-width="4">cube</tspan>
   </text>
 
-  <rect x="99" y="360" width="104" height="5" rx="2.5" fill="{VIOLET}"/>
+  <rect x="99" y="404" width="104" height="5" rx="2.5" fill="{VIOLET}"/>
 
-  <text x="99" y="424" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
+  <text x="99" y="468" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
         font-size="34" fill="#a49cbe">Second-strike capability for job applications.</text>
 
-  <!-- Same triad geometry as triad.svg, scaled. Component names rather than the
-       icon nicknames: a shared link has no table to explain silo/patrol/bomber. -->
-  <g transform="translate(800,112) scale(1.18)">
-{triad_group(label_size=13).replace("SILO", "COLD APPLY").replace("PATROL", "OUTREACH").replace("BOMBER", "REFERRAL")}
+  <!-- Same triad geometry as triad.svg, scaled, and the same labels. It used to
+       substitute COLD APPLY / OUTREACH / REFERRAL on the theory that a shared
+       link has no table to explain the leg names. Wrong call: the leg names ARE
+       the identity, the card is where someone meets them first, and a card that
+       teaches different words from the docs teaches the wrong ones.
+
+       Label size is 19, not the 13 this used to carry. A social card is read at
+       roughly 500px wide in a timeline, so 13px on a 1280px canvas arrives at
+       about five pixels and the labels were decoration rather than information.
+       The fill is lifted off DIM for the same reason: at that scale the dim
+       violet-grey disappeared into the ground.
+
+       No double hyphen anywhere in this string. XML forbids it inside a comment,
+       and emitting one here silently dropped the whole triad group from the
+       rendered card while the SVG still looked fine as source. -->
+  <g transform="translate(806,148) scale(1.2)">
+{triad_group(label_size=19, label_fill="#c3bcd8")}
   </g>
 </svg>
 """
+
+
+# ── the network: what nests under each leg ──────────────────────────────────
+# The triad diagram says there are three routes. It does not say what runs them,
+# which is the question anyone reading DOCTRINE.md asks next. This is that
+# answer as a picture: three tiers, the middle one holding the legs, and every
+# leg's actual machinery hanging off it by filename.
+#
+# Left-to-right rather than radial. A radial layout with fourteen leaf labels
+# collides with itself no matter how the angles are chosen; the tree reads.
+#
+# Leaves stack UNDER their leg's description rather than beside it. Side by side
+# was the first attempt and it overlapped: a description runs about 340px and the
+# longest leaf line about 500px, which does not fit in 1160 next to a glyph
+# column. Stacking removes the constraint instead of negotiating with it.
+# Width is set by the longest leaf line (verify_port_signoff.py plus its gloss,
+# about 460px from the leaf column) rather than by a round number. At 1240 the
+# right 400px was empty.
+NW = 920
+BAND_W = 840
+
+TIER1 = (
+    "TIER 1 · TARGETING",
+    "Decides what to pursue. Once per role, upstream of all three legs.",
+    ["deep-sweep", "build_sweep_viz.py", "open-status gate", "JD-verify", "validate_job_sweep.py"],
+)
+TIER3 = (
+    "TIER 3 · COMMAND AND CONTROL",
+    "Governs all of it. Not a leg, and not per-role: every gate fails closed.",
+    ["security_guards.py", "lint_skills.py", "check_upstream_updates.py", "the greenlight"],
+)
+
+# name, register, y centre, description lines, leaves
+NET_LEGS = [
+    (
+        "silo", "SILO", "Scripted", 312,
+        ["Fixed infrastructure, automated up to the firing",
+         "order. A human still sends."],
+        [("pipeline", "discover → draft → port → export → file"),
+         ("template_port.py", "the port primitive, measured against manifest.json"),
+         ("validate_canva_ops.py", "no live call without a passing op check"),
+         ("verify_port_signoff.py", "cancel the transaction rather than ship a clipped cover"),
+         ("render_canva_page.py", "pixels decide; character counts are a drafting heuristic"),
+         ("working/exports/", "PDFs filed beside the copy that made them")],
+    ),
+    (
+        "patrol", "PATROL", "Paced", 566,
+        ["Patrols under emission discipline. Contact with a",
+         "checkpoint means silent for the day, no exceptions."],
+        [("linkedin-outreach", "scope the chain, verify the handle, connect, one message"),
+         ("scope_targets.py", "the decision chain, before any contact"),
+         ("run_outreach.ps1", "5 per org per day, 30–60s gaps, hard-stop on a checkpoint"),
+         ("working/outreach/", "gitignored — the logs name real people")],
+    ),
+    (
+        "bomber", "BOMBER", "Crewed", 742,
+        ["The leg valued because there is judgment on board. Empty here,",
+         "because the judgment is asking a person for a favour."],
+        [],
+    ),
+]
+
+# Two lines, because one ran past the container at this width.
+BOMBER_NOTE = [
+    "nothing, on purpose. The row stays on the diagram because",
+    "dropping it would imply two routes are all there are.",
+]
+
+
+def _band(x: float, y: float, w: float, h: float, title: str, sub: str, items: list[str]) -> str:
+    """A tier that wraps the triad rather than sitting inside it."""
+    chips, cx_ = [], x + 28
+    for item in items:
+        width = len(item) * 7.4 + 22
+        chips.append(
+            f'<rect x="{cx_:.1f}" y="{y + h - 40:.1f}" width="{width:.1f}" height="25" rx="12.5"'
+            f' fill="{VIOLET}" fill-opacity=".085" stroke="{VIOLET}" stroke-opacity=".22"/>'
+            f'<text x="{cx_ + width / 2:.1f}" y="{y + h - 22.5:.1f}" text-anchor="middle"'
+            f' font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5"'
+            f' fill="#a79fc0">{item}</text>'
+        )
+        cx_ += width + 10
+    nl = "\n    "
+    return f"""  <g>
+    <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="14" fill="{VIOLET}" fill-opacity=".035"
+          stroke="{DIM}" stroke-opacity=".28" stroke-dasharray="5 4"/>
+    <text x="{x + 28}" y="{y + 30}" font-family="ui-monospace, SFMono-Regular, Consolas, monospace"
+          font-size="13" letter-spacing="1.6" fill="{VIOLET}">{title}</text>
+    <text x="{x + 28}" y="{y + 52}" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
+          font-size="14.5" fill="#8d85a8">{sub}</text>
+    {nl.join(chips)}
+  </g>"""
+
+
+def network() -> str:
+    hub_x, hub_s = 108.0, 1.35
+    leg_x, leg_s = 232.0, 0.62
+    text_x = 300.0
+    spine_x = 318.0
+    leaf_x = 348.0
+    leaf_step = 25.0
+    block_gap = 30.0
+    y = 300.0
+
+    spokes, glyphs, blocks, leaves = [], [], [], []
+    centres: list[tuple[str, float, float]] = []
+
+    for name, label, register, _unused_cy, desc, items in NET_LEGS:
+        head = 40.0 + len(desc) * 19.0
+        rows = max(len(items), len(BOMBER_NOTE))
+        height = head + rows * leaf_step
+
+        # The glyph aligns with its leg's NAME, not the centre of the whole block.
+        # Centred, it sat level with the leaves instead of the thing it labels, so
+        # the spokes appeared to point at a list rather than at a leg.
+        cy = y + 14
+        glyphs.append("  " + _place(name, leg_x, cy, leg_s))
+        centres.append((name, cy, METRICS[name]["r"] * leg_s))
+
+        blocks.append(
+            f'    <text x="{text_x}" y="{y + 20:.1f}"'
+            f' font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="19"'
+            f' letter-spacing="2.2" fill="{PAPER}">{label}'
+            f'<tspan font-size="13" letter-spacing="1.4" fill="{VIOLET}"'
+            f' font-style="italic">   {register}</tspan></text>'
+        )
+        for i, line in enumerate(desc):
+            blocks.append(
+                f'    <text x="{text_x}" y="{y + 42 + i * 19:.1f}"'
+                f' font-family="\'Segoe UI\',system-ui,Helvetica,Arial,sans-serif"'
+                f' font-size="13.5" fill="#8d85a8">{line}</text>'
+            )
+
+        first = y + head + 2
+        if not items:
+            for i, line in enumerate(BOMBER_NOTE):
+                leaves.append(
+                    f'    <text x="{leaf_x}" y="{first + 6 + i * 19:.1f}"'
+                    f' font-family="\'Segoe UI\',system-ui,Helvetica,Arial,sans-serif" font-size="13.5"'
+                    f' font-style="italic" fill="#6f6885">{line}</text>'
+                )
+        else:
+            last = first + (len(items) - 1) * leaf_step
+            leaves.append(
+                f'    <path d="M{spine_x:.1f},{y + head - 12:.1f} L{spine_x:.1f},{last:.1f}"'
+                f' stroke="{VIOLET}" stroke-opacity=".38" stroke-width="1.4" fill="none"/>'
+            )
+            for i, (item, gloss) in enumerate(items):
+                ly = first + i * leaf_step
+                leaves.append(
+                    f'    <path d="M{spine_x:.1f},{ly:.1f} L{leaf_x - 12:.1f},{ly:.1f}"'
+                    f' stroke="{VIOLET}" stroke-opacity=".38" stroke-width="1.4" fill="none"/>'
+                    f'<circle cx="{leaf_x - 10:.1f}" cy="{ly:.1f}" r="2.6" fill="{GREEN}"'
+                    f' fill-opacity=".8"/>'
+                    f'<text x="{leaf_x:.1f}" y="{ly + 4.5:.1f}"'
+                    f' font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13"'
+                    f' fill="{PAPER}">{item}'
+                    f'<tspan font-family="\'Segoe UI\',system-ui,Helvetica,Arial,sans-serif"'
+                    f' font-size="12.5" fill="#7d7595">   {gloss}</tspan></text>'
+                )
+
+        y += height + block_gap
+
+    # The hub sits on the mean of the three leg centres, so no spoke has to bend
+    # further than the others to reach it.
+    hub_y = sum(cy for _, cy, _ in centres) / len(centres)
+    hr = METRICS["trefoil"]["r"] * hub_s + 11
+    for name, cy, lr in centres:
+        x0, x1 = hub_x + hr, leg_x - lr - 11
+        mid = (x0 + x1) / 2
+        spokes.append(
+            f'<path d="M{x0:.1f},{hub_y:.1f} C{mid:.1f},{hub_y:.1f} {mid:.1f},{cy:.1f}'
+            f' {x1:.1f},{cy:.1f}"/>'
+        )
+
+    tier2_h = y - block_gap - 212 + 28
+    height = 212 + tier2_h + 28 + 104 + 40
+    nl = "\n    "
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {NW} {height:.0f}" width="{NW}" height="{height:.0f}"
+     role="img" aria-label="The three tiers, the triad's three legs, and the machinery under each">
+  <title>jobcube — what nests under each leg of the triad</title>
+  <defs>
+    <pattern id="ngrid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64,0 L0,0 0,64" fill="none" stroke="{VIOLET}" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+{_defs()}
+  </defs>
+
+  <rect width="{NW}" height="{height:.0f}" fill="{GROUND}"/>
+  <rect width="{NW}" height="{height:.0f}" fill="url(#ngrid)"/>
+
+  <text x="40" y="52" font-family="Consolas, 'Cascadia Mono', 'JetBrains Mono', monospace"
+        font-size="30" letter-spacing="-0.5" paint-order="stroke fill" stroke-linejoin="round">
+    <tspan fill="{PAPER}" stroke="{PAPER}" stroke-width="1.1">job</tspan><tspan fill="{VIOLET}" stroke="{VIOLET}" stroke-width="1.1">cube</tspan><tspan
+      font-size="17" letter-spacing="0" fill="#8d85a8" font-family="'Segoe UI',system-ui,sans-serif">   doctrine, and what runs it</tspan>
+  </text>
+
+{_band(40, 84, BAND_W, 104, *TIER1)}
+
+  <g>
+    <rect x="40" y="212" width="{BAND_W}" height="{tier2_h:.0f}" rx="14" fill="{VIOLET}" fill-opacity=".05"
+          stroke="{VIOLET}" stroke-opacity=".3"/>
+    <text x="68" y="248" font-family="ui-monospace, SFMono-Regular, Consolas, monospace"
+          font-size="13" letter-spacing="1.6" fill="{VIOLET}">TIER 2 · THE TRIAD</text>
+    <text x="68" y="272" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
+          font-size="14.5" fill="#8d85a8">Three independent routes to a human, so that no single defence stops everything.</text>
+  </g>
+
+  <g stroke="{DIM}" stroke-width="1.6" stroke-opacity=".5" stroke-linecap="round" fill="none">
+    {nl.join(spokes)}
+  </g>
+{chr(10).join(glyphs)}
+  {_place("trefoil", hub_x, hub_y, hub_s)}
+
+  <g>
+{chr(10).join(blocks)}
+  </g>
+
+  <g>
+{chr(10).join(leaves)}
+  </g>
+
+{_band(40, 212 + tier2_h + 28, BAND_W, 104, *TIER3)}
+</svg>
+"""
+
+
+def _wellformed(path: Path) -> None:
+    """Parse what we just wrote. A malformed SVG still looks fine as source.
+
+    A `--` inside an XML comment is illegal and shipped once: the browser dropped
+    everything after it, which silently removed the whole triad group from the
+    social card. Parsing here turns that into a build failure.
+    """
+    import xml.etree.ElementTree as ET
+
+    try:
+        ET.parse(path)
+    except ET.ParseError as exc:
+        raise SystemExit(f"  {path.name} is not well-formed XML: {exc}") from exc
 
 
 def main() -> int:
@@ -226,9 +503,11 @@ def main() -> int:
         written.append(f"icon-{name}.svg")
     (OUT / "triad.svg").write_text(triad(), encoding="utf-8")
     (OUT / "social-preview.svg").write_text(social(), encoding="utf-8")
-    written += ["triad.svg", "social-preview.svg"]
+    (OUT / "triad-network.svg").write_text(network(), encoding="utf-8")
+    written += ["triad.svg", "social-preview.svg", "triad-network.svg"]
 
     for name in written:
+        _wellformed(OUT / name)
         print(f"  wrote assets/{name}")
     print("\nNow re-render the PNG and look at it — geometry that reads at 420px")
     print("does not always read at 64px, and only a render tells you.")

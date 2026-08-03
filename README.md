@@ -80,7 +80,9 @@ What each leg corresponds to in the repo, including where nothing does:
 | <img src="assets/icon-patrol.svg" alt="" width="30" /> | **Patrol** | *paced* | LinkedIn outreach before you apply | [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md), `scripts/outreach/`, `working/outreach/` | Scoping, handle verification, logging, pacing. **You run the live commands.** |
 | <img src="assets/icon-bomber.svg" alt="" width="30" /> | **Bomber** | *crewed* | A referral from someone already inside | — | **Nothing. This leg is yours.** |
 
-Full vocabulary, and where each capability sits: [`DOCTRINE.md`](DOCTRINE.md).
+Full vocabulary, and what branches off each leg:
+[`DOCTRINE.md`](DOCTRINE.md) — which opens with
+[the whole tree](assets/triad-network.svg), every file in it named.
 
 The third row is not an oversight. A referral is produced by a relationship you either have
 or don't, and tooling that claimed to generate one would be the kind of overclaim this repo

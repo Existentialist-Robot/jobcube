@@ -11,8 +11,8 @@
     <g id="silo">
   <rect fill="#8d85a8" opacity=".28" x="2" y="46" width="60" height="13" rx="2"/>
   <rect fill="#8d85a8" opacity=".55" x="21" y="34" width="22" height="16" rx="2"/>
-  <path fill="#8d85a8" opacity=".85" d="M19,38 L4,32 L2,38 L18,44 Z"/>
-  <path fill="#8d85a8" opacity=".85" d="M45,38 L60,32 L62,38 L46,44 Z"/>
+  <path fill="#8d85a8" opacity=".85" d="M19,38 L4,44 L2,38 L18,32 Z"/>
+  <path fill="#8d85a8" opacity=".85" d="M45,38 L60,44 L62,38 L46,32 Z"/>
   <rect fill="#b98cff" x="26" y="8" width="12" height="34" rx="2.5"/>
   <path fill="#3fca7d" d="M26,16 L26,10.5 A2.5,2.5 0 0 1 28.5,8 L35.5,8 A2.5,2.5 0 0 1 38,10.5 L38,16 Z"/>
     </g>
@@ -43,7 +43,7 @@
   <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10.5"
      letter-spacing="1.5" fill="#8d85a8" text-anchor="middle">
     <text x="180.00" y="19.36">BOMBER</text>
-    <text x="283.92" y="275.60">PATROL</text>
-    <text x="76.08" y="278.70">SILO</text>
+    <text x="283.92" y="284.48">PATROL</text>
+    <text x="76.08" y="284.48">SILO</text>
   </g>
 </svg>

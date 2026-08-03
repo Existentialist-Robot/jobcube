@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 1094" width="920" height="1094"
+     role="img" aria-label="The three tiers, the triad's three legs, and the machinery under each">
+  <title>jobcube — what nests under each leg of the triad</title>
+  <defs>
+    <pattern id="ngrid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64,0 L0,0 0,64" fill="none" stroke="#b98cff" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+    <g id="trefoil">
+  <polygon fill="#b98cff" points="32,8.8 51.8,19.5 32,30.3 12.2,19.5"/>
+  <polygon fill="#b98cff" points="10.6,22.1 30.4,32.9 30.4,54.4 10.6,43.6"/>
+  <polygon fill="#b98cff" points="53.4,22.1 33.6,32.9 33.6,54.4 53.4,43.6"/>
+  <circle fill="#3fca7d" cx="32" cy="33.5" r="3.6"/>
+    </g>
+    <g id="silo">
+  <rect fill="#8d85a8" opacity=".28" x="2" y="46" width="60" height="13" rx="2"/>
+  <rect fill="#8d85a8" opacity=".55" x="21" y="34" width="22" height="16" rx="2"/>
+  <path fill="#8d85a8" opacity=".85" d="M19,38 L4,44 L2,38 L18,32 Z"/>
+  <path fill="#8d85a8" opacity=".85" d="M45,38 L60,44 L62,38 L46,32 Z"/>
+  <rect fill="#b98cff" x="26" y="8" width="12" height="34" rx="2.5"/>
+  <path fill="#3fca7d" d="M26,16 L26,10.5 A2.5,2.5 0 0 1 28.5,8 L35.5,8 A2.5,2.5 0 0 1 38,10.5 L38,16 Z"/>
+    </g>
+    <g id="patrol">
+  <rect fill="#8d85a8" opacity=".4" x="4" y="21" width="56" height="2" rx="1"/>
+  <rect fill="#b98cff" x="6" y="41" width="9" height="4.5" rx="2.25"/>
+  <rect fill="#b98cff" x="10" y="36" width="44" height="15" rx="7.5"/>
+  <rect fill="#b98cff" x="26" y="25" width="12" height="12" rx="2"/>
+  <rect fill="#b98cff" x="30.5" y="15" width="3" height="11" rx="1.5"/>
+  <path fill="#3fca7d" d="M28.5,17 L28.5,12.5 A2,2 0 0 1 30.5,10.5 L33.5,10.5 A2,2 0 0 1 35.5,12.5 L35.5,17 Z"/>
+    </g>
+    <g id="bomber">
+  <path fill="#8d85a8" opacity=".22" d="M4,50 C18,42 46,42 60,50 L60,56 L4,56 Z"/>
+  <path fill="#b98cff" d="M32,9 L58,44 L38,39.5 L32,48 L26,39.5 L6,44 Z"/>
+  <rect fill="#3fca7d" x="29" y="14" width="6" height="7" rx="1.5"/>
+    </g>
+  </defs>
+
+  <rect width="920" height="1094" fill="#0b0910"/>
+  <rect width="920" height="1094" fill="url(#ngrid)"/>
+
+  <text x="40" y="52" font-family="Consolas, 'Cascadia Mono', 'JetBrains Mono', monospace"
+        font-size="30" letter-spacing="-0.5" paint-order="stroke fill" stroke-linejoin="round">
+    <tspan fill="#e9e6f5" stroke="#e9e6f5" stroke-width="1.1">job</tspan><tspan fill="#b98cff" stroke="#b98cff" stroke-width="1.1">cube</tspan><tspan
+      font-size="17" letter-spacing="0" fill="#8d85a8" font-family="'Segoe UI',system-ui,sans-serif">   doctrine, and what runs it</tspan>
+  </text>
+
+  <g>
+    <rect x="40" y="84" width="840" height="104" rx="14" fill="#b98cff" fill-opacity=".035"
+          stroke="#8d85a8" stroke-opacity=".28" stroke-dasharray="5 4"/>
+    <text x="68" y="114" font-family="ui-monospace, SFMono-Regular, Consolas, monospace"
+          font-size="13" letter-spacing="1.6" fill="#b98cff">TIER 1 · TARGETING</text>
+    <text x="68" y="136" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
+          font-size="14.5" fill="#8d85a8">Decides what to pursue. Once per role, upstream of all three legs.</text>
+    <rect x="68.0" y="148.0" width="96.0" height="25" rx="12.5" fill="#b98cff" fill-opacity=".085" stroke="#b98cff" stroke-opacity=".22"/><text x="116.0" y="165.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5" fill="#a79fc0">deep-sweep</text>
+    <rect x="174.0" y="148.0" width="155.2" height="25" rx="12.5" fill="#b98cff" fill-opacity=".085" stroke="#b98cff" stroke-opacity=".22"/><text x="251.6" y="165.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5" fill="#a79fc0">build_sweep_viz.py</text>
+    <rect x="339.2" y="148.0" width="140.4" height="25" rx="12.5" fill="#b98cff" fill-opacity=".085" stroke="#b98cff" stroke-opacity=".22"/><text x="409.4" y="165.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5" fill="#a79fc0">open-status gate</text>
+    <rect x="489.6" y="148.0" width="88.6" height="25" rx="12.5" fill="#b98cff" fill-opacity=".085" stroke="#b98cff" stroke-opacity=".22"/><text x="533.9" y="165.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5" fill="#a79fc0">JD-verify</text>
+    <rect x="588.2" y="148.0" width="177.4" height="25" rx="12.5" fill="#b98cff" fill-opacity=".085" stroke="#b98cff" stroke-opacity=".22"/><text x="676.9" y="165.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5" fill="#a79fc0">validate_job_sweep.py</text>
+  </g>
+
+  <g>
+    <rect x="40" y="212" width="840" height="710" rx="14" fill="#b98cff" fill-opacity=".05"
+          stroke="#b98cff" stroke-opacity=".3"/>
+    <text x="68" y="248" font-family="ui-monospace, SFMono-Regular, Consolas, monospace"
+          font-size="13" letter-spacing="1.6" fill="#b98cff">TIER 2 · THE TRIAD</text>
+    <text x="68" y="272" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
+          font-size="14.5" fill="#8d85a8">Three independent routes to a human, so that no single defence stops everything.</text>
+  </g>
+
+  <g stroke="#8d85a8" stroke-width="1.6" stroke-opacity=".5" stroke-linecap="round" fill="none">
+    <path d="M150.3,555.3 C174.6,555.3 174.6,314.0 199.0,314.0"/>
+    <path d="M150.3,555.3 C175.9,555.3 175.9,572.0 201.6,572.0"/>
+    <path d="M150.3,555.3 C175.1,555.3 175.1,780.0 200.0,780.0"/>
+  </g>
+  <use href="#silo" transform="translate(212.20,291.47) scale(0.62)"/>
+  <use href="#patrol" transform="translate(212.48,548.23) scale(0.62)"/>
+  <use href="#bomber" transform="translate(212.20,759.09) scale(0.62)"/>
+  <use href="#trefoil" transform="translate(64.88,512.16) scale(1.35)"/>
+
+  <g>
+    <text x="300.0" y="320.0" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="19" letter-spacing="2.2" fill="#e9e6f5">SILO<tspan font-size="13" letter-spacing="1.4" fill="#b98cff" font-style="italic">   Scripted</tspan></text>
+    <text x="300.0" y="342.0" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="13.5" fill="#8d85a8">Fixed infrastructure, automated up to the firing</text>
+    <text x="300.0" y="361.0" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="13.5" fill="#8d85a8">order. A human still sends.</text>
+    <text x="300.0" y="578.0" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="19" letter-spacing="2.2" fill="#e9e6f5">PATROL<tspan font-size="13" letter-spacing="1.4" fill="#b98cff" font-style="italic">   Paced</tspan></text>
+    <text x="300.0" y="600.0" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="13.5" fill="#8d85a8">Patrols under emission discipline. Contact with a</text>
+    <text x="300.0" y="619.0" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="13.5" fill="#8d85a8">checkpoint means silent for the day, no exceptions.</text>
+    <text x="300.0" y="786.0" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="19" letter-spacing="2.2" fill="#e9e6f5">BOMBER<tspan font-size="13" letter-spacing="1.4" fill="#b98cff" font-style="italic">   Crewed</tspan></text>
+    <text x="300.0" y="808.0" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="13.5" fill="#8d85a8">The leg valued because there is judgment on board. Empty here,</text>
+    <text x="300.0" y="827.0" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="13.5" fill="#8d85a8">because the judgment is asking a person for a favour.</text>
+  </g>
+
+  <g>
+    <path d="M318.0,366.0 L318.0,505.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/>
+    <path d="M318.0,380.0 L336.0,380.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="380.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="384.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">pipeline<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   discover → draft → port → export → file</tspan></text>
+    <path d="M318.0,405.0 L336.0,405.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="405.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="409.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">template_port.py<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   the port primitive, measured against manifest.json</tspan></text>
+    <path d="M318.0,430.0 L336.0,430.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="430.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="434.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">validate_canva_ops.py<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   no live call without a passing op check</tspan></text>
+    <path d="M318.0,455.0 L336.0,455.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="455.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="459.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">verify_port_signoff.py<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   cancel the transaction rather than ship a clipped cover</tspan></text>
+    <path d="M318.0,480.0 L336.0,480.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="480.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="484.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">render_canva_page.py<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   pixels decide; character counts are a drafting heuristic</tspan></text>
+    <path d="M318.0,505.0 L336.0,505.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="505.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="509.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">working/exports/<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   PDFs filed beside the copy that made them</tspan></text>
+    <path d="M318.0,624.0 L318.0,713.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/>
+    <path d="M318.0,638.0 L336.0,638.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="638.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="642.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">linkedin-outreach<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   scope the chain, verify the handle, connect, one message</tspan></text>
+    <path d="M318.0,663.0 L336.0,663.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="663.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="667.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">scope_targets.py<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   the decision chain, before any contact</tspan></text>
+    <path d="M318.0,688.0 L336.0,688.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="688.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="692.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">run_outreach.ps1<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   5 per org per day, 30–60s gaps, hard-stop on a checkpoint</tspan></text>
+    <path d="M318.0,713.0 L336.0,713.0" stroke="#b98cff" stroke-opacity=".38" stroke-width="1.4" fill="none"/><circle cx="338.0" cy="713.0" r="2.6" fill="#3fca7d" fill-opacity=".8"/><text x="348.0" y="717.5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13" fill="#e9e6f5">working/outreach/<tspan font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="12.5" fill="#7d7595">   gitignored — the logs name real people</tspan></text>
+    <text x="348.0" y="852.0" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="13.5" font-style="italic" fill="#6f6885">nothing, on purpose. The row stays on the diagram because</text>
+    <text x="348.0" y="871.0" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="13.5" font-style="italic" fill="#6f6885">dropping it would imply two routes are all there are.</text>
+  </g>
+
+  <g>
+    <rect x="40" y="950.0" width="840" height="104" rx="14" fill="#b98cff" fill-opacity=".035"
+          stroke="#8d85a8" stroke-opacity=".28" stroke-dasharray="5 4"/>
+    <text x="68" y="980.0" font-family="ui-monospace, SFMono-Regular, Consolas, monospace"
+          font-size="13" letter-spacing="1.6" fill="#b98cff">TIER 3 · COMMAND AND CONTROL</text>
+    <text x="68" y="1002.0" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
+          font-size="14.5" fill="#8d85a8">Governs all of it. Not a leg, and not per-role: every gate fails closed.</text>
+    <rect x="68.0" y="1014.0" width="155.2" height="25" rx="12.5" fill="#b98cff" fill-opacity=".085" stroke="#b98cff" stroke-opacity=".22"/><text x="145.6" y="1031.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5" fill="#a79fc0">security_guards.py</text>
+    <rect x="233.2" y="1014.0" width="125.6" height="25" rx="12.5" fill="#b98cff" fill-opacity=".085" stroke="#b98cff" stroke-opacity=".22"/><text x="296.0" y="1031.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5" fill="#a79fc0">lint_skills.py</text>
+    <rect x="368.8" y="1014.0" width="207.0" height="25" rx="12.5" fill="#b98cff" fill-opacity=".085" stroke="#b98cff" stroke-opacity=".22"/><text x="472.3" y="1031.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5" fill="#a79fc0">check_upstream_updates.py</text>
+    <rect x="585.8" y="1014.0" width="125.6" height="25" rx="12.5" fill="#b98cff" fill-opacity=".085" stroke="#b98cff" stroke-opacity=".22"/><text x="648.6" y="1031.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12.5" fill="#a79fc0">the greenlight</text>
+  </g>
+</svg>
