@@ -31,6 +31,8 @@ cell is fresh while sitting on the notes from the last time you searched it.
 > **This is a template.** Fork it and fill in your own profile. Every personal value is a
 > `[BRACKETED]` placeholder — there is no real person's data in here.
 
+[![CI](https://github.com/Existentialist-Robot/jobcube/actions/workflows/ci.yml/badge.svg)](https://github.com/Existentialist-Robot/jobcube/actions/workflows/ci.yml)
+
 ---
 
 ## The escalation ladder
