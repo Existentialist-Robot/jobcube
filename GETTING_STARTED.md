@@ -11,7 +11,7 @@ jobcube turns a coding agent — Claude Code or Codex — into your personal job
 
 The design principle is **one conversation = one sprint** — you open Claude Code, say `/pipeline`, and Claude handles search → evaluate → draft → port → export. You review drafts in your IDE, greenlight, and Claude does the Canva edits and PDF exports. The output is submission-ready PDFs filed in `working/exports/`, a running `job_search_tracker.csv`, and a searchable 3D visualization of your entire pipeline.
 
-The system is built for a specific workflow: a **Canva resume template with multiple resume+cover pairs** (each pair = one application), edited programmatically via the Canva MCP. This is the fastest way to produce polished, consistently formatted applications at volume. If you don't want to use Canva, the repo still works with LaTeX templates (see `cv/` and `cover_letters/` as fallbacks), but the porting automation won't apply.
+The system is built for a specific workflow: a **Canva resume template with multiple resume+cover pairs** (each pair = one application), edited programmatically via the Canva MCP. It produces consistently formatted applications at volume with almost no per-application layout work. If you don't want to use Canva, the repo still works with LaTeX templates (see `cv/` and `cover_letters/` as fallbacks), but the porting automation won't apply.
 
 ---
 
@@ -201,7 +201,7 @@ Claude will:
 1. Ask if you want to review the shortlist before drafting (or pass `--confirm` / `--auto` next time to skip the question)
 2. Search the confirmed-queryable boards in `.claude/skills/pipeline/boards.md` — ~4–6 WebFetch/WebSearch calls per wave
 3. Filter results through a **hiring probability gate** (skills match ≠ hiring probability; roles where there's no realistic path to hire are dropped silently)
-4. Write a sweep doc to `working/active/job_sweep_YYYY-MM-DD.md` **before presenting anything in chat**
+4. Write a sweep doc to `working/active/job_sweep_<YYYY-MM-DD>_<slug>.md` **before presenting anything in chat**
 5. Summarize from the doc, then wait for your input
 
 ### The anti-signal filter
@@ -348,7 +348,7 @@ Claude will read the key files and give you a status brief before doing anything
 
 **Pair assignment confusion.** Keep the roster table in the sprint doc updated — one row per role with its pair number. If two roles accidentally get the same pair, one gets overwritten.
 
-**Chat-only sweep docs.** If Claude only reports the sweep in chat and doesn't write a doc, the results are lost when the session ends. The sweep doc (`working/active/job_sweep_YYYY-MM-DD.md`) must be written to disk before anything is presented in chat. This is a standing rule in `CLAUDE.md` and the skills.
+**Chat-only sweep docs.** If Claude only reports the sweep in chat and doesn't write a doc, the results are lost when the session ends. The sweep doc (`working/active/job_sweep_<YYYY-MM-DD>_<slug>.md`) must be written to disk before anything is presented in chat. This is a standing rule in `CLAUDE.md` and the skills.
 
 ---
 

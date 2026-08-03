@@ -69,7 +69,7 @@ A referral from someone already inside. The leg valued because there is judgment
 **There is nothing here, on purpose.** A referral comes from a relationship you either have
 or you don't, and tooling that claimed to manufacture one would be the exact overclaim this
 document exists to prevent. The leg stays on the diagram because dropping it would imply two
-routes are all there are — and this is the one with the highest conversion rate.
+routes are all there are, and a referral is the one that most often actually works.
 
 ---
 
@@ -121,4 +121,4 @@ The boundary matters as much as the vocabulary.
 
 Two tests, both required. If a capability has no honest counterpart, it does not get one —
 an unnamed mechanism is better than a mechanism wearing a word that promises more than it
-does. Two rows above are deliberately empty for that reason.
+does. That is why the bomber section has no table and local-first has no term.

@@ -10,8 +10,8 @@ every application this repo produces. This file exists so an agent that does not
 
 ## What is portable and what is not
 
-Nothing here pins a model or a vendor. The scripts are stdlib Python and the rules are
-Markdown, so any agent that can read files and run a shell will work; what varies is
+Nothing here pins a model or a vendor. The rules are Markdown and the scripts are Python
+with three dependencies (`requirements.txt`) and stdlib for everything else, so any agent that can read files and run a shell will work; what varies is
 judgment, and the JD-verification and anti-slop passes are the first things to degrade on a
 weaker one.
 

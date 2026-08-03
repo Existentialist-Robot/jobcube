@@ -22,7 +22,7 @@ framework_version: 1.0.0
 role confirmed open → packet drafted → SCOPE → RESOLVE → CONNECT → (accepted) MESSAGE → submit application
 ```
 
-If connections haven't been accepted within ~3–5 days, submit anyway — outreach is a booster, never a blocker.
+If connections haven't been accepted within ~3–5 days, submit anyway — outreach is a booster, never a gate.
 
 ## Tooling
 

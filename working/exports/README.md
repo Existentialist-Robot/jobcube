@@ -35,7 +35,7 @@ working/exports/
 
 ## Rules
 
-- **Month folder:** `YYYY-MM (Mon 'YY)` — e.g. `2025-06 (Jun 'YY)`. Use the export/submission date.
+- **Month folder:** `YYYY-MM (Mon 'YY)` — e.g. `2025-06 (Jun '25)`. Use the export/submission date.
 - **App folder:** `YY-MM-DD - Company - Role` — date-first so folders auto-sort chronologically.
 - **PDF names:** exactly `[YOUR_NAME]_Resume.pdf` and `[YOUR_NAME]_Cover_Letter.pdf` (replace with your actual name in CLAUDE.md).
 - **All file ops use PowerShell** (`Invoke-WebRequest` to download, PowerShell `New-Item`/`Move-Item` for folders) — never Bash `mv` for paths with spaces or parentheses.

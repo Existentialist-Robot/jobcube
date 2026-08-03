@@ -5,7 +5,7 @@ silently changes every future document.
 
 | Template | Copy to | Purpose |
 |----------|---------|---------|
-| [`SWEEP_TEMPLATE.md`](SWEEP_TEMPLATE.md) | `working/active/sweep_<YYYY-MM-DD>.md` | One job-search sweep: shortlist roster, per-role JD verdicts, exclusions |
+| [`SWEEP_TEMPLATE.md`](SWEEP_TEMPLATE.md) | `working/active/job_sweep_<YYYY-MM-DD>_<slug>.md` | One job-search sweep: shortlist roster, per-role JD verdicts, exclusions |
 | [`PACKET_TEMPLATE.md`](PACKET_TEMPLATE.md) | `working/exports/<YYYY-MM (Mon 'YY)>/<YY-MM-DD - Company - Role>/copy/packet_<slug>_<YYYY-MM-DD>.md` | One application: roster row, measured copy per box, cover body, pre/post-port checklists |
 | [`OUTREACH_LOG_TEMPLATE.md`](OUTREACH_LOG_TEMPLATE.md) | `working/outreach/<YYYY-MM-DD> - <Org> - <Role>/outreach_log.md` | LinkedIn outreach for one role: decision chain, exact commands, action log |
 

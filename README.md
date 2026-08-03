@@ -83,10 +83,9 @@ Here is what each leg actually corresponds to in the repo, including where it do
 Full vocabulary, and where each capability sits: [`DOCTRINE.md`](DOCTRINE.md).
 
 The third row is not an oversight. A referral is produced by a relationship you either have
-or don't, and tooling that claimed to generate one would be the precise species of overclaim
-this repo exists to avoid. It stays on the diagram because leaving it off would suggest two
-routes are all there are, and the one with no software behind it has the highest conversion
-rate of the three.
+or don't, and tooling that claimed to generate one would be the kind of overclaim this repo
+exists to avoid. It stays on the diagram because leaving it off would suggest two routes are
+all there are, and a referral is the one that most often actually works.
 
 The mark is the same diagram at lower resolution: an isometric cube's three faces radiate at
 120°, which is exactly where the three legs sit.
@@ -225,6 +224,7 @@ AGENTS.md              Entry point for Codex; points back at CLAUDE.md
 GETTING_STARTED.md     The full walkthrough
 HANDOFF.md             Sprint state, carried between sessions
 documents/             Your private inputs (contents gitignored)
+job_scraper/           seen_jobs.json — the dedup ledger, created on first sweep, gitignored
 cv/ cover_letters/     LaTeX fallback, placeholder-tokenized
 working/
   templates/           Copy these: sweep, packet, outreach log

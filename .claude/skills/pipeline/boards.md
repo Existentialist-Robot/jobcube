@@ -2,7 +2,7 @@
 
 All boards below have been verified as returning plain HTML — no JS rendering, no headless browser required. Queryable via WebFetch directly.
 
-**Last verified: 2025.** Treat that date as an expiry, not a guarantee — boards add bot protection, move behind JS, and change URL patterns without notice. Re-verify a board the first time a sweep gets nothing from it, and move it to Known Failures rather than retrying it every sweep.
+**Last verified: 2025 (no month recorded — treat as unverified).** Treat that date as an expiry, not a guarantee — boards add bot protection, move behind JS, and change URL patterns without notice. Re-verify a board the first time a sweep gets nothing from it, and move it to Known Failures rather than retrying it every sweep.
 
 This file is the hand-maintained, human-readable list. Its machine-readable twin is [`sources.json`](sources.json), which holds the API keys' status, per-source trust levels, and the ATS endpoint patterns. Keep the two in step.
 

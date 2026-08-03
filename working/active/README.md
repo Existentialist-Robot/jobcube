@@ -4,7 +4,7 @@ Live work only — the things you are looking at right now:
 
 | What | Where it comes from |
 |---|---|
-| `sweep_<YYYY-MM-DD>.md` | one current sweep, from [`../templates/SWEEP_TEMPLATE.md`](../templates/SWEEP_TEMPLATE.md) |
+| `job_sweep_<YYYY-MM-DD>_<slug>.md` | one current sweep, from [`../templates/SWEEP_TEMPLATE.md`](../templates/SWEEP_TEMPLATE.md) |
 | `job_search_viz.html` | generated — `python working/scripts/viz/build_job_viz_three.py` |
 | `search_focus.json` | written by the pipeline skill from the viz's "Copy Focus" button |
 | the current interview prep doc | drafted per interview |

@@ -65,7 +65,7 @@ For each promising result from Step 1:
 - **Verify it is still open** — check for "application period has closed" message. Discard if closed.
 - Skip if already in `seen_jobs.json` or `job_search_tracker.csv`
 
-Run fetches in parallel where possible (up to 7 at a time).
+Batch fetches, but stay inside the sweep budget: ~4–6 calls per wave (CLAUDE.md → Search Execution).
 
 ### Step 3: Hiring Probability Assessment
 
@@ -109,7 +109,7 @@ Add all fetched jobs to `seen_jobs.json`:
 
 ### Step 5: Draft sweep to disk, THEN present
 
-**MANDATORY — write the sweep to `working/active/job_sweep_{YYYY-MM-DD}.md` FIRST, before presenting in chat.** A chat-only shortlist is lost when the session ends. Write the doc, then summarize from it.
+**MANDATORY — write the sweep to `working/active/job_sweep_{YYYY-MM-DD}_{slug}.md` FIRST, before presenting in chat.** A chat-only shortlist is lost when the session ends. Write the doc, then summarize from it.
 
 Doc structure — use the **canonical sweep format** (full template in `.claude/skills/pipeline/SKILL.md` → Step 3). Key table:
 
@@ -148,6 +148,6 @@ If user decides to apply, add a row to `job_search_tracker.csv`.
 1. **Never fabricate postings.** Only present jobs found and verified via WebSearch/WebFetch.
 2. **Verify open status.** Fetch every posting before including it. Discard anything showing "application period has closed."
 3. **Minimum low-medium probability.** Do not list roles where there is no realistic path to hire.
-4. **Parallel fetches.** Run up to 7 WebFetch calls simultaneously to stay efficient.
-5. **Only open positions.** Skip expired deadlines. Flag roles closing within 48 hours as urgent.
+4. **Batched fetches.** Keep each wave to ~4–6 calls. More coverage means another small sweep, not a bigger one.
+5. **Only open positions.** Skip expired deadlines. Flag roles closing within 3 days as urgent (`⚠️ URGENT`), matching the sweep-doc column rules.
 6. **Respect deduplication.** Always check seen_jobs.json AND job_search_tracker.csv.
