@@ -211,7 +211,7 @@ def social() -> str:
   <!-- Same triad geometry as triad.svg, scaled. Component names rather than the
        icon nicknames: a shared link has no table to explain silo/boomer/bomber. -->
   <g transform="translate(800,112) scale(1.18)">
-{triad_group(label_size=13).replace("SILO", "PORTAL").replace("BOOMER", "OUTREACH").replace("BOMBER", "WARM INTRO")}
+{triad_group(label_size=13).replace("SILO", "COLD APPLY").replace("BOOMER", "OUTREACH").replace("BOMBER", "REFERRAL")}
   </g>
 </svg>
 """

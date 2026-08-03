@@ -60,14 +60,29 @@ confidently doing the wrong thing at volume. Trust, but verify. Mostly verify.
 <img src="assets/triad.svg" alt="The three delivery legs: silo, boomer, bomber" width="420" />
 
 One delivery route can be defended against; three can't. An application reaches a human by
-exactly three paths, and the pipeline treats them as separate legs because they fail
-separately:
+exactly three paths, and they fail separately — an ATS can black-hole you without touching
+your outreach, and a hiring manager who ignores a connection request may still take a
+referral.
 
-| | Leg | Route | Character |
-|---|---|---|---|
-| <img src="assets/icon-silo.svg" alt="" width="30" /> | **Silo** | Portal submission | Fixed address, hardened, everyone knows where it is. Still works. |
-| <img src="assets/icon-boomer.svg" alt="" width="30" /> | **Boomer** | LinkedIn outreach | Quiet, mobile, surfaces once. Rate-limited on purpose. |
-| <img src="assets/icon-bomber.svg" alt="" width="30" /> | **Bomber** | Warm intro | Slow, visible, and the only leg you can recall after launch. |
+**Targeting and delivery are halves of one doctrine, not two ideas.** The grid decides
+which roles are worth an evening. The triad decides how the application reaches a person.
+Neither is worth much alone: a flawless target list you can only mail into an ATS is a
+single route, and three routes to a role that closed in March is three wasted evenings.
+The visualization belongs to the targeting half — it is not one of the legs below.
+
+Here is what each leg actually corresponds to in the repo, including where it doesn't:
+
+| | Leg | Route | What runs it | Covered? |
+|---|---|---|---|---|
+| <img src="assets/icon-silo.svg" alt="" width="30" /> | **Silo** | Cold application through the employer's own portal | `pipeline` skill, `template/` port primitive, `utils/` render-verify, `working/exports/` | Everything up to the send. **You paste and click.** |
+| <img src="assets/icon-boomer.svg" alt="" width="30" /> | **Boomer** | LinkedIn outreach before you apply | [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md), `scripts/outreach/`, `working/outreach/` | Scoping, handle verification, logging, pacing. **You run the live commands.** |
+| <img src="assets/icon-bomber.svg" alt="" width="30" /> | **Bomber** | A referral from someone already inside | — | **Nothing. This leg is yours.** |
+
+The third row is not an oversight. A referral is produced by a relationship you either have
+or don't, and tooling that claimed to generate one would be the precise species of overclaim
+this repo exists to avoid. It stays on the diagram because leaving it off would suggest two
+routes are all there are, and the one with no software behind it has the highest conversion
+rate of the three.
 
 The mark is the same diagram at lower resolution: an isometric cube's three faces radiate at
 120°, which is exactly where the three legs sit.
