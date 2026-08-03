@@ -39,10 +39,19 @@ yourself is circular, and it is the single easiest way to walk into a room confi
 2. **Band** — `python -B working/scripts/floorprice/band.py --role "<substring>" [--location XX]`.
    Reports floor, midpoint, ceiling and the postings underneath. If it refuses, widen the
    filter or run more sweeps.
-3. **Normalize the offer** — salary is one term. Work out the annual value of the pension or
-   RRSP match, vacation days above the statutory minimum, hybrid days, and any professional
-   development budget. A defined-benefit pension is routinely worth more than the salary gap
-   people leave a job over.
+3. **Normalize the offer** — `cp offer.example.json <org>.offer.json`, fill in what you were
+   actually told, then `python -B working/scripts/floorprice/offer.py <org>.offer.json`. Pass
+   two files to compare them. Salary is one term: the tool prices the employer's pension
+   contribution, vacation above the statutory minimum, the health premium and any PD budget,
+   and reports a guaranteed annual figure separately from an at-target one.
+
+   **Leave a field out rather than guessing it.** Anything missing is reported `UNPRICED`,
+   which is the state that prompts you to go and ask. A guessed field silently becomes part of
+   a total you then rely on in a conversation. Equity is never priced — a private share count
+   times a number somebody said on a call is not a figure.
+
+   Expect the base salary and the guaranteed value to disagree about which of two offers is
+   better. That is the ordinary case, and it is the reason to run this before you answer.
 4. **Rehearse** before the call. Have ready: the number, the two postings you would cite if
    pushed, and what you say when asked for your expectations first.
 
@@ -65,3 +74,7 @@ It knows only the postings you have seen, so it is biased toward the roles you a
 for and the employers who publish ranges at all. It cannot tell you what an individual is paid,
 and it cannot price equity. Treat the band as the floor of what is defensible, not the ceiling
 of what is possible.
+
+`--role` is a plain substring match, so it will miss what the posting abbreviated. The shipped
+example data says `Dir, Economic Development`, and `--role director` finds nothing at all. Try
+the abbreviation, or a shorter fragment, before concluding you have no data.

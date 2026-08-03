@@ -80,6 +80,19 @@ jobs:
           test -s working/active/job_search_viz.html
       - name: Visualization passes its structural checks
         run: python -B working/scripts/utils/check_viz_three.py
+      - name: floorprice collects from the example dataset
+        run: |
+          python -B working/scripts/floorprice/collect.py
+          test -s working/scripts/floorprice/observations.json
+      - name: floorprice refuses a band on thin data
+        run: |
+          # The refusal is the load-bearing behaviour: a filter matching nothing
+          # must exit 1 rather than reporting a band over an empty sample.
+          if python -B working/scripts/floorprice/band.py --role zzz-no-such-role; then
+            echo "band.py reported a band with no observations behind it"; exit 1
+          fi
+      - name: floorprice prices the example offer
+        run: python -B working/scripts/floorprice/offer.py working/scripts/floorprice/offer.example.json
       - name: Run tests when present
         run: |
           if [ -d tests ]; then

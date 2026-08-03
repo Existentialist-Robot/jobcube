@@ -48,6 +48,10 @@ working/active/vendor/
 # set of them maps exactly which roles and employers you are targeting.
 working/scripts/floorprice/observations.json
 
+# An offer file is a named employer's confidential numbers, usually given to you
+# verbally and not yet accepted. offer.example.json is the format and is tracked.
+*.offer.json
+
 # Outreach logs name real third-party people (hiring managers, panellists).
 # Keep the folder structure; never commit the logs themselves.
 working/outreach/**
