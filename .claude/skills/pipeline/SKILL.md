@@ -180,9 +180,12 @@ Process **one role at a time** — never draft or port multiple roles simultaneo
 
 ### 6b. Review
 
-Run review agents from `working/scripts/REVIEW_AGENTS.md`:
+Run review agents from `working/scripts/review-agent-library.json` (personas also documented in `working/scripts/REVIEW_AGENTS.md`):
 - For 5-star: run 3 agents (Hiring Manager + Screener + Holistic)
 - For 4-star or below: run 2 agents (Hiring Manager + Screener)
+- **Every cover draft, regardless of rating:** Anti-AI-Slop Reviewer
+
+Pick agents by tag overlap and **state the match score before running one**: reuse needs ≥8.5/10, or ≥9.0/10 for a 5-star application. Below threshold, clone the closest agent into a new specialized entry rather than running a bad match. Append each outcome to that agent's `used_for`.
 
 Incorporate fixes before porting.
 

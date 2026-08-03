@@ -205,7 +205,9 @@ Layout changed later? `build-manifest ... --name v2` registers the new variant; 
 
 **Files under `working/scripts/builders/` are historical examples and must not be cloned for new packets.** They are kept only as evidence of how the layout was originally derived.
 
-**Review agents:** reusable interviewer/reviewer personas (hiring manager, recruiter, peer, holistic copy reviewer, anti-AI-slop reviewer) live in [`working/scripts/REVIEW_AGENTS.md`](working/scripts/REVIEW_AGENTS.md). **Run them on drafts BEFORE porting** (standing rule) — reuse the persona templates verbatim; don't re-write them. Keep a historical review log there; recurring lessons let you pre-empt common flags and save a review cycle.
+**Review agents:** reusable interviewer/reviewer personas (hiring manager, recruiter, peer, holistic copy reviewer, anti-AI-slop reviewer) ship as a seeded library in two synced views — [`working/scripts/review-agent-library.json`](working/scripts/review-agent-library.json) (machine-readable: `{SLOT}` templates, tags, reuse thresholds) and [`working/scripts/REVIEW_AGENTS.md`](working/scripts/REVIEW_AGENTS.md) (human-readable reference + your review log). **Run them on drafts BEFORE porting** (standing rule) — reuse the persona templates verbatim; don't re-write them.
+
+Pick an agent by tag overlap and **state the match score before running it**: ≥8.5/10 to reuse, ≥9.0/10 for a 5-star application. Below threshold, clone the closest agent into a new specialized variant (`public-sector-hiring-manager-v1` is the worked example of that shape) rather than running a bad match. Append every outcome to the agent's `used_for`, and keep recurring lessons in the markdown — they let you pre-empt common flags and save a review cycle.
 
 ### Length-match method (how to hit bounds first try)
 1. `start-editing-transaction` and save the snapshot. `template_port.py` parses it tolerantly (the response is truncated near ~100 KB) into per-box `element_id`, width/height, run count, current text and char length.

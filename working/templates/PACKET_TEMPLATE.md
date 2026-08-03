@@ -89,7 +89,8 @@ Characters: [n]
 - [ ] Every claim traceable to `CLAUDE.md`; nothing fabricated
 - [ ] Banned words/phrases scan clean (see `CLAUDE.md` → Never-Use Words & Phrases)
 - [ ] Anti-AI-slop pass run on the cover
-- [ ] Reviewer personas run on the draft (`working/scripts/REVIEW_AGENTS.md`)
+- [ ] Reviewer agents run on the draft (`working/scripts/review-agent-library.json`), match score stated per agent
+- [ ] Anti-AI-Slop Reviewer run on the cover (mandatory, every draft)
 - [ ] Every box ≤ its manifest cap, and ≥ ~95% of capacity
 - [ ] Cover body ends with the sign-off
 - [ ] `template_port.py port` prints `CLEAN-MAP CHECK: PASS`

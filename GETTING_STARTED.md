@@ -384,7 +384,8 @@ jobcube/
 │   │   └── packets/            # intermediate multi-app drafts
 │   └── scripts/
 │       ├── PORTING_RECIPE.md   # step-by-step Canva porting guide
-│       ├── REVIEW_AGENTS.md    # reviewer persona templates + log
+│       ├── REVIEW_AGENTS.md    # reviewer persona reference + your review log
+│       ├── review-agent-library.json  # same personas, machine-readable + reuse thresholds
 │       ├── template/           # template_port.py + manifest.json (the port primitive)
 │       ├── utils/              # render, verify sign-off, measure gap, audits
 │       ├── viz/                # visualization generators

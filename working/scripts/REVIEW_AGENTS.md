@@ -2,7 +2,29 @@
 
 **Standing rule:** Run review agents on DRAFTS before porting to Canva — never after. Port-then-re-port wastes a full porting session.
 
-Run at minimum 2 agents per application (Hiring Manager + Recruiter Screener). Run 3 for high-stakes roles (add Holistic Copy Reviewer). Reuse these persona templates verbatim — don't rewrite them.
+Run at minimum 2 agents per application (Hiring Manager + Recruiter Screener). Run 3 for high-stakes roles (add Holistic Copy Reviewer). The **Anti-AI-Slop Reviewer runs on every cover draft** — that one is mandatory, not discretionary. Reuse these persona templates verbatim — don't rewrite them.
+
+## Two views of the same library
+
+| File | What it is | Use it when |
+|------|-----------|-------------|
+| `REVIEW_AGENTS.md` (this file) | Human-readable persona reference + your review log | Reading, or running an agent by hand |
+| [`review-agent-library.json`](review-agent-library.json) | Machine-readable seed library: the same personas with `{SLOT}` templates, tags, and reuse thresholds | Claude picks an agent, or you add a specialized variant |
+
+**Keep them in sync.** If you add a persona here, add it there — and vice versa.
+
+### How reuse works (the JSON's job)
+
+Writing a fresh reviewer for every application is waste; reusing a badly-matched one is worse than not reviewing. The library resolves that with **tag matching against a threshold**:
+
+1. Pick the agent whose `tags` best match the role.
+2. Score the tag overlap out of 10 and **state the score before running.**
+3. Clears the agent's `reuse_threshold` (8.5 standard, **9.0 for a 5-star application**)? Fill the slots and run. Doesn't clear? Clone the closest agent into a new specialized entry.
+4. Append the outcome to that agent's `used_for` — the library learns what each agent is actually good at.
+
+`public-sector-hiring-manager-v1` ships as a worked example of a **specialization**: narrower tags, threshold raised to 9.0, sector-specific gates baked into the prompt. Clone that shape for any sector with its own screening culture.
+
+Every seed agent has an empty `used_for` on purpose — that array is your review history, not shipped data.
 
 ---
 
