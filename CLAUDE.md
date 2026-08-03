@@ -160,7 +160,7 @@ Boxes are **absolutely positioned**, so the *only* layout failure mode is **over
 - **Multi-run boxes** (run count > 1: work-experience entries = bold title/org line + bullets): **never whole-replace** — it flattens the bold title and is what previously **italicized the first bullet**. Keep the title/org lines **byte-identical** and use **per-line `find_and_replace_text`** for each changed bullet only.
 - **Never** emit a `format_text` op with `font_style: italic` (or any restyle) unless explicitly restoring a known prior style. Font *family* changes aren't supported by the API anyway — preserve, don't set.
 - **All multi-run boxes, including covers, fail closed.** Never assume a multi-run cover is body-uniform. Each replacement must target one complete, unique snapshot run, and the run replacements must reconstruct the intended final text exactly. `template_port.py` enforces this and refuses to emit a whole-box `replace_text` for any box with more than one run.
-- **Cover letters MUST fill a full page (standing rule).** The cover box holds ~3,200–3,400 characters when full. A cover at ~1,800–2,600 reads as light/under-filled and looks weak on the page. **Always draft/expand covers to ~3,200–3,400 chars of substantive content** (concrete examples, a "how I'd approach the role" paragraph, a second proof point) — never filler, never overflow past the page. This applies to every future packet.
+- **Cover letters MUST fill a full page (standing rule).** The band is **3,050–3,387 characters**, and it is not prose: it is `cover_char_band` in [`port_config.json`](working/scripts/template/port_config.json), which `template_port.py` enforces. Recalibrate it there against your own box, and every doc that quotes a number should quote that one. A cover at ~1,800–2,600 reads as under-filled and looks weak on the page. **Draft to the top of the band with substantive content** — concrete examples, a paragraph on how you would approach the role, a second proof point. Never filler, never past the page.
 - **Export & filing:** export each application as **separate résumé + cover PDFs**, `export-design` (PDF, `size:letter`, `export_quality:pro`, `pages:[N]` per page). Pro is tiny for text pages (≤~115 KB) → always pro; `pages` skips hidden/stale pages. **File them as** `working/exports/<YYYY-MM (Mon 'YY)>/<YY-MM-DD - Company - Role>/[YOUR_NAME]_Resume.pdf` (+ `_Cover_Letter.pdf`) — monthly folders only, date-first app folders for autosort. Full convention in [`working/scripts/PORTING_RECIPE.md`](working/scripts/PORTING_RECIPE.md).
 - **Known template artifact — italic first bullet:** in each work-experience box the **first bullet is baked italic** (it shows up as its *own run*, separate from bullets 2-n). `find_and_replace_text` *preserves* that italic, so it survives porting. **Fix it as a standard step:** apply `format_text` with **only** `{"font_style": "normal"}` to each work-experience element. This clears italic element-wide **without** touching the bold title, because it only sets the italic attribute (weight per-run is preserved). Verify from the response: the title must remain its **own leading run** (bold intact) and the bullets should **merge into one run** (italic gone). `format_text` is allowed because this is a fixed-page (non-responsive) design.
 - **Run boundaries reveal hidden styling** even though the API doesn't expose style values: a sub-phrase that sits in its *own* `regions` entry has a distinct style (bold/italic) from its neighbours. Use run boundaries to locate styled spans before/after editing.
@@ -229,7 +229,7 @@ Layout changed later? `build-manifest ... --name v2` registers the new variant; 
 | skill desc 2 | ≤ ~180 chars | |
 | skill desc 3 | ≤ ~175 chars | |
 | skill desc 4 | ≤ ~210 chars | |
-| cover letter | ~3,050–3,300 chars (cap ~3,400) | fill 70–80% of the page |
+| cover letter | 3,050–3,387 chars | from `port_config.json`; fills the page |
 
 **Per-bullet rule:** matching the *box total* to ceiling is **not sufficient** — a single over-long bullet wraps to an extra line and overflows even when the box total is under. Match each bullet to its known-good equivalent length, not just the box total.
 
@@ -341,5 +341,5 @@ After creating or updating a CV or cover letter, re-read the generated content a
 - [ ] No spelling or grammar errors
 - [ ] Agentic coding / AI tooling references name the specific tool (Claude Code, Codex, …), not just "AI"
 - [ ] Cover letter is addressed to the correct person (or "Dear Hiring Manager" if unknown)
-- [ ] Cover letter fills approximately one page (~3,050–3,300 chars in Canva template)
+- [ ] Cover letter fills the page (3,050–3,387 chars, the band in `port_config.json`)
 - [ ] All box lengths are within calibrated targets (see table above)

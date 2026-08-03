@@ -65,7 +65,7 @@
 
 ## Cover letter body
 
-> **Must fill a full page** — target the proven character band for your cover box (roughly 3,050–3,400
+> **Must fill a full page** — target the proven character band for your cover box (3,050–3,387
 > in the reference layout). Substance, never filler: concrete examples, a how-I'd-approach-the-role
 > paragraph, a second proof point.
 >

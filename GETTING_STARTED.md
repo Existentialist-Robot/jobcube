@@ -21,7 +21,7 @@ Before you start:
 
 1. **A coding agent** — [Claude Code](https://claude.ai/code) (`claude` CLI) or [Codex](https://openai.com/codex). The scripts and gates run under either; only the slash-command layer is Claude Code-specific. Codex users start from [`AGENTS.md`](AGENTS.md).
 2. **Canva account** with the MCP connector enabled in your agent's settings (this is what lets the agent edit your design without a browser)
-3. **Python 3.11+** for the helper scripts (`pip install plotly` for the viz)
+3. **Python 3.11+** for the helper scripts — `pip install -r requirements.txt`. That is `pymupdf` (required: the render-verify loop rasterizes exported PDFs), `plotly` (only for the legacy renderer) and `pyyaml` (optional; the linter has a fallback). Skip this entirely if you use the container.
 4. **Node.js** (optional — only needed if you use the `working/scripts/utils/check_viz_full.py` / `check_viz_three.py` syntax checkers)
 5. **GitHub account** (the repo tracks your applications via git)
 6. **Optional: Adzuna API key** — structured Canadian job listings with salary data. Free tier. Register at [developer.adzuna.com](https://developer.adzuna.com). The pipeline can call it as an MCP tool for significantly better search coverage than HTML scraping.
@@ -103,7 +103,7 @@ The porting workflow requires your resume to use **absolutely-positioned text bo
 - **skills boxes** — 4 skill labels with description paragraphs
 - **cover letter box** — the large text area on the cover page
 
-Claude identifies boxes by matching their current text content (not by position), so after you set up the baseline, it can find the right box on any duplicated pair.
+Boxes are identified by **position**, not by their current text. Element IDs regenerate on every duplicated page, but the geometry does not, so `manifest.json` keys each slot by where it sits and pages match a variant by position fingerprint. That is why duplicating the pair is enough setup: the copy in the boxes can change freely and the slot map still resolves.
 
 ### Getting the design ID and shortlink
 
@@ -134,21 +134,31 @@ The `.env` file is gitignored. Never commit it.
 
 ## Step 4 — Build your first viz
 
-The job search visualizer is a self-contained HTML file that shows your entire pipeline in 3D.
+The visualizer plots your whole pipeline in a 3D coordinate space and doubles as the record of where you have already searched.
 
 ```bash
-python working/scripts/viz/build_job_viz.py
+python -B tools/serve.py          # rebuilds, then serves at http://localhost:8000
 ```
 
-This generates `working/active/job_search_viz.html`. Open it in any browser — no server needed.
+Or in a container, if you would rather not set up Python locally:
+
+```bash
+docker compose up                 # same thing, same address
+```
+
+Either way it regenerates `working/active/job_search_viz.html` and serves it with caching off, so a refresh always shows the current build. **Don't open the file directly** — that was the old workflow, and it gives you no way to tell whether what you are looking at is stale. `build_job_viz_three.py` is the builder; `build_job_viz.py` now delegates to it and only renders the legacy Plotly version under `JOB_VIZ_LEGACY=1`.
 
 ### What the three axes mean
 
-- **X = Public-sector proximity** (1 = startup, 5 = core government/APS)
-- **Y = Innovation focus** (1 = operations/compliance, 5 = ecosystem/R&D)
-- **Z = Seniority** (1 = specialist/individual contributor, 5 = branch-head/VP)
+The shipped defaults describe one particular search:
 
-Every job in your pipeline is a dot. You plot it based on how the role actually sits in that 3D space, not just its job title. This makes it easy to see where your search is concentrated, where you have blind spots, and how to talk about your positioning.
+- **X = employer type** (1 = startup, 5 = government)
+- **Y = kind of work** (1 = operations/compliance, 5 = ecosystem/R&D)
+- **Z = seniority** (1 = specialist, 5 = VP/C-suite)
+
+**Rename them.** They are `AXES` in `working/scripts/viz/build_sweep_viz.py`, and your search may vary along entirely different dimensions — industry, company stage, geography, IC versus management. `/setup` asks you about this.
+
+Every role is a dot, placed by where it actually sits rather than by its title. What that buys you is visible blind spots: `build_sweep_viz.py` also records which cells you have swept, so the map shows where you have not looked. `deep sweep` searches exactly the cells flagged `new=True`, which is what stops a search quietly re-mining one seam for a month.
 
 ### Adding your own jobs
 

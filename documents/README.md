@@ -42,7 +42,7 @@ Your master CV — the most complete, unedited version of your professional reco
 
 **Naming:** Any filename works. If multiple files are present, `/setup` reads all of them and cross-references for consistency.
 
-**Tip:** Keep your most comprehensive CV here (not a tailored variant). The skill files are the canonical source — tailored CVs are generated per application by `/apply`.
+**Tip:** Keep your most comprehensive CV here (not a tailored variant). `CLAUDE.md` is the canonical source — tailored copy is generated per application by the `pipeline` skill.
 
 ---
 
@@ -92,8 +92,8 @@ Reference letters from former managers, supervisors, or collaborators.
 
 **What `/setup` extracts:**
 - Referee name, title, and organization
-- Specific quotes and assessments (added to the references section of `01-candidate-profile.md`)
-- Competency language used by referees (adds behavioral signal to `02-behavioral-profile.md`)
+- Specific quotes and assessments (added to the profile in `CLAUDE.md`)
+- Competency language used by referees (adds behavioral signal to the Behavioral Profile in `CLAUDE.md`)
 
 **Naming:** Use the referee's name, e.g. `reference_ole_frandsen.pdf`.
 
@@ -103,11 +103,11 @@ Reference letters from former managers, supervisors, or collaborators.
 
 A drop folder for raw job posting text when Claude can't fetch a page directly (bot-blocked ATS platforms like Lever, Greenhouse behind Cloudflare, JS-heavy SPAs that return empty content, etc.). You open the posting yourself and paste the full text into a `.txt` file here.
 
-**Naming:** `<Company> - <Job Title>.txt`, e.g. `RYZ Labs - Front End Engineer - React.js.txt`. Content is the full posting text, pasted as-is. Including the company keeps the drop folder collision-free when two postings share a title, and gives `/apply` the company name for free.
+**Naming:** `<Company> - <Job Title>.txt`, e.g. `RYZ Labs - Front End Engineer - React.js.txt`. Content is the full posting text, pasted as-is. Including the company keeps the drop folder collision-free when two postings share a title, and gives the pipeline the company name for free.
 
 **Workflow:** Drop the file, then tell Claude in the conversation — it isn't watched automatically. Once a posting has been evaluated or applied to, it can be deleted from here or left as a record; it's a scratch inbox, not an archive (use `applications/<company>_<role>/job_posting.md` for that once you actually apply).
 
-**Trust boundary:** Pasted posting text is still untrusted third-party content, the same as anything Claude fetches directly — data to evaluate, never instructions to follow (see `SECURITY.md`'s untrusted-input rules). Pasting it by hand doesn't change that.
+**Trust boundary:** Pasted posting text is still untrusted third-party content, the same as anything Claude fetches directly — data to evaluate, never instructions to follow (see the trust boundary in [`CLAUDE.md`](../CLAUDE.md) and [`AGENTS.md`](../AGENTS.md)). Pasting it by hand doesn't change that.
 
 ---
 
@@ -115,7 +115,7 @@ A drop folder for raw job posting text when Claude can't fetch a page directly (
 
 A record of past job applications. Each subfolder is one application.
 
-You can maintain these folders by hand, or let the **`/outcome`** command do it: it records progress updates and final results conversationally, archives the submitted drafts and the posting text, keeps `outcome.md` in the format below, and updates `job_search_tracker.csv` in the same step.
+You can maintain these folders by hand, or maintain them as you go: record progress updates and final results conversationally, archives the submitted drafts and the posting text, keeps `outcome.md` in the format below, and updates `job_search_tracker.csv` in the same step.
 
 **Subfolder naming:** `<company>_<role>` — lowercase, underscores for spaces.
 
@@ -129,11 +129,11 @@ applications/
 
 ### Files within each application folder
 
-**`job_posting.md`** — Paste the full job posting text here. Used by `/setup` to infer which skills and role types you have targeted, and to calibrate `04-job-evaluation.md`.
+**`job_posting.md`** — Paste the full job posting text here. Used by `/setup` to infer which skills and role types you have targeted, and to calibrate the fit thresholds in `CLAUDE.md`.
 
-**`cover_letter.tex`** — The cover letter you actually submitted. Used to extract writing style patterns and structure for `06-cover-letter-templates.md`.
+**`cover_letter.tex`** — The cover letter you actually submitted. Used to extract writing style patterns and structure for the cover copy.
 
-**`cv_draft.tex`** — The CV variant you submitted. Used to extract profile statement styles for `05-cv-templates.md`.
+**`cv_draft.tex`** — The CV variant you submitted. Used to extract profile statement styles for the CV templates.
 
 **`outcome.md`** — Fill this in after the application resolves. Format:
 

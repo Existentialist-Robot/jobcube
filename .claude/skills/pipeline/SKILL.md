@@ -176,7 +176,7 @@ Process **one role at a time** — never draft or port multiple roles simultaneo
    `working/exports/{YYYY-MM (Mon 'YY)}/{YY-MM-DD - Company - Role}/copy/packet_{slug}_{date}.md`
    - Packets are NOT written to `working/active/`
    - Use calibrated box targets from `CLAUDE.md`
-   - Cover letter: ~3,050–3,300 chars (cap ~3,400)
+   - Cover letter: 3,050–3,387 chars (the band in `port_config.json`)
 
 ### 6b. Review
 
