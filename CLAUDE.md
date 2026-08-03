@@ -105,6 +105,7 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 - `CLAUDE.md` (this file) — your profile and the rules Claude must follow
 - [`HANDOFF.md`](HANDOFF.md) — current sprint state, carried between sessions
 - [`AGENTS.md`](AGENTS.md) — entry point for agents that don't read this file by convention (Codex). Points back here; lists what's portable and what's Claude Code-only
+- [`DOCTRINE.md`](DOCTRINE.md) — the vocabulary for this repo's own machinery, and which tier every capability sits in
 
 ### Your private inputs
 - `documents/` — **drop your real files here; contents are gitignored.** Subfolders: `cv/`, `linkedin/`, `diplomas/`, `references/`, `postings/`, `applications/`. The folder structure is tracked so the layout survives a clone; the files you put in it never get committed. See [`documents/README.md`](documents/README.md).

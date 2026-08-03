@@ -5,7 +5,7 @@ description: >
   their boss, adjacent leads), resolve LinkedIn handles, send connection requests, and message
   once connected — all BEFORE the application is submitted.
   Triggers on: outreach, hiring manager, decision chain, connection request, LinkedIn scoping,
-  "who would I report to", warm intro, linkedin-cli.
+  "who would I report to", warm intro, referral, linkedin-cli.
 allowed-tools: Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Bash, PowerShell
 framework_version: 1.0.0
 ---

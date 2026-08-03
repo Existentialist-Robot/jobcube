@@ -45,14 +45,14 @@ SILO = f"""\
   <rect fill="{VIOLET}" x="26" y="8" width="12" height="34" rx="2.5"/>
   <path fill="{GREEN}" d="M26,16 L26,10.5 A2.5,2.5 0 0 1 28.5,8 L35.5,8 A2.5,2.5 0 0 1 38,10.5 L38,16 Z"/>"""
 
-# ── boomer ──────────────────────────────────────────────────────────────────
+# ── patrol ──────────────────────────────────────────────────────────────────
 # Three passes to get here. A wide flat ellipse with a thin stalk read as a
 # frying pan; adding a tinted body of water behind it then read as an aquarium,
 # because a faint filled rectangle is a box before it is anything else. So: the
 # waterline is a single rule and nothing else, the hull is submerged beneath it
 # with only the mast breaking through, and the stern plane is small enough to
 # read as a fin rather than a blunt nose.
-BOOMER = f"""\
+PATROL = f"""\
   <rect fill="{DIM}" opacity=".4" x="4" y="21" width="56" height="2" rx="1"/>
   <rect fill="{VIOLET}" x="6" y="41" width="9" height="4.5" rx="2.25"/>
   <rect fill="{VIOLET}" x="10" y="36" width="44" height="15" rx="7.5"/>
@@ -67,9 +67,9 @@ BOMBER = f"""\
   <rect fill="{GREEN}" x="29" y="14" width="6" height="7" rx="1.5"/>"""
 
 LEGS = {
-    "silo": (SILO, "Silo — portal submission"),
-    "boomer": (BOOMER, "Boomer — LinkedIn outreach"),
-    "bomber": (BOMBER, "Bomber — warm intro"),
+    "silo": (SILO, "Silo — cold application"),
+    "patrol": (PATROL, "Patrol — LinkedIn outreach"),
+    "bomber": (BOMBER, "Bomber — referral"),
 }
 
 # ── measured geometry ───────────────────────────────────────────────────────
@@ -78,13 +78,13 @@ LEGS = {
 # rendered alpha, so partial opacity counts the way the eye counts it.
 #
 # These are why the spokes looked wrong. Every glyph's ink sits BELOW its box
-# centre -- boomer by 6.3 units, silo by 4.3 -- because the hull and the ground
+# centre -- patrol by 6.3 units, silo by 4.3 -- because the hull and the ground
 # slab are the heavy parts. Centring the boxes therefore pointed each spoke
 # above the thing it was supposed to connect to. Re-measure if a glyph changes.
 METRICS = {
     "trefoil": {"cx": 31.94, "cy": 31.98, "r": 23.16},
     "silo":    {"cx": 31.94, "cy": 36.34, "r": 35.47},
-    "boomer":  {"cx": 31.49, "cy": 38.34, "r": 31.33},
+    "patrol":  {"cx": 31.49, "cy": 38.34, "r": 31.33},
     "bomber":  {"cx": 31.94, "cy": 33.72, "r": 33.92},
 }
 
@@ -98,12 +98,12 @@ GAP = 14.0           # clear space at both ends of every spoke
 
 # angle, glyph, label, which side the label sits on.
 # Ordered by altitude: the aircraft flies, so it takes the top arm; the silo
-# sits on the ground and the boomer runs beneath the surface, so both take the
+# sits on the ground and the patrol boat runs beneath the surface, so both take the
 # lower two. The arrangement is arbitrary geometrically and obvious visually,
 # which is the good kind of arbitrary.
 ARMS = [
     (-90.0, "bomber", "BOMBER", "above"),
-    (30.0, "boomer", "BOOMER", "below"),
+    (30.0, "patrol", "PATROL", "below"),
     (150.0, "silo", "SILO", "below"),
 ]
 
@@ -172,7 +172,7 @@ def _defs() -> str:
 def triad() -> str:
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {TW} {TH}" width="{TW}" height="{TH}"
      role="img" aria-label="The three delivery legs on the mark's blade axes">
-  <title>The jobcube triad — silo, boomer, bomber</title>
+  <title>The jobcube triad — silo, patrol, bomber</title>
   <defs>
 {_defs()}
   </defs>
@@ -209,9 +209,9 @@ def social() -> str:
         font-size="34" fill="#a49cbe">Second-strike capability for job applications.</text>
 
   <!-- Same triad geometry as triad.svg, scaled. Component names rather than the
-       icon nicknames: a shared link has no table to explain silo/boomer/bomber. -->
+       icon nicknames: a shared link has no table to explain silo/patrol/bomber. -->
   <g transform="translate(800,112) scale(1.18)">
-{triad_group(label_size=13).replace("SILO", "COLD APPLY").replace("BOOMER", "OUTREACH").replace("BOMBER", "REFERRAL")}
+{triad_group(label_size=13).replace("SILO", "COLD APPLY").replace("PATROL", "OUTREACH").replace("BOMBER", "REFERRAL")}
   </g>
 </svg>
 """

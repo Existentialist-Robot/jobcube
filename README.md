@@ -59,7 +59,7 @@ confidently doing the wrong thing at volume. Trust, but verify. Mostly verify.
 
 ## Three ways in
 
-<img src="assets/triad.svg" alt="The three delivery legs: silo, boomer, bomber" width="420" />
+<img src="assets/triad.svg" alt="The three delivery legs: silo, patrol, bomber" width="420" />
 
 One delivery route can be defended against; three can't. An application reaches a human by
 exactly three paths, and they fail separately — an ATS can black-hole you without touching
@@ -74,11 +74,13 @@ The visualization belongs to the targeting half — it is not one of the legs be
 
 Here is what each leg actually corresponds to in the repo, including where it doesn't:
 
-| | Leg | Route | What runs it | Covered? |
-|---|---|---|---|---|
-| <img src="assets/icon-silo.svg" alt="" width="30" /> | **Silo** | Cold application through the employer's own portal | `pipeline` skill, `template/` port primitive, `utils/` render-verify, `working/exports/` | Everything up to the send. **You paste and click.** |
-| <img src="assets/icon-boomer.svg" alt="" width="30" /> | **Boomer** | LinkedIn outreach before you apply | [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md), `scripts/outreach/`, `working/outreach/` | Scoping, handle verification, logging, pacing. **You run the live commands.** |
-| <img src="assets/icon-bomber.svg" alt="" width="30" /> | **Bomber** | A referral from someone already inside | — | **Nothing. This leg is yours.** |
+| | Leg | | Route | What runs it | Covered? |
+|---|---|---|---|---|---|
+| <img src="assets/icon-silo.svg" alt="" width="30" /> | **Silo** | *scripted* | Cold application through the employer's own portal | `pipeline` skill, `template/` port primitive, `utils/` render-verify, `working/exports/` | Everything up to the send. **You paste and click.** |
+| <img src="assets/icon-patrol.svg" alt="" width="30" /> | **Patrol** | *paced* | LinkedIn outreach before you apply | [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md), `scripts/outreach/`, `working/outreach/` | Scoping, handle verification, logging, pacing. **You run the live commands.** |
+| <img src="assets/icon-bomber.svg" alt="" width="30" /> | **Bomber** | *crewed* | A referral from someone already inside | — | **Nothing. This leg is yours.** |
+
+Full vocabulary, and where each capability sits: [`DOCTRINE.md`](DOCTRINE.md).
 
 The third row is not an oversight. A referral is produced by a relationship you either have
 or don't, and tooling that claimed to generate one would be the precise species of overclaim

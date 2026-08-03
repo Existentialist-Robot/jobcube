@@ -26,6 +26,7 @@ The work itself is done by plain Python and plain Markdown:
 | Outreach scaffolder + paced wrapper | `working/scripts/outreach/` |
 | Lint, security guards, upstream drift | `tools/` |
 | Every rule, gate, and convention | `CLAUDE.md`, `GETTING_STARTED.md`, `HANDOFF.md` |
+| The vocabulary for all of the above | [`DOCTRINE.md`](DOCTRINE.md) |
 
 The **invocation layer** is not portable. `.claude/skills/` and `.claude/commands/` are
 Claude Code mechanisms: there, `deep sweep`, `/pipeline`, `/setup` and `/add-portal`

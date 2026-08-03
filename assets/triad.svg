@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300" width="360" height="300"
      role="img" aria-label="The three delivery legs on the mark's blade axes">
-  <title>The jobcube triad — silo, boomer, bomber</title>
+  <title>The jobcube triad — silo, patrol, bomber</title>
   <defs>
     <g id="trefoil">
   <polygon fill="#b98cff" points="32,8.8 51.8,19.5 32,30.3 12.2,19.5"/>
@@ -16,7 +16,7 @@
   <rect fill="#b98cff" x="26" y="8" width="12" height="34" rx="2.5"/>
   <path fill="#3fca7d" d="M26,16 L26,10.5 A2.5,2.5 0 0 1 28.5,8 L35.5,8 A2.5,2.5 0 0 1 38,10.5 L38,16 Z"/>
     </g>
-    <g id="boomer">
+    <g id="patrol">
   <rect fill="#8d85a8" opacity=".4" x="4" y="21" width="56" height="2" rx="1"/>
   <rect fill="#b98cff" x="6" y="41" width="9" height="4.5" rx="2.25"/>
   <rect fill="#b98cff" x="10" y="36" width="44" height="15" rx="7.5"/>
@@ -37,13 +37,13 @@
     <path d="M135.78,201.53 L111.24,215.70"/>
   </g>
   <use href="#bomber" transform="translate(156.04,30.71) scale(0.75)"/>
-  <use href="#boomer" transform="translate(260.31,207.25) scale(0.75)"/>
+  <use href="#patrol" transform="translate(260.31,207.25) scale(0.75)"/>
   <use href="#silo" transform="translate(52.12,208.75) scale(0.75)"/>
   <use href="#trefoil" transform="translate(128.90,124.83) scale(1.6)"/>
   <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="10.5"
      letter-spacing="1.5" fill="#8d85a8" text-anchor="middle">
     <text x="180.00" y="19.36">BOMBER</text>
-    <text x="283.92" y="275.60">BOOMER</text>
+    <text x="283.92" y="275.60">PATROL</text>
     <text x="76.08" y="278.70">SILO</text>
   </g>
 </svg>

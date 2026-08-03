@@ -19,7 +19,7 @@
   <rect fill="#b98cff" x="26" y="8" width="12" height="34" rx="2.5"/>
   <path fill="#3fca7d" d="M26,16 L26,10.5 A2.5,2.5 0 0 1 28.5,8 L35.5,8 A2.5,2.5 0 0 1 38,10.5 L38,16 Z"/>
     </g>
-    <g id="boomer">
+    <g id="patrol">
   <rect fill="#8d85a8" opacity=".4" x="4" y="21" width="56" height="2" rx="1"/>
   <rect fill="#b98cff" x="6" y="41" width="9" height="4.5" rx="2.25"/>
   <rect fill="#b98cff" x="10" y="36" width="44" height="15" rx="7.5"/>
@@ -50,7 +50,7 @@
         font-size="34" fill="#a49cbe">Second-strike capability for job applications.</text>
 
   <!-- Same triad geometry as triad.svg, scaled. Component names rather than the
-       icon nicknames: a shared link has no table to explain silo/boomer/bomber. -->
+       icon nicknames: a shared link has no table to explain silo/patrol/bomber. -->
   <g transform="translate(800,112) scale(1.18)">
   <g stroke="#8d85a8" stroke-width="1.6" opacity=".5" stroke-linecap="round" fill="none">
     <path d="M180.00,124.94 L180.00,95.44"/>
@@ -58,7 +58,7 @@
     <path d="M135.78,201.53 L111.24,215.70"/>
   </g>
   <use href="#bomber" transform="translate(156.04,30.71) scale(0.75)"/>
-  <use href="#boomer" transform="translate(260.31,207.25) scale(0.75)"/>
+  <use href="#patrol" transform="translate(260.31,207.25) scale(0.75)"/>
   <use href="#silo" transform="translate(52.12,208.75) scale(0.75)"/>
   <use href="#trefoil" transform="translate(128.90,124.83) scale(1.6)"/>
   <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13"
