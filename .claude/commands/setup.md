@@ -129,12 +129,19 @@ to flag it twice.
 2. Call `get-design` and report the live page count and how many résumé/cover
    pairs that is. Remind them page count is read live every session and never
    hardcoded, because they will keep adding pairs.
-3. If they have built their own layout rather than copying the reference one,
-   run `template_port.py build-manifest <snapshot> --name v2` against a
-   transaction snapshot and tell them plainly: **the capacities shipped in
+3. **No reference design ships with this repo.** Whatever layout they have is
+   their own, so this step always applies: run
+   `template_port.py build-manifest <snapshot> --name v2` against a transaction
+   snapshot, and tell them plainly that **the capacities shipped in
    `manifest.json` were measured against one specific design and are almost
-   certainly wrong for theirs.** They get recalibrated by the render-verify
-   loop on the first real port, which is expected, not a failure.
+   certainly wrong for theirs.** They get recalibrated by the render-verify loop
+   on the first real port, which is expected, not a failure.
+
+   This step used to begin "if they have built their own layout rather than
+   copying the reference one" — presupposing a reference design that has never
+   existed in this repo or been linked from it. A stranger following that
+   sentence went looking for a file that was not there. If a reference layout is
+   ever published, restore the conditional and link it here.
 4. Fill in the placeholder tokens in `cv/main_example.tex` and
    `cover_letters/cover_example.tex` so the LaTeX fallback is usable.
 
