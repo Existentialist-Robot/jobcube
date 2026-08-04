@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640"
+     role="img" aria-label="jobcube — banner">
+  <title>jobcube — banner</title>
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64,0 L0,0 0,64" fill="none" stroke="#b98cff" stroke-opacity="0.055" stroke-width="1"/>
+    </pattern>
+    <g id="trefoil">
+  <polygon fill="#b98cff" points="32,8.8 51.8,19.5 32,30.3 12.2,19.5"/>
+  <polygon fill="#b98cff" points="10.6,22.1 30.4,32.9 30.4,54.4 10.6,43.6"/>
+  <polygon fill="#b98cff" points="53.4,22.1 33.6,32.9 33.6,54.4 53.4,43.6"/>
+  <circle fill="#3fca7d" cx="32" cy="33.5" r="3.6"/>
+    </g>
+    <g id="silo">
+  <rect fill="#8d85a8" opacity=".28" x="2" y="46" width="60" height="13" rx="2"/>
+  <rect fill="#8d85a8" opacity=".55" x="21" y="34" width="22" height="16" rx="2"/>
+  <path fill="#8d85a8" opacity=".85" d="M19,38 L4,44 L2,38 L18,32 Z"/>
+  <path fill="#8d85a8" opacity=".85" d="M45,38 L60,44 L62,38 L46,32 Z"/>
+  <rect fill="#b98cff" x="26" y="8" width="12" height="34" rx="2.5"/>
+  <path fill="#3fca7d" d="M26,16 L26,10.5 A2.5,2.5 0 0 1 28.5,8 L35.5,8 A2.5,2.5 0 0 1 38,10.5 L38,16 Z"/>
+    </g>
+    <g id="patrol">
+  <rect fill="#8d85a8" opacity=".4" x="4" y="21" width="56" height="2" rx="1"/>
+  <rect fill="#b98cff" x="6" y="41" width="9" height="4.5" rx="2.25"/>
+  <rect fill="#b98cff" x="10" y="36" width="44" height="15" rx="7.5"/>
+  <rect fill="#b98cff" x="26" y="25" width="12" height="12" rx="2"/>
+  <rect fill="#b98cff" x="30.5" y="15" width="3" height="11" rx="1.5"/>
+  <path fill="#3fca7d" d="M28.5,17 L28.5,12.5 A2,2 0 0 1 30.5,10.5 L33.5,10.5 A2,2 0 0 1 35.5,12.5 L35.5,17 Z"/>
+    </g>
+    <g id="bomber">
+  <path fill="#8d85a8" opacity=".22" d="M4,50 C18,42 46,42 60,50 L60,56 L4,56 Z"/>
+  <path fill="#b98cff" d="M32,9 L58,44 L38,39.5 L32,48 L26,39.5 L6,44 Z"/>
+  <rect fill="#3fca7d" x="29" y="14" width="6" height="7" rx="1.5"/>
+    </g>
+  </defs>
+  <rect width="1280" height="640" fill="#0b0910"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+  <text x="96" y="168" font-family="Consolas, 'Cascadia Mono', 'JetBrains Mono', monospace" text-anchor="start"
+        font-size="96" letter-spacing="-1.7" paint-order="stroke fill" stroke-linejoin="round">
+    <tspan fill="#e9e6f5" stroke="#e9e6f5" stroke-width="3.5">job</tspan><tspan fill="#b98cff" stroke="#b98cff" stroke-width="3.5">cube</tspan>
+  </text>
+  <rect x="99" y="202" width="112" height="5" rx="2.5" fill="#b98cff"/>
+  <text x="99" y="250" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif" font-size="30" text-anchor="start" fill="#a49cbe">Second-strike capability for job applications.</text>
+  <path d="M96,318 L1184,318" stroke="#8d85a8" stroke-opacity=".22" stroke-width="1.5"/>
+  <use href="#silo" transform="translate(283.27,388.21) scale(1.15)"/>
+  <use href="#patrol" transform="translate(603.79,385.91) scale(1.15)"/>
+  <use href="#bomber" transform="translate(923.27,391.22) scale(1.15)"/>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="19" letter-spacing="1.5" fill="#c3bcd8" text-anchor="middle">
+    <text x="320" y="497">SILO</text>
+    <text x="640" y="497">PATROL</text>
+    <text x="960" y="497">BOMBER</text>
+  </g>
+</svg>
