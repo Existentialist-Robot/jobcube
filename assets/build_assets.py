@@ -203,6 +203,47 @@ def triad() -> str:
 """
 
 
+# ── the social card's shared centre line ────────────────────────────────────
+# 1280x640 is GitHub's recommended size, so the ink of both halves is centred on
+# y=320. Everything here is derived, not nudged, because this card has been
+# re-cut several times and each eyeballed offset was a fresh guess.
+SOCIAL_AXIS = 320.0
+SOCIAL_TRIAD_SCALE = 1.38          # up from 1.2: at 1.2 the leg detail did not resolve
+SOCIAL_TRIAD_HUB_X = 1000.0
+SOCIAL_LABEL_SIZE = 19.0           # rendered size, before the scale is divided out
+SOCIAL_WORDMARK_SIZE = 112
+# Cap top to tagline descender, for a 112px mono wordmark with the tagline 102px
+# below it: the block's ink centre sits ~14.7px below the wordmark baseline.
+SOCIAL_WORDMARK_BASELINE = SOCIAL_AXIS - 14.7
+
+
+def _social_triad_ink_dy() -> float:
+    """How far the triad's ink centre sits above its hub, in final pixels.
+
+    The bomber label clears the hub by its leg radius plus a gap; the silo and
+    patrol labels sit a shorter distance below. The asymmetry is why matching
+    hubs does not match ink.
+    """
+    import math
+
+    internal_label = SOCIAL_LABEL_SIZE / SOCIAL_TRIAD_SCALE
+    tops, bottoms = [], []
+    for deg, name, _text, side in ARMS:
+        py = CY + math.sin(math.radians(deg)) * SPOKE
+        leg_r = METRICS[name]["r"] * LEG_SCALE
+        if side == "above":
+            tops.append(py - leg_r - GAP * 0.8 - internal_label * 0.8)
+        else:
+            bottoms.append(py + leg_r)
+    bottom = max(bottoms) + GAP * 1.15 + internal_label * 0.75
+    ink_centre = (min(tops) + bottom) / 2
+    return (CY - ink_centre) * SOCIAL_TRIAD_SCALE
+
+
+SOCIAL_TRIAD_INK_DY = _social_triad_ink_dy()
+SOCIAL_TRIAD_HUB_Y = SOCIAL_AXIS + SOCIAL_TRIAD_INK_DY
+
+
 def social() -> str:
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640"
      role="img" aria-label="jobcube — second-strike capability for job applications">
@@ -219,17 +260,22 @@ def social() -> str:
 
   <!-- Weight comes from a matched stroke rather than font-weight, so the mark
        renders identically wherever Consolas Bold is absent. -->
-  <!-- Everything sits 44px lower than it used to. The ink spanned y=100..452 on a
-       640 canvas, so the composition was high in the frame with a dead band along
-       the bottom; 44 puts its centre on the card's. -->
-  <text x="96" y="366" font-family="Consolas, 'Cascadia Mono', 'JetBrains Mono', monospace"
-        font-size="108" letter-spacing="-2" paint-order="stroke fill" stroke-linejoin="round">
-    <tspan fill="{PAPER}" stroke="{PAPER}" stroke-width="4">job</tspan><tspan fill="{VIOLET}" stroke="{VIOLET}" stroke-width="4">cube</tspan>
+  <!-- Both halves centre their INK on y=320, the canvas centre.
+
+       Aligning the triad's hub to a shared axis is the obvious move and it is
+       wrong: the bomber label sits far above the hub while the silo and patrol
+       labels sit close below it, so the diagram's ink centre is {SOCIAL_TRIAD_INK_DY:.0f}px above
+       its hub. Matching hubs to text left the two halves {76}px apart, which is
+       worse than the {55}px offset it was meant to fix. Both numbers below are
+       derived from the glyph metrics rather than nudged by eye. -->
+  <text x="96" y="{SOCIAL_WORDMARK_BASELINE:.0f}" font-family="Consolas, 'Cascadia Mono', 'JetBrains Mono', monospace"
+        font-size="{SOCIAL_WORDMARK_SIZE}" letter-spacing="-2" paint-order="stroke fill" stroke-linejoin="round">
+    <tspan fill="{PAPER}" stroke="{PAPER}" stroke-width="4.1">job</tspan><tspan fill="{VIOLET}" stroke="{VIOLET}" stroke-width="4.1">cube</tspan>
   </text>
 
-  <rect x="99" y="404" width="104" height="5" rx="2.5" fill="{VIOLET}"/>
+  <rect x="99" y="{SOCIAL_WORDMARK_BASELINE + 38:.0f}" width="112" height="5" rx="2.5" fill="{VIOLET}"/>
 
-  <text x="99" y="468" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
+  <text x="99" y="{SOCIAL_WORDMARK_BASELINE + 102:.0f}" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
         font-size="34" fill="#a49cbe">Second-strike capability for job applications.</text>
 
   <!-- Same triad geometry as triad.svg, scaled, and the same labels. It used to
@@ -247,8 +293,9 @@ def social() -> str:
        No double hyphen anywhere in this string. XML forbids it inside a comment,
        and emitting one here silently dropped the whole triad group from the
        rendered card while the SVG still looked fine as source. -->
-  <g transform="translate(806,148) scale(1.2)">
-{triad_group(label_size=19, label_fill="#c3bcd8")}
+  <!-- label_size is divided by the scale so the rendered size stays at 19. -->
+  <g transform="translate({SOCIAL_TRIAD_HUB_X - CX * SOCIAL_TRIAD_SCALE:.1f},{SOCIAL_TRIAD_HUB_Y - CY * SOCIAL_TRIAD_SCALE:.1f}) scale({SOCIAL_TRIAD_SCALE})">
+{triad_group(label_size=SOCIAL_LABEL_SIZE / SOCIAL_TRIAD_SCALE, label_fill="#c3bcd8")}
   </g>
 </svg>
 """

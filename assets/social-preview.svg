@@ -39,17 +39,22 @@
 
   <!-- Weight comes from a matched stroke rather than font-weight, so the mark
        renders identically wherever Consolas Bold is absent. -->
-  <!-- Everything sits 44px lower than it used to. The ink spanned y=100..452 on a
-       640 canvas, so the composition was high in the frame with a dead band along
-       the bottom; 44 puts its centre on the card's. -->
-  <text x="96" y="366" font-family="Consolas, 'Cascadia Mono', 'JetBrains Mono', monospace"
-        font-size="108" letter-spacing="-2" paint-order="stroke fill" stroke-linejoin="round">
-    <tspan fill="#e9e6f5" stroke="#e9e6f5" stroke-width="4">job</tspan><tspan fill="#b98cff" stroke="#b98cff" stroke-width="4">cube</tspan>
+  <!-- Both halves centre their INK on y=320, the canvas centre.
+
+       Aligning the triad's hub to a shared axis is the obvious move and it is
+       wrong: the bomber label sits far above the hub while the silo and patrol
+       labels sit close below it, so the diagram's ink centre is 38px above
+       its hub. Matching hubs to text left the two halves 76px apart, which is
+       worse than the 55px offset it was meant to fix. Both numbers below are
+       derived from the glyph metrics rather than nudged by eye. -->
+  <text x="96" y="305" font-family="Consolas, 'Cascadia Mono', 'JetBrains Mono', monospace"
+        font-size="112" letter-spacing="-2" paint-order="stroke fill" stroke-linejoin="round">
+    <tspan fill="#e9e6f5" stroke="#e9e6f5" stroke-width="4.1">job</tspan><tspan fill="#b98cff" stroke="#b98cff" stroke-width="4.1">cube</tspan>
   </text>
 
-  <rect x="99" y="404" width="104" height="5" rx="2.5" fill="#b98cff"/>
+  <rect x="99" y="343" width="112" height="5" rx="2.5" fill="#b98cff"/>
 
-  <text x="99" y="468" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
+  <text x="99" y="407" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif"
         font-size="34" fill="#a49cbe">Second-strike capability for job applications.</text>
 
   <!-- Same triad geometry as triad.svg, scaled, and the same labels. It used to
@@ -67,7 +72,8 @@
        No double hyphen anywhere in this string. XML forbids it inside a comment,
        and emitting one here silently dropped the whole triad group from the
        rendered card while the SVG still looked fine as source. -->
-  <g transform="translate(806,148) scale(1.2)">
+  <!-- label_size is divided by the scale so the rendered size stays at 19. -->
+  <g transform="translate(751.6,114.8) scale(1.38)">
   <g stroke="#8d85a8" stroke-width="1.6" opacity=".5" stroke-linecap="round" fill="none">
     <path d="M180.00,124.94 L180.00,95.44"/>
     <path d="M224.22,201.53 L251.45,217.25"/>
@@ -77,11 +83,11 @@
   <use href="#patrol" transform="translate(260.31,207.25) scale(0.75)"/>
   <use href="#silo" transform="translate(52.12,208.75) scale(0.75)"/>
   <use href="#trefoil" transform="translate(128.90,124.83) scale(1.6)"/>
-  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="19"
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13.768115942028986"
      letter-spacing="1.5" fill="#c3bcd8" text-anchor="middle">
     <text x="180.00" y="19.36">BOMBER</text>
-    <text x="283.92" y="289.15">PATROL</text>
-    <text x="76.08" y="289.15">SILO</text>
+    <text x="283.92" y="286.27">PATROL</text>
+    <text x="76.08" y="286.27">SILO</text>
   </g>
   </g>
 </svg>
