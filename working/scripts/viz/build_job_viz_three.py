@@ -39,19 +39,25 @@ _covmod = _ilu.module_from_spec(_covspec); _covspec.loader.exec_module(_covmod)
 COV_SWEEPS, COV_FUTURE = _covmod.SWEEPS, _covmod.FUTURE
 
 STATUS_ALIAS = {"File-ready": "Ready", "Canva-ported": "Ported"}
+# Status and fit encode meaning, so these are set deliberately rather than
+# hue-rotated with the chrome. The set runs cold-and-dim for a dead role to
+# bright-violet for live work, with the mark's green reserved for a confirmed
+# target and amber for the one state that is genuinely hot.
 STATUS_COLORS = {
-    "Applied": "#4f8fd8",
+    "Applied": "#a78bfa",
     "Interview": "#f0a13a",
-    "Ready": "#a887ff",
-    "Ported": "#44c7e8",
-    "Queued": "#73c985",
-    "Drafted": "#f47f55",
-    "Target": "#27c6d8",
-    "Declined": "#7f8795",
-    "Closed": "#5c5350",
+    "Ready": "#c9a3ff",
+    "Ported": "#57d6a0",
+    "Queued": "#8a78c8",
+    "Drafted": "#d98a5a",
+    "Target": "#3fca7d",
+    "Declined": "#6f6885",
+    "Closed": "#4a4458",
 }
 
-FIT_COLORS = ["#d85a4a", "#f28b58", "#e7c85d", "#73b4d4", "#3978bd"]
+# 1 star to 5. Violet to green rather than red to blue: a single-hue ramp would
+# separate the ends only by lightness, and the comparison that matters is 3 vs 5.
+FIT_COLORS = ["#6b6480", "#8f7bc4", "#b98cff", "#79c9a4", "#3fca7d"]
 
 AXIS_LABELS = {
     "x": ["", "Startup", "Innovation org", "Nonprofit", "Post-secondary", "Gov"],
@@ -314,18 +320,22 @@ def build_html(jobs: list[dict]) -> str:
   <title>Job Search Space</title>
   <script src="vendor/three.min.js"></script>
   <style>
+    /* The brand ground, not the blue this shipped with. Same values as
+       assets/build_assets.py: violet #b98cff, green #3fca7d, ground #0b0910,
+       paper #e9e6f5, dim #8d85a8. The map is the front page of the repo's
+       targeting half and had no visual relationship to the mark above it. */
     :root {
       color-scheme: dark;
-      --bg: #090c12;
-      --panel: #111723;
-      --panel-2: #151d2a;
-      --line: rgba(220, 230, 255, 0.13);
-      --text: #eff4ff;
-      --muted: #9aa7bd;
-      --soft: #c2ccdf;
-      --accent: #60a5fa;
-      --accent-2: #41d7c8;
-      --danger: #f87171;
+      --bg: #0b0910;
+      --panel: #15111e;
+      --panel-2: #1b1626;
+      --line: rgba(201, 190, 232, 0.14);
+      --text: #e9e6f5;
+      --muted: #8d85a8;
+      --soft: #c3bcd8;
+      --accent: #b98cff;
+      --accent-2: #3fca7d;
+      --danger: #f2718c;
       --radius: 8px;
     }
     * { box-sizing: border-box; }
@@ -339,8 +349,8 @@ def build_html(jobs: list[dict]) -> str:
       grid-template-columns: 220px minmax(0, 1fr);
       grid-template-rows: minmax(0, 100vh);
       background:
-        linear-gradient(120deg, rgba(38, 83, 129, 0.12), transparent 28%),
-        linear-gradient(180deg, #0b1018, #070a0f 56%, #080b11);
+        linear-gradient(120deg, rgba(114, 78, 178, 0.14), transparent 28%),
+        linear-gradient(180deg, #0e0b14, #08060c 56%, #0a0810);
     }
     .sidebar {
       min-height: 0;
@@ -349,15 +359,26 @@ def build_html(jobs: list[dict]) -> str:
       background: rgba(12, 17, 26, 0.96);
       padding: 14px 12px 16px;
     }
+    /* Mark, title and count on one row inside a 220px sidebar. Adding the mark to
+       a baseline-aligned flex row wrapped the title onto two lines, so the title
+       is the only thing allowed to shrink and it is told not to wrap. */
     .brand {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 8px;
       margin-bottom: 12px;
     }
-    h1 { margin: 0; font-size: 15px; letter-spacing: 0; }
-    .count { color: var(--muted); font-size: 11px; white-space: nowrap; }
+    h1 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 0;
+      white-space: nowrap;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+    .mark { flex: 0 0 auto; }
+    .count { color: var(--muted); font-size: 11px; white-space: nowrap; flex: 0 0 auto; }
     details {
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -394,7 +415,7 @@ def build_html(jobs: list[dict]) -> str:
       justify-content: space-between;
     }
     .sub-summary::-webkit-details-marker { display: none; }
-    .sub-summary:after { content: "+"; color: #748099; font-size: 12px; }
+    .sub-summary:after { content: "+"; color: #8d85a8; font-size: 12px; }
     .sub-details[open] .sub-summary:after { content: "-"; }
     .sub-section { padding: 0 10px 10px; display: grid; gap: 8px; }
     summary {
@@ -412,21 +433,21 @@ def build_html(jobs: list[dict]) -> str:
       justify-content: space-between;
     }
     summary::-webkit-details-marker { display: none; }
-    summary:after { content: "+"; color: #748099; font-size: 13px; }
+    summary:after { content: "+"; color: #8d85a8; font-size: 13px; }
     details[open] summary:after { content: "-"; }
     .section { padding: 0 10px 11px; display: grid; gap: 9px; }
     .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
     .btn {
       border: 1px solid rgba(150, 170, 210, 0.18);
-      background: #171f30;
+      background: #1c1727;
       border-radius: 6px;
       padding: 6px 9px;
       font-size: 12px;
       cursor: pointer;
       min-height: 30px;
     }
-    .btn:hover { border-color: rgba(150, 190, 255, 0.38); background: #1d273a; }
-    .btn.active { background: #223a60; border-color: rgba(108, 166, 255, 0.68); color: #ddebff; }
+    .btn:hover { border-color: rgba(178, 150, 235, 0.38); background: #241d33; }
+    .btn.active { background: #33244f; border-color: rgba(163, 130, 232, 0.68); color: #e6dcff; }
     .btn.compact { min-height: 25px; padding: 3px 7px; font-size: 11px; }
     .pill {
       border: 1px solid rgba(150, 170, 210, 0.18);
@@ -444,9 +465,9 @@ def build_html(jobs: list[dict]) -> str:
       border: 1px solid rgba(150, 170, 210, 0.18);
       border-radius: 6px;
       overflow: hidden;
-      background: #171f30;
+      background: #1c1727;
     }
-    .preset-tag:hover { border-color: rgba(150, 190, 255, 0.38); }
+    .preset-tag:hover { border-color: rgba(178, 150, 235, 0.38); }
     .preset-load {
       border: 0;
       background: transparent;
@@ -467,13 +488,13 @@ def build_html(jobs: list[dict]) -> str:
     .preset-del:hover { background: rgba(248, 113, 113, 0.18); }
     .field { display: grid; gap: 5px; }
     .field label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 11px; }
-    .field input[type="range"] { width: 100%; accent-color: #5fa8ff; cursor: pointer; }
+    .field input[type="range"] { width: 100%; accent-color: #b98cff; cursor: pointer; }
     .field input[type="text"] {
       width: 100%;
       border: 1px solid rgba(150, 170, 210, 0.22);
       border-radius: 6px;
       padding: 7px 8px;
-      background: #0d1320;
+      background: #120e1a;
       color: var(--text);
       outline: none;
     }
@@ -509,7 +530,7 @@ def build_html(jobs: list[dict]) -> str:
       overflow: hidden;
       background:
         radial-gradient(circle at 50% 45%, rgba(66, 125, 190, 0.16), transparent 34%),
-        linear-gradient(180deg, #0a0f18, #070a0f);
+        linear-gradient(180deg, #0c0912, #08060c);
     }
     #scene3d {
       position: absolute;
@@ -539,7 +560,7 @@ def build_html(jobs: list[dict]) -> str:
       border-radius: 4px;
       background: rgba(9, 13, 20, 0.78);
       border: 1px solid rgba(255,255,255,0.1);
-      color: #dce8ff;
+      color: #e2daf5;
       font-size: 10px;
       white-space: nowrap;
       max-width: 170px;
@@ -563,7 +584,7 @@ def build_html(jobs: list[dict]) -> str:
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.04em;
-      color: #cfe0ff;
+      color: #e9cfff;
     }
     .tooltip {
       position: absolute;
@@ -574,7 +595,7 @@ def build_html(jobs: list[dict]) -> str:
       border: 1px solid rgba(220,230,255,0.16);
       border-radius: var(--radius);
       background: rgba(10, 14, 22, 0.94);
-      color: #e7eefc;
+      color: #f2e7fc;
       font-size: 12px;
       line-height: 1.45;
       box-shadow: 0 12px 32px rgba(0,0,0,0.36);
@@ -607,17 +628,17 @@ def build_html(jobs: list[dict]) -> str:
       font-weight: 700;
     }
     #location-map { display: block; width: 100%; height: auto; max-height: 360px; }
-    .province { fill: #182235; stroke: rgba(230,240,255,0.24); stroke-width: 1; }
-    .province-label { fill: #8ea0bd; font-size: 10px; pointer-events: none; }
-    .country { fill: #182235; stroke: rgba(230,240,255,0.18); stroke-width: 1; cursor: pointer; transition: fill 120ms ease; }
-    .country.ca { fill: #1c2c3f; }
-    .country.us { fill: #1a2838; }
+    .province { fill: #281835; stroke: rgba(230,240,255,0.24); stroke-width: 1; }
+    .province-label { fill: #a78ebd; font-size: 10px; pointer-events: none; }
+    .country { fill: #281835; stroke: rgba(230,240,255,0.18); stroke-width: 1; cursor: pointer; transition: fill 120ms ease; }
+    .country.ca { fill: #2d1c3f; }
+    .country.us { fill: #291a38; }
     /* No :hover on individual paths — JS adds .country-hover to the whole country group */
-    .country.country-hover { fill: #2a3f5c !important; stroke: rgba(120,180,255,0.7); stroke-width: 1.5; }
-    .country-label { fill: #cfe0ff; font-size: 30px; font-weight: 700; pointer-events: none; }
-    .usstate { fill: #182235; stroke: rgba(230,240,255,0.24); stroke-width: 1; cursor: pointer; transition: fill 120ms ease; }
-    .usstate:hover { fill: #28405f; }
-    .usstate-label { fill: #8ea0bd; font-size: 11px; font-weight: 600; pointer-events: none; }
+    .country.country-hover { fill: #432a5c !important; stroke: rgba(120,180,255,0.7); stroke-width: 1.5; }
+    .country-label { fill: #e9cfff; font-size: 30px; font-weight: 700; pointer-events: none; }
+    .usstate { fill: #281835; stroke: rgba(230,240,255,0.24); stroke-width: 1; cursor: pointer; transition: fill 120ms ease; }
+    .usstate:hover { fill: #43285f; }
+    .usstate-label { fill: #a78ebd; font-size: 11px; font-weight: 600; pointer-events: none; }
     .map-pie-sw {
       border: 1px solid rgba(150,170,210,0.22);
       background: rgba(15,22,36,0.7);
@@ -628,11 +649,11 @@ def build_html(jobs: list[dict]) -> str:
       cursor: pointer;
       white-space: nowrap;
     }
-    .map-pie-sw.active { background: #223a60; border-color: rgba(108,166,255,0.68); color: #ddebff; }
+    .map-pie-sw.active { background: #33244f; border-color: rgba(108,166,255,0.68); color: #e6dcff; }
     .map-pie-sw:hover { border-color: rgba(150,190,255,0.38); }
     .map-back {
       border: 1px solid rgba(150, 170, 210, 0.28);
-      background: #1d273a;
+      background: #241d33;
       border-radius: 6px;
       padding: 3px 9px;
       font-size: 11px;
@@ -641,7 +662,7 @@ def build_html(jobs: list[dict]) -> str:
       display: none;
     }
     .map-back.show { display: inline-block; }
-    .map-back:hover { border-color: rgba(150, 190, 255, 0.5); }
+    .map-back:hover { border-color: rgba(178, 150, 235, 0.5); }
     .map-hover-label {
       position: absolute;
       pointer-events: auto;
@@ -649,7 +670,7 @@ def build_html(jobs: list[dict]) -> str:
       border-radius: 6px;
       background: rgba(10, 14, 22, 0.96);
       border: 1px solid rgba(96,165,250,0.5);
-      color: #e7eefc;
+      color: #f2e7fc;
       font-size: 12px;
       white-space: nowrap;
       box-shadow: 0 8px 22px rgba(0,0,0,0.4);
@@ -670,7 +691,7 @@ def build_html(jobs: list[dict]) -> str:
     .pie-axis-row { display: flex; gap: 3px; margin-top: 2px; }
     .pie-axis-btn {
       border: 1px solid rgba(150, 170, 210, 0.28);
-      background: #171f30;
+      background: #1c1727;
       border-radius: 4px;
       padding: 1px 7px;
       font-size: 10px;
@@ -678,10 +699,10 @@ def build_html(jobs: list[dict]) -> str:
       cursor: pointer;
       color: var(--soft);
     }
-    .pie-axis-btn.active { background: #223a60; border-color: rgba(108, 166, 255, 0.7); color: #ddebff; }
+    .pie-axis-btn.active { background: #33244f; border-color: rgba(163, 130, 232, 0.7); color: #e6dcff; }
     .map-sel {
       border: 1px solid rgba(150, 170, 210, 0.28);
-      background: #1d273a;
+      background: #241d33;
       border-radius: 6px;
       padding: 3px 8px;
       font-size: 11px;
@@ -690,7 +711,7 @@ def build_html(jobs: list[dict]) -> str:
       display: none;
     }
     .map-sel.show { display: inline-block; }
-    .map-sel:hover { border-color: rgba(150, 190, 255, 0.5); }
+    .map-sel:hover { border-color: rgba(178, 150, 235, 0.5); }
     .map-dot { cursor: pointer; stroke: rgba(5,8,12,0.82); stroke-width: 1.5; transition: r 140ms ease, opacity 140ms ease; }
     .map-dot.dim { opacity: 0.18; }
     .map-dot.hot { r: 7; stroke: white; stroke-width: 2.2; }
@@ -731,7 +752,7 @@ def build_html(jobs: list[dict]) -> str:
     .detail .org { color: var(--muted); font-size: 12px; margin-bottom: 10px; }
     .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
     .chip { border: 1px solid var(--line); border-radius: 5px; padding: 4px 6px; color: var(--soft); font-size: 11px; background: rgba(255,255,255,0.04); }
-    .note { color: #c5cfdf; font-size: 12px; line-height: 1.48; }
+    .note { color: #d3c5df; font-size: 12px; line-height: 1.48; }
     .role-list {
       overflow: auto;
       padding: 8px;
@@ -771,17 +792,17 @@ def build_html(jobs: list[dict]) -> str:
     .range-wrap { position: relative; height: 24px; display: flex; align-items: center; }
     .range-track, .range-fill { position: absolute; left: 0; right: 0; height: 4px; border-radius: 3px; pointer-events: none; }
     .range-track { background: rgba(255,255,255,0.10); }
-    .range-fill { background: linear-gradient(90deg, #558ee8, #39c6bd); }
+    .range-fill { background: linear-gradient(90deg, #a155e8, #39c6bd); }
     .range-wrap input[type="range"] { position: absolute; width: 100%; margin: 0; appearance: none; background: transparent; pointer-events: none; }
-    .range-wrap input[type="range"]::-webkit-slider-thumb { appearance: none; pointer-events: auto; cursor: pointer; width: 14px; height: 14px; border-radius: 50%; background: #e6f0ff; border: 3px solid #4285d8; }
-    .range-wrap input[type="range"]::-moz-range-thumb { pointer-events: auto; cursor: pointer; width: 14px; height: 14px; border-radius: 50%; background: #e6f0ff; border: 3px solid #4285d8; }
+    .range-wrap input[type="range"]::-webkit-slider-thumb { appearance: none; pointer-events: auto; cursor: pointer; width: 14px; height: 14px; border-radius: 50%; background: #f3e6ff; border: 3px solid #8c42d8; }
+    .range-wrap input[type="range"]::-moz-range-thumb { pointer-events: auto; cursor: pointer; width: 14px; height: 14px; border-radius: 50%; background: #f3e6ff; border: 3px solid #8c42d8; }
     .today { color: var(--accent-2); }
     .tl-ticks { position: relative; height: 17px; margin: 0 2px; }
     .tl-ticks .tm {
       position: absolute;
       transform: translateX(-50%);
       font-size: 10px;
-      color: #7da0e0;
+      color: #b27de0;
       white-space: nowrap;
       display: flex;
       flex-direction: column;
@@ -799,17 +820,17 @@ def build_html(jobs: list[dict]) -> str:
     .tl-controls { display: flex; align-items: center; gap: 7px; padding: 4px 2px 0; flex-wrap: wrap; }
     .tl-ctl-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
     .tl-ctl-val { font-size: 10px; color: var(--soft); min-width: 26px; }
-    .tl-controls input[type=range] { width: 116px; accent-color: #8b6fe0; }
+    .tl-controls input[type=range] { width: 116px; accent-color: #b98cff; }
     .tl-ticks { overflow: hidden; }
     .tl-ent .lb { max-width: 128px; overflow: hidden; text-overflow: ellipsis; }
-    .tm.mstart { color: #9fbef0; font-weight: 600; }
+    .tm.mstart { color: #c99ff0; font-weight: 600; }
     #tl-overview { position: relative; height: 12px; margin: 0 2px 3px; opacity: 0; transition: opacity .45s ease; pointer-events: none; }
     #tl-overview .ovtrack { position: absolute; left: 7px; right: 7px; top: 5px; height: 2px; background: rgba(150,170,220,0.25); border-radius: 1px; }
     #tl-ov-box { position: absolute; top: 1px; height: 10px; border: 1.5px solid #ff5a6a; border-radius: 3px; background: rgba(255,90,106,0.14); box-shadow: 0 0 7px rgba(255,90,106,0.55); }
     .tl-preset { padding: 3px 7px !important; }
-    .tl-preset.active { background: #4a3c7e; border-color: #8b6fe0; color: #efeaff; }
+    .tl-preset.active { background: #4a3c7e; border-color: #b98cff; color: #efeaff; }
     .sum-tog { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; color: var(--muted); font-weight: 400; margin-left: 6px; }
-    .sum-tog input { accent-color: #8b6fe0; margin: 0; }
+    .sum-tog input { accent-color: #b98cff; margin: 0; }
     @media (max-width: 720px) {
       body { overflow: auto; }
       .app { height: auto; min-height: 100vh; grid-template-columns: 1fr; grid-template-rows: minmax(500px, 70vh) auto; }
@@ -823,6 +844,15 @@ def build_html(jobs: list[dict]) -> str:
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
+      <!-- The mark itself, inlined rather than linked: this page is served from
+           working/active/ and assets/ is outside the served tree on purpose. Same
+           geometry as assets/logo.svg. -->
+      <svg class="mark" viewBox="0 0 64 64" width="19" height="19" aria-hidden="true">
+        <polygon fill="#b98cff" points="32,8.8 51.8,19.5 32,30.3 12.2,19.5"/>
+        <polygon fill="#b98cff" points="10.6,22.1 30.4,32.9 30.4,54.4 10.6,43.6"/>
+        <polygon fill="#b98cff" points="53.4,22.1 33.6,32.9 33.6,54.4 53.4,43.6"/>
+        <circle fill="#3fca7d" cx="32" cy="33.5" r="3.6"/>
+      </svg>
       <h1>Job Search Space</h1>
       <span class="count" id="job-count">0 roles</span>
     </div>
@@ -976,7 +1006,7 @@ def build_html(jobs: list[dict]) -> str:
               <button class="map-sel" id="map-deselect-all" data-action="map-deselect-all">Deselect all</button>
             </span>
             <span style="display:flex;align-items:center;gap:5px">
-              <span style="font-size:10px;color:#9aa7bd;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Pie axis</span>
+              <span style="font-size:10px;color:#8d85a8;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Pie axis</span>
               <button class="map-pie-sw active" data-pie-axis="x">Sector</button>
               <button class="map-pie-sw" data-pie-axis="y">Innovation</button>
               <button class="map-pie-sw" data-pie-axis="z">Seniority</button>
@@ -1060,7 +1090,7 @@ def build_html(jobs: list[dict]) -> str:
   const AXIS_LABELS = DATA.axisLabels;
   const US_STATE_PATHS = DATA.usStatePaths || [];
   const BOUNDARY_LABELS = ["", "Very strict", "Strict", "Fairly strict", "Moderate", "Medium", "Fairly loose", "Loose", "Very loose", "Very loose", "Fuzzy"];
-  const LOCATION_COLORS = { AB: "#44c7e8", BC: "#7dd3a8", SK: "#e7c85d", MB: "#f59e0b", ON: "#a887ff", QC: "#f472b6", Remote: "#d1d5db" };
+  const LOCATION_COLORS = { AB: "#7d44e8", BC: "#7dd3a8", SK: "#e7c85d", MB: "#f59e0b", ON: "#a887ff", QC: "#f472b6", Remote: "#d6d1db" };
   const OUTCOMES = ["pending", "offer", "no-offer", "waitlisted"];
   const OUTCOME_COLORS = { pending: "#e0b15b", offer: "#46c08a", "no-offer": "#d73027", waitlisted: "#a78bfa" };
 
@@ -1247,8 +1277,8 @@ def build_html(jobs: list[dict]) -> str:
       const t = clamp((job.sal - 55) / 165, 0, 1);
       return rgbToHex(lerp(92, 250, t), lerp(170, 204, t), lerp(255, 90, t));
     }
-    if (state.colorMode === "location") return LOCATION_COLORS[job.province] || "#d1d5db";
-    return STATUS_COLORS[job.status] || "#9aa7bd";
+    if (state.colorMode === "location") return LOCATION_COLORS[job.province] || "#d6d1db";
+    return STATUS_COLORS[job.status] || "#8d85a8";
   }
 
   function rgbToHex(r, g, b) {
@@ -1550,7 +1580,17 @@ def build_html(jobs: list[dict]) -> str:
   }
 
   function resetCamera() {
-    orbit = { theta: Math.PI * 0.25, phi: Math.PI * 0.34, radius: 9.2 };
+    // theta was 0.25*PI — exactly 45 degrees, which puts the camera on the cube's
+    // diagonal so both front faces foreshorten by the same amount. That symmetry
+    // is what read as straight on: with no near corner, nothing tells you it is a
+    // volume rather than a plane.
+    //
+    // 0.33*PI (59 degrees) with 25 degrees of elevation gives one dominant face
+    // and one receding, which is what makes it read as depth. Chosen by rendering
+    // five candidates and comparing, not by reasoning about spherical coordinates:
+    // the first attempt went the other way to 31 degrees, which is close enough to
+    // an axis that the box collapsed into an oblique plane.
+    orbit = { theta: Math.PI * 0.33, phi: Math.PI * 0.36, radius: 9.5 };
     updateCamera();
   }
 
@@ -2208,8 +2248,8 @@ def build_html(jobs: list[dict]) -> str:
     const SIZE = 70, R = 33, CX = 35, CY = 35;
     if (!jobs || jobs.length === 0) {
       return "<svg width=\"" + SIZE + "\" height=\"" + SIZE + "\" viewBox=\"0 0 " + SIZE + " " + SIZE + "\">" +
-        "<circle cx=\"" + CX + "\" cy=\"" + CY + "\" r=\"" + R + "\" fill=\"#1a2233\" stroke=\"rgba(230,240,255,0.2)\"></circle>" +
-        "<text x=\"" + CX + "\" y=\"" + (CY + 3) + "\" text-anchor=\"middle\" fill=\"#8ea0bd\" font-size=\"8\">0</text></svg>";
+        "<circle cx=\"" + CX + "\" cy=\"" + CY + "\" r=\"" + R + "\" fill=\"#281a33\" stroke=\"rgba(230,240,255,0.2)\"></circle>" +
+        "<text x=\"" + CX + "\" y=\"" + (CY + 3) + "\" text-anchor=\"middle\" fill=\"#a78ebd\" font-size=\"8\">0</text></svg>";
     }
     const buckets = [0, 0, 0, 0, 0];
     jobs.forEach((j) => {
@@ -2354,7 +2394,7 @@ def build_html(jobs: list[dict]) -> str:
     $$(".map-dot").forEach((dot) => {
       const id = dot.dataset.jobId;
       const job = jobById.get(id);
-      dot.setAttribute("fill", job ? colorFor(job) : "#d1d5db");
+      dot.setAttribute("fill", job ? colorFor(job) : "#d6d1db");
       dot.classList.toggle("dim", !visibleIds.has(id));
       dot.classList.toggle("hot", id === state.hoveredId || id === state.selectedId);
     });
