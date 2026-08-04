@@ -77,7 +77,7 @@ What each leg corresponds to in the repo, including where nothing does:
 | | Leg | | Route | What runs it | Covered? |
 |---|---|---|---|---|---|
 | <img src="assets/icon-silo.svg" alt="" width="30" /> | **Silo** | *scripted* | Cold application through the employer's own portal | `pipeline` skill, `template/` port primitive, `utils/` render-verify, `working/exports/` | Everything up to the send. **You paste and click.** |
-| <img src="assets/icon-patrol.svg" alt="" width="30" /> | **Patrol** | *paced* | LinkedIn outreach before you apply | [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md), `scripts/outreach/`, `working/outreach/` | Scoping, handle verification, logging, pacing. **You run the live commands.** |
+| <img src="assets/icon-patrol.svg" alt="" width="30" /> | **Patrol** | *paced* | LinkedIn outreach before you apply | [`linkedin-outreach`](.claude/skills/linkedin-outreach/SKILL.md), `scripts/outreach/`, `working/outreach/` | Scoping, handle verification, logging, pacing. **You run the live commands — and the wrapper is [Windows-only today](.claude/skills/linkedin-outreach/SKILL.md).** |
 | <img src="assets/icon-bomber.svg" alt="" width="30" /> | **Bomber** | *crewed* | A referral from someone already inside | — | **Nothing. This leg is yours.** |
 
 Full vocabulary, and what branches off each leg:
@@ -94,11 +94,35 @@ The mark is the same diagram at lower resolution: an isometric cube's three face
 
 ---
 
+## Which path am I on?
+
+Pick before you set anything up. **Only the layout step needs Canva** — everything
+that finds roles, screens them and writes the copy works without it.
+
+| | Tier | You need | You get | Layout by |
+|---|---|---|---|---|
+| **A** | Full pipeline | Canva + its connector, Python 3.11+ | Search → screen → draft → **auto-laid-out, verified PDFs** → filed | The agent |
+| **B** | Draft-only | Python 3.11+ | Search → screen → draft → reviewed packet as Markdown | **You**, in whatever you already use |
+| **C** | LaTeX fallback | Python 3.11+, MiKTeX or TeX Live | Search → screen → draft → compiled PDFs | LaTeX |
+
+**Tier B is a real path, not a consolation prize.** The open-status gate,
+JD-verification, dedup against everything you have seen, the coverage map, the
+reviewer personas and the anti-slop pass are all Tier B. What you give up is the
+automatic length-matched layout — you paste approved copy into your own résumé
+instead. Start here if Canva stalls, and upgrade later; nothing has to be redone.
+
+Tier A is the reason the repo exists, and its setup is the one genuinely fiddly part:
+[**docs/CANVA_SETUP.md**](docs/CANVA_SETUP.md) has the steps and a one-line test for
+whether it actually worked.
+
+---
+
 ## Setup
 
 **You need:** a coding agent — [Claude Code](https://claude.ai/code) or
-[Codex](https://openai.com/codex) · a Canva account with the MCP connector enabled ·
-Python 3.11+ (`pip install plotly pymupdf`).
+[Codex](https://openai.com/codex) · Python 3.11+ (`pip install plotly pymupdf`) ·
+**for Tier A only:** a Canva account with its connector enabled
+([how](docs/CANVA_SETUP.md)).
 
 **Which agent, honestly.** The parts that do the work are plain Python and plain Markdown,
 and run under either: the validators, the port primitive, the render-verify loop, the

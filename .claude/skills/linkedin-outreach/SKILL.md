@@ -28,6 +28,19 @@ If connections haven't been accepted within ~3–5 days, submit anyway — outre
 
 The CLI is vendored at `.agents/vendor/linkedin-cli` (submodule; see its `llms.txt` for the full verb/JSON contract). Windows exe: `.agents/vendor/linkedin-cli/.venv/Scripts/linkedin-cli.exe` (built by `.agents/vendor/setup_linkedin_cli.ps1`).
 
+> **Platform limit — read before planning outreach.** This leg is **Windows-only
+> today.** The setup script is PowerShell, the pacing wrapper is
+> `run_outreach.ps1`, and every command below names a `.exe`. There is no macOS or
+> Linux path, and nothing else in the repo depends on Windows.
+>
+> On macOS or Linux: the *scoping* half still works — `scope_targets.py` is stdlib
+> Python and builds the decision-chain log — but you run the connects and messages
+> by hand in the LinkedIn web UI, honouring the same caps below (≤5 per org per day,
+> ≤10 per day, one message per person, stop for the day on any checkpoint). Log them
+> in the same `working/outreach/` file so the record stays complete.
+>
+> Say this to the user *before* they start a batch, not when a command fails.
+
 **Session model:** one long-lived owner process, short-lived verb clients.
 - Terminal 1 (yours, stays open): `linkedin-cli.exe session open --session work` (blocks — owns the browser)
 - Terminal 2: `linkedin-cli.exe login` once, then any verb: `linkedin-cli.exe --session work <verb> <handle> --json`

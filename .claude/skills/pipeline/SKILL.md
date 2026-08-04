@@ -28,7 +28,33 @@ framework_version: 1.0.0
 
 ## Step 0: Configure
 
-**Before doing anything else**, check for search focus parameters — in priority order:
+### 0a. Which tier is this run? — check FIRST, before any searching
+
+The porting steps need Canva. Discovery, screening, drafting and review do not. Find
+out which you have **now**, not at Step 6 with drafts already written:
+
+- **No Canva MCP tools available in this session**, or `CLAUDE.md` still holds
+  `[YOUR_CANVA_DESIGN_ID]` → **Tier B**.
+- Both present → **Tier A**.
+
+On Tier B, say so once, plainly, at the start: *"No Canva design is configured, so
+this is a Tier B run — I will take it through drafting and review and stop there.
+You will paste the approved copy into your own résumé. `docs/CANVA_SETUP.md` covers
+upgrading to Tier A."* Then run Steps 1–5, file the packet, and stop. **Do not
+attempt the port and do not treat the absence of Canva as an error** — it is a
+supported path, described in the README's tier table.
+
+Every gate that matters still applies on Tier B: the open-status gate, JD-verify,
+dedup, the reviewer personas, the anti-slop pass, and the sweep-doc validator. The
+only thing Tier B loses is automatic layout.
+
+This check exists because fail-closed became fail-*late* here: the pipeline used to
+assume Canva and discover its absence deep into a run, after the user had spent an
+evening. A gate belongs at the door.
+
+### 0b. Search focus
+
+**Then** check for search focus parameters — in priority order:
 1. **Inline in prompt**: If the prompt contains a `SEARCH_FOCUS={"cx":...}` JSON line (pasted from the "Copy Focus" button in the viz), parse and use those values directly. Also write them to `working/active/search_focus.json` for future runs.
 2. **From file**: Read `working/active/search_focus.json` if it exists.
 3. **Default**: cx=3, cy=3.5, cz=3.5, radius=1.0, boundary=5.
