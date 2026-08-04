@@ -14,8 +14,8 @@
     <g id="silo">
   <rect fill="#8d85a8" opacity=".28" x="2" y="46" width="60" height="13" rx="2"/>
   <rect fill="#8d85a8" opacity=".55" x="21" y="34" width="22" height="16" rx="2"/>
-  <path fill="#8d85a8" opacity=".85" d="M19,38 L4,44 L2,38 L18,32 Z"/>
-  <path fill="#8d85a8" opacity=".85" d="M45,38 L60,44 L62,38 L46,32 Z"/>
+  <path fill="#8d85a8" opacity=".85" d="M17.6,26.8 L22.4,32.2 L6.4,46.7 L1.6,41.3 Z"/>
+  <path fill="#8d85a8" opacity=".85" d="M46.4,26.8 L41.6,32.2 L57.6,46.7 L62.4,41.3 Z"/>
   <rect fill="#b98cff" x="26" y="8" width="12" height="34" rx="2.5"/>
   <path fill="#3fca7d" d="M26,16 L26,10.5 A2.5,2.5 0 0 1 28.5,8 L35.5,8 A2.5,2.5 0 0 1 38,10.5 L38,16 Z"/>
     </g>
@@ -72,22 +72,31 @@
        No double hyphen anywhere in this string. XML forbids it inside a comment,
        and emitting one here silently dropped the whole triad group from the
        rendered card while the SVG still looked fine as source. -->
-  <!-- label_size is divided by the scale so the rendered size stays at 19. -->
+  <!-- label_size is divided by the scale so the rendered size stays at 19.
+
+       The card labels the three legs by their REGISTER, not their nickname. It has
+       tried both nicknames (SILO / PATROL / BOMBER) and component names (COLD APPLY
+       / OUTREACH / REFERRAL); neither works cold. The nicknames need DOCTRINE.md to
+       mean anything, and the component names read as a feature list. Scripted /
+       paced / crewed is still the doctrine's own vocabulary — it is the italic
+       register word on each leg in DOCTRINE.md and in the network diagram — but it
+       describes what the route *is like* rather than naming a weapon, so it carries
+       meaning to someone who has never opened the repo. -->
   <g transform="translate(751.6,114.8) scale(1.38)">
   <g stroke="#8d85a8" stroke-width="1.6" opacity=".5" stroke-linecap="round" fill="none">
     <path d="M180.00,124.94 L180.00,95.44"/>
     <path d="M224.22,201.53 L251.45,217.25"/>
-    <path d="M135.78,201.53 L111.24,215.70"/>
+    <path d="M135.78,201.53 L111.27,215.68"/>
   </g>
   <use href="#bomber" transform="translate(156.04,30.71) scale(0.75)"/>
   <use href="#patrol" transform="translate(260.31,207.25) scale(0.75)"/>
-  <use href="#silo" transform="translate(52.12,208.75) scale(0.75)"/>
+  <use href="#silo" transform="translate(52.12,208.88) scale(0.75)"/>
   <use href="#trefoil" transform="translate(128.90,124.83) scale(1.6)"/>
   <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13.768115942028986"
      letter-spacing="1.5" fill="#c3bcd8" text-anchor="middle">
-    <text x="180.00" y="19.36">BOMBER</text>
-    <text x="283.92" y="286.27">PATROL</text>
-    <text x="76.08" y="286.27">SILO</text>
+    <text x="180.00" y="19.36">CREWED</text>
+    <text x="283.92" y="286.31">PACED</text>
+    <text x="76.08" y="286.31">SCRIPTED</text>
   </g>
   </g>
 </svg>

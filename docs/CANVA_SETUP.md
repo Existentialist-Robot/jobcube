@@ -66,8 +66,18 @@ résumé/cover pairs." Anything else means it is not working:
 | An authorization or permission error | Connected but not authorized. Reconnect and approve the Canva page. |
 | "I can't access that design" | Connected to a different Canva account than the one that owns the design. |
 
-Then run `/doctor` (or `python -B tools/doctor.py`), which repeats this check as
-part of a full setup audit.
+If the probe answers with a number, Tier A is ready. For a broader check that
+nothing personal is tracked and the skill files are intact, run:
+
+```bash
+python -B tools/security_guards.py
+python -B tools/lint_skills.py
+```
+
+*A `/doctor` command that audits the whole setup in one pass — including this probe
+— is planned and does not exist yet. This page pointed at it before it was written;
+that was the same phantom-artifact mistake this repo exists to avoid, caught by
+review.*
 
 ---
 

@@ -42,11 +42,18 @@ TREFOIL = f"""\
 # the ground slab and high where it meets the opening. They sloped the other way
 # for three commits, which read as two ramps running down into the hole rather
 # than as a closure thrown open.
+#
+# Second pass: they were also too small and too shallow. A 19-degree incline on a
+# thin bar reads as a shrug; a blast door thrown open is a heavy slab standing well
+# clear of the opening. Now 42 degrees, ~22 units long and 7 thick — each one built
+# as a thick bar from an outer hinge at (4,44) to an inner tip at (20,29.5), which
+# is why the corner numbers look arbitrary. The inner corner clears the collar's
+# top-left at (21,34) by design; check that if the collar ever moves.
 SILO = f"""\
   <rect fill="{DIM}" opacity=".28" x="2" y="46" width="60" height="13" rx="2"/>
   <rect fill="{DIM}" opacity=".55" x="21" y="34" width="22" height="16" rx="2"/>
-  <path fill="{DIM}" opacity=".85" d="M19,38 L4,44 L2,38 L18,32 Z"/>
-  <path fill="{DIM}" opacity=".85" d="M45,38 L60,44 L62,38 L46,32 Z"/>
+  <path fill="{DIM}" opacity=".85" d="M17.6,26.8 L22.4,32.2 L6.4,46.7 L1.6,41.3 Z"/>
+  <path fill="{DIM}" opacity=".85" d="M46.4,26.8 L41.6,32.2 L57.6,46.7 L62.4,41.3 Z"/>
   <rect fill="{VIOLET}" x="26" y="8" width="12" height="34" rx="2.5"/>
   <path fill="{GREEN}" d="M26,16 L26,10.5 A2.5,2.5 0 0 1 28.5,8 L35.5,8 A2.5,2.5 0 0 1 38,10.5 L38,16 Z"/>"""
 
@@ -88,7 +95,7 @@ LEGS = {
 # above the thing it was supposed to connect to. Re-measure if a glyph changes.
 METRICS = {
     "trefoil": {"cx": 31.94, "cy": 31.98, "r": 23.16},
-    "silo":    {"cx": 31.94, "cy": 36.34, "r": 35.47},
+    "silo":    {"cx": 31.94, "cy": 36.16, "r": 35.52},
     "patrol":  {"cx": 31.49, "cy": 38.34, "r": 31.33},
     "bomber":  {"cx": 31.94, "cy": 33.72, "r": 33.92},
 }
@@ -293,9 +300,18 @@ def social() -> str:
        No double hyphen anywhere in this string. XML forbids it inside a comment,
        and emitting one here silently dropped the whole triad group from the
        rendered card while the SVG still looked fine as source. -->
-  <!-- label_size is divided by the scale so the rendered size stays at 19. -->
+  <!-- label_size is divided by the scale so the rendered size stays at 19.
+
+       The card labels the three legs by their REGISTER, not their nickname. It has
+       tried both nicknames (SILO / PATROL / BOMBER) and component names (COLD APPLY
+       / OUTREACH / REFERRAL); neither works cold. The nicknames need DOCTRINE.md to
+       mean anything, and the component names read as a feature list. Scripted /
+       paced / crewed is still the doctrine's own vocabulary — it is the italic
+       register word on each leg in DOCTRINE.md and in the network diagram — but it
+       describes what the route *is like* rather than naming a weapon, so it carries
+       meaning to someone who has never opened the repo. -->
   <g transform="translate({SOCIAL_TRIAD_HUB_X - CX * SOCIAL_TRIAD_SCALE:.1f},{SOCIAL_TRIAD_HUB_Y - CY * SOCIAL_TRIAD_SCALE:.1f}) scale({SOCIAL_TRIAD_SCALE})">
-{triad_group(label_size=SOCIAL_LABEL_SIZE / SOCIAL_TRIAD_SCALE, label_fill="#c3bcd8")}
+{triad_group(label_size=SOCIAL_LABEL_SIZE / SOCIAL_TRIAD_SCALE, label_fill="#c3bcd8").replace("SILO", "SCRIPTED").replace("PATROL", "PACED").replace("BOMBER", "CREWED")}
   </g>
 </svg>
 """
