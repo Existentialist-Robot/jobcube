@@ -1,0 +1,24 @@
+# See eden-os specs/repo-architecture-standard-PROPOSAL.md and ops/decisions-2026-08-25.md D-01.
+repo: jobcube
+plane: tooling                     # A STAR CENTRE: supplies mechanism, downstream of nobody.
+                                   # It is PUBLIC, which is the second reason it cannot sit in
+                                   # the context chain -- the boundary governs context, and a
+                                   # public repo can hold none of it.
+canonical_home: Bumblebee          # default, unruled
+writers: single
+
+context:
+  upstream: ~                      # a star centre has none; that is what makes it a centre
+  receives: []
+  emits_upstream: false
+  readable_by_root: true
+
+tooling:
+  source: ~                        # it IS a source
+  mode: ~
+  vendored_upstream_sha: ~
+
+startup:
+  tier0: [.repo-relation.yaml]
+  tier1: CLAUDE.md
+  tier2_on_demand: [AGENTS.md]
