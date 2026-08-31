@@ -98,10 +98,17 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 ---
 
 ## Repo Structure
-- `cv/` - LaTeX CV variants — **legacy fallback only**
-- `cover_letters/` - LaTeX cover letters — **legacy fallback only**
-- `.claude/skills/` - AI skill definitions for the application workflow
-- `working/scripts/` - Canva helper scripts + viz
+
+Full annotated tree in [`README.md`](README.md#file-structure); walkthrough in [`GETTING_STARTED.md`](GETTING_STARTED.md).
+
+- `documents/` — **input.** The user's real career material (CV, LinkedIn export, diplomas, references, past applications). Read this to build and refresh the profile above. Gitignored contents.
+- `working/exports/` — **output.** The finals archive: every submitted application, filed `<YYYY-MM (Mon 'YY)>/<YY-MM-DD - Company - Role>/`. Packets are written here at draft time, not into `active/`.
+- `working/active/` — live work only: the current sweep doc and the current interview doc. Nothing else.
+- `working/templates/` — fill-in-the-blank docs (sweep, packet, outreach log). Copy, don't edit in place.
+- `working/scripts/` — Canva porting helpers, sweep tooling, viz. Start from [`PORTING_RECIPE.md`](working/scripts/PORTING_RECIPE.md).
+- `working/archive/` — superseded sweeps, sprint notes, intermediate packets.
+- `.claude/skills/` — pipeline, deep-sweep, job-scraper, linkedin-outreach.
+- `cv/`, `cover_letters/` — LaTeX fallback (moderncv + `cover.cls`). Used only when not porting to Canva.
 
 ---
 

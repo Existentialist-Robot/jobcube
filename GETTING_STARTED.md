@@ -1,12 +1,10 @@
-# Getting Started — Claude-Assisted Job Search Workspace
+# Getting Started — the full walkthrough
 
-## What this repo does
+**Start with [`README.md`](README.md)** for what this is and the five-minute version. This file is the long form: every step in detail, plus the failure modes worth knowing before you hit them.
 
-This workspace turns Claude Code into your personal job application pipeline. It handles job discovery (searching confirmed-queryable job boards), fit evaluation (screening roles against your profile and realistic hiring probability, not just skills match), application drafting (résumé body + cover letter, length-matched to your Canva template), porting (editing your Canva design via MCP without you touching the tool), and filing (exporting PDFs, naming folders, updating your tracker).
+The design principle is **one conversation = one sprint**. You open Claude Code, say `/pipeline`, and Claude runs search → evaluate → draft → port → export. You review drafts in your IDE and greenlight; Claude does the Canva edits and PDF exports. The output is submission-ready PDFs in `working/exports/`, a running `job_search_tracker.csv`, and a 3D visualization of your pipeline.
 
-The design principle is **one conversation = one sprint** — you open Claude Code, say `/pipeline`, and Claude handles search → evaluate → draft → port → export. You review drafts in your IDE, greenlight, and Claude does the Canva edits and PDF exports. The output is submission-ready PDFs filed in `working/exports/`, a running `job_search_tracker.csv`, and a searchable 3D visualization of your entire pipeline.
-
-The system is built for a specific workflow: a **Canva resume template with multiple resume+cover pairs** (each pair = one application), edited programmatically via the Canva MCP. This is the fastest way to produce polished, consistently formatted applications at volume. If you don't want to use Canva, the repo still works with LaTeX templates (see `cv/` and `cover_letters/` as fallbacks), but the porting automation won't apply.
+Built for a **Canva file with multiple résumé+cover pairs** (one pair per application), edited over MCP. If you'd rather not use Canva, `cv/` and `cover_letters/` hold a LaTeX fallback — you keep everything except the porting automation.
 
 ---
 
@@ -21,6 +19,22 @@ Before you start:
 5. **GitHub account** (the repo tracks your applications via git)
 6. **Optional: Adzuna API key** — structured Canadian job listings with salary data. Free tier. Register at [developer.adzuna.com](https://developer.adzuna.com). The pipeline can call it as an MCP tool for significantly better search coverage than HTML scraping.
 7. **Optional: Jooble API key** — broader aggregator. Free key on request at [jooble.org/api/about](https://jooble.org/api/about).
+
+---
+
+## Step 0 — Drop in your career documents
+
+Optional, but it makes Step 1 far less typing. Put your real material in [`documents/`](documents/):
+
+| Folder | What goes in |
+|---|---|
+| `documents/cv/` | your master CV — the complete one, not a tailored variant |
+| `documents/linkedin/` | LinkedIn export (Profile → More → Save to PDF) |
+| `documents/diplomas/` | degrees and transcripts — official titles and dates |
+| `documents/references/` | reference letters — quotes and competency language |
+| `documents/applications/` | past applications and how they went |
+
+Claude reads these to draft your profile, so you're editing rather than authoring. The folder contents are gitignored; only the structure is tracked. Details in [`documents/README.md`](documents/README.md).
 
 ---
 
@@ -151,7 +165,7 @@ The blue sphere in the viz shows your current search focus — the region of the
 
 Claude will:
 1. Ask if you want to review the shortlist before drafting (or pass `--confirm` / `--auto` next time to skip the question)
-2. Search the confirmed-queryable boards in `working/scripts/utils/../boards.md` — ~4–6 WebFetch/WebSearch calls per wave
+2. Search the confirmed-queryable boards in `.claude/skills/pipeline/boards.md` — ~4–6 WebFetch/WebSearch calls per wave
 3. Filter results through a **hiring probability gate** (skills match ≠ hiring probability; roles where there's no realistic path to hire are dropped silently)
 4. Write a sweep doc to `working/active/job_sweep_YYYY-MM-DD.md` **before presenting anything in chat**
 5. Summarize from the doc, then wait for your input
@@ -263,35 +277,14 @@ Claude will read the key files and give you a status brief before doing anything
 
 ---
 
-## Directory Reference
+## Directory reference
 
-```
-ai-job-search/
-├── CLAUDE.md                   # candidate profile + workflow rules (AI reads this first)
-├── GETTING_STARTED.md          # this file
-├── HANDOFF.md                  # sprint state, active docs, pending items
-├── SWEEP_TEMPLATE.md           # template for sweep docs
-├── .env.example                # env var keys (copy to .env, fill in)
-├── .gitignore
-├── job_search_tracker.csv      # canonical application index
-├── working/
-│   ├── active/                 # live work only: current sweep + current interview doc
-│   ├── exports/                # FINALS ARCHIVE: every submitted app (PDFs + drafts)
-│   ├── archive/
-│   │   ├── sweeps/             # past sweep docs (move here after sprint ends)
-│   │   ├── sprints/            # past sprint plans
-│   │   └── packets/            # intermediate multi-app drafts
-│   └── scripts/
-│       ├── PORTING_RECIPE.md   # step-by-step Canva porting guide
-│       ├── REVIEW_AGENTS.md    # reviewer persona templates + log
-│       ├── utils/              # general-purpose utilities (parse, read, audit)
-│       ├── builders/           # per-role builder scripts (clone one per port)
-│       ├── viz/                # visualization generator
-│       └── generated/          # output JSON from builder scripts
-├── cv/                         # LaTeX CV fallback (legacy)
-├── cover_letters/              # LaTeX cover letter fallback (legacy)
-└── .claude/skills/             # AI skill definitions
-    ├── pipeline/SKILL.md       # full pipeline skill
-    ├── pipeline/boards.md      # confirmed queryable job boards
-    └── job-scraper/SKILL.md    # job search skill
-```
+See [`README.md`](README.md#file-structure) for the annotated tree. The three things worth internalizing:
+
+**`documents/` is input, `working/exports/` is output.** You drop your career material in the first; finished applications accumulate in the second. Nothing else is a source of truth.
+
+**`working/active/` holds only live work** — the current sweep doc and the current interview doc. Everything else is either filed with its application or archived. If `active/` has more than two or three files, something needs moving.
+
+**Packets live with their application from the first draft**, at `working/exports/<month>/<app folder>/copy/`. Not in `active/`. This is what keeps the draft, the reviewer notes, and the submitted PDF together six months later when you're asked about the role.
+
+Copy your working docs from [`working/templates/`](working/templates/) rather than writing them freehand — the sweep table feeds the viz, and the packet roster feeds the port.
