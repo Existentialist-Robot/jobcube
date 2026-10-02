@@ -18,6 +18,22 @@ tooling:
   mode: ~
   vendored_upstream_sha: ~
 
+  # Vendored FILES, each carrying its own pin. Written by eden-os
+  # `python -m tools.repos.vendorpush`; checked by `python -m tools.repos.vendorsync`.
+  # `upstream_sha` is the commit that last touched THAT FILE upstream, not upstream HEAD.
+  # `sha256` is of the bytes as vendored, so a local edit is detectable on a machine that
+  # does not hold the upstream at all. `policy` says how this copy may be treated here.
+  vendored_files:
+    - from: eden-os
+      upstream_path: tools/yield.py
+      path: tools/yield.py
+      upstream_sha: 7315cfbefee595bf714c2e516d7fdad592bde85f
+      sha256: f87a4fb70cf424e246242dbaba22e7d8a4df4a856af66683660918b9aaf74b27
+      policy: readonly
+      note: >-
+        session record-work yield: share of commits that edited prose about the work, against
+        the registry target
+
 startup:
   tier0: [.repo-relation.yaml]
   tier1: CLAUDE.md

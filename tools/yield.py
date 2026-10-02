@@ -392,6 +392,115 @@ def validate_session(session: str | None) -> str:
     return session
 
 
+def record_target(
+    ledger_rows: Sequence[dict[str, Any]],
+    label: str,
+    review_through_shas: Sequence[str] = (),
+) -> tuple[str, int | None, str]:
+    """Decide where a --record for `label` goes: append, upsert, or refuse.
+
+    ONE ROW PER SESSION. Before this existed, --record appended unconditionally,
+    so a session that re-ran its close wrote a SECOND row -- and the window of
+    that second row contained only the fixup commits the close itself had just
+    surfaced. Those are handoff prose by construction, so the row scored 100%
+    record-work and described nothing. Four of the five 100% rows in the ledger
+    on 2026-08-29 were made this way; the instrument was measuring its own
+    error-correction loop, one row per correction.
+
+    WHY UPSERT AND NOT PLAIN REFUSAL. Refusing the second --record would fail the
+    close for a legitimate re-run, and the fixup commits would then roll silently
+    into the NEXT session's window -- two sessions scored as one, which is the
+    failure specs/handoff-lifecycle.md already warns about. Refusal deletes the
+    measurement; upsert keeps it and files it under the session that earned it.
+
+    WHY NOT UPSERT A LABEL ANYWHERE IN THE LEDGER. Rewriting a non-terminal row's
+    end_sha breaks tools/overhead_review.py:pending_sessions(), which finds the
+    review boundary by exact end_sha match and exits 2 when it cannot. A label
+    reappearing after an intervening label is operator error and must be loud.
+
+    Returns (action, index, reason) where action is "append" | "upsert" | "refuse".
+    """
+    labels = [r.get("session") for r in ledger_rows]
+    if label not in labels:
+        return ("append", None, "first row for this session")
+    last = len(ledger_rows) - 1
+    if labels[last] != label:
+        first = labels.index(label)
+        return (
+            "refuse",
+            None,
+            f"session {label!r} is row {first + 1} but the last row is "
+            f"{labels[last]!r}. Re-recording it would rewrite a CLOSED window and "
+            f"break the review chain's end_sha lookup. If this is a new session, "
+            f"give it a new label.",
+        )
+    frozen = set(s for s in review_through_shas if s)
+    if ledger_rows[last].get("end_sha") in frozen:
+        return (
+            "refuse",
+            None,
+            f"session {label!r} is the last row, but its end_sha is already the "
+            f"boundary of a recorded overhead review. Upserting would move a sha "
+            f"that ops/overhead-reviews.jsonl points at.",
+        )
+    return ("upsert", last, "same session recording again; windows are merged")
+
+
+def merge_rows(existing: dict[str, Any], new: dict[str, Any]) -> dict[str, Any]:
+    """Fold a re-recorded window into the row it belongs to.
+
+    ADDITIVE, NOT RE-MEASURED. Each row's window starts where the previous one
+    ended, so the two windows are disjoint and contiguous and summing them is
+    exact. Re-measuring instead would need the anchor from BEFORE the first
+    same-label row, which the ledger no longer carries once the row is written.
+
+    record_share_pct is RECOMPUTED from the summed counts, never averaged --
+    averaging 80/100/100/100 gives 95.0 where the true share is 83.3.
+    """
+    out = dict(existing)
+    for key in ("commits", "row_work", "record_work"):
+        out[key] = (existing.get(key) or 0) + (new.get(key) or 0)
+
+    repos = dict(existing.get("by_repo") or {})
+    for name, incoming in (new.get("by_repo") or {}).items():
+        prior = repos.get(name) or {}
+        merged = dict(incoming)
+        for key in ("commits", "row_work", "record_work"):
+            merged[key] = (prior.get(key) or 0) + (incoming.get(key) or 0)
+        repos[name] = merged
+    if repos:
+        out["by_repo"] = repos
+
+    commits = out["commits"]
+    out["record_share_pct"] = round(100.0 * out["record_work"] / commits, 1) if commits else 0.0
+
+    # The window GREW: it keeps the start it always had and takes the new end.
+    out["start_sha"] = existing.get("start_sha")
+    out["end_sha"] = new.get("end_sha")
+    if new.get("end_shas"):
+        out["end_shas"] = new["end_shas"]
+    # A level, not a flow -- the latest reading is the right one.
+    if new.get("open_rows") is not None:
+        out["open_rows"] = new["open_rows"]
+    if new.get("open_rows_error") is not None:
+        out["open_rows_error"] = new["open_rows_error"]
+    # A session that runs past midnight keeps the date it STARTED.
+    if new.get("date") and new.get("date") != existing.get("date"):
+        out["date_last"] = new["date"]
+    out["record_calls"] = int(existing.get("record_calls") or 1) + 1
+    return out
+
+
+def duplicate_session_labels(ledger_rows: Sequence[dict[str, Any]]) -> list[str]:
+    """Labels appearing in more than one row -- the invariant this module enforces."""
+    seen: dict[str, int] = {}
+    for row in ledger_rows:
+        name = row.get("session")
+        if name is not None:
+            seen[name] = seen.get(name, 0) + 1
+    return sorted(k for k, n in seen.items() if n > 1)
+
+
 def append_record(path: Path, row: dict[str, Any], session: str | None) -> None:
     validate_session(session)
     if not path.parent.is_dir():
