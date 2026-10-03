@@ -27,8 +27,8 @@ tooling:
     - from: eden-os
       upstream_path: tools/yield.py
       path: tools/yield.py
-      upstream_sha: 7315cfbefee595bf714c2e516d7fdad592bde85f
-      sha256: f87a4fb70cf424e246242dbaba22e7d8a4df4a856af66683660918b9aaf74b27
+      upstream_sha: ecc527b411b204bdd2aca37a7f9f03a629224a6e
+      sha256: 49d4a75c86162108cbf74e706eadc67f6ce517844a6cfbb95b9662f3963783a4
       policy: readonly
       note: >-
         session record-work yield: share of commits that edited prose about the work, against

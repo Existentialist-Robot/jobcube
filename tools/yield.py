@@ -5,8 +5,15 @@ touch only other paths. Configuration may be overridden per repository with a
 `.yield.json` file in the repository root.
 
 The ledger is the state: unless `--since` is supplied, measurement starts at
-the last valid ledger row's `end_sha`. With an empty ledger, the last 20 commits
-form a first baseline.
+the anchor of the ledger row with the HIGHEST commit epoch for this repository
+(`end_shas[<repo_name>].epoch`, eden-os D-224, 2026-09-09: a ledger appended by
+more than one machine has a file order that is not its time order). Rows that
+carry no epoch fall back to the last valid row's `end_sha`, the old behaviour.
+With an empty ledger, the last 20 commits form a first baseline.
+
+`--record` keeps ONE ROW PER SESSION (record_target): a re-record of the last
+row's session is merged into that row in place; a label that is not the last
+row's is refused with exit 4.
 
 Known one-commit off-by-one: a recorded row stores HEAD as `end_sha`, so the
 commit that later writes that ledger row cannot be included in that row and
@@ -159,9 +166,21 @@ def establish_repo(cwd: Path) -> Path:
     return repo_root
 
 
+def strip_leading_dot_slash(value: str) -> str:
+    """Remove leading `./` and `/` segments ONLY. Not str.lstrip("./"), which strips a
+    character SET and so turned `.tools/` into `tools/` and `.claude/` into `claude/`."""
+    while True:
+        if value.startswith("./"):
+            value = value[2:]
+        elif value.startswith("/"):
+            value = value[1:]
+        else:
+            return value
+
+
 def normalized_dir(value: str) -> str:
     value = value.replace("\\", "/").strip()
-    value = value.lstrip("./")
+    value = strip_leading_dot_slash(value)
     if value and not value.endswith("/"):
         value += "/"
     return value
@@ -254,7 +273,7 @@ def load_config(repo_root: Path) -> Config:
 
 def is_row_work(paths: Sequence[str], config: Config) -> bool:
     for original in paths:
-        path = normalized_fragment(original).lstrip("./")
+        path = strip_leading_dot_slash(normalized_fragment(original))
         if any(path.startswith(directory) for directory in config.row_dirs):
             return True
         if any(path.endswith(suffix) for suffix in config.row_suffixes):
@@ -299,6 +318,33 @@ def read_ledger(config: Config) -> tuple[list[dict[str, Any]], list[str]]:
     except OSError as exc:
         fail(f"Cannot read ledger {config.ledger_display}: {exc}", 2)
     return rows, malformed
+
+
+def ledger_anchor(ledger_rows: Sequence[dict[str, Any]], repo_name: str) -> str | None:
+    """The sha the next window starts from: EPOCH-PRIMARY (eden-os D-224).
+
+    The same rule as eden-os tools/gates/session_yield_gate.py root_anchor(): the row
+    whose `end_shas[repo_name]` carries the highest integer `epoch` wins, a tie goes
+    to the LAST tied row in file order, and when no row carries an epoch for this
+    repo the last row's `end_sha` is used exactly as before. Rows written by this
+    file alone carry no `end_shas`, so a ledger only this tool writes is unaffected.
+    """
+    best: tuple[int, str] | None = None
+    for row in ledger_rows:
+        anchor = (row.get("end_shas") or {}).get(repo_name) if isinstance(row.get("end_shas"), dict) else None
+        if not isinstance(anchor, dict):
+            continue
+        epoch = anchor.get("epoch")
+        if not isinstance(epoch, int) or isinstance(epoch, bool):
+            continue
+        sha = anchor.get("sha")
+        if not isinstance(sha, str) or not sha:
+            sha = row["end_sha"]  # read_ledger guarantees a non-empty str end_sha
+        if best is None or epoch >= best[0]:
+            best = (epoch, sha)
+    if best is not None:
+        return best[1]
+    return ledger_rows[-1]["end_sha"] if ledger_rows else None
 
 
 def head_sha(repo_root: Path) -> str:
@@ -499,6 +545,42 @@ def duplicate_session_labels(ledger_rows: Sequence[dict[str, Any]]) -> list[str]
         if name is not None:
             seen[name] = seen.get(name, 0) + 1
     return sorted(k for k, n in seen.items() if n > 1)
+
+
+def replace_last_record(path: Path, row: dict[str, Any], session: str | None) -> None:
+    """Rewrite the LAST VALID ledger row in place (the upsert record_target chose).
+
+    Every other line is kept byte-for-byte: the ledger may hold rows another writer
+    serialized differently, and re-serializing them would be a rewrite of history.
+    Written beside the ledger and renamed into place, so a failure leaves it intact."""
+    validate_session(session)
+    try:
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            lines = handle.readlines()
+    except OSError as exc:
+        fail(f"Cannot read ledger {path}: {exc}", 2)
+    target = None
+    for index, line in enumerate(lines):
+        try:
+            value = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(value, dict) and isinstance(value.get("end_sha"), str) and value["end_sha"]:
+            target = index
+    if target is None:
+        fail(f"Internal error: no valid row to update in {path}", 2)
+    lines[target] = json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n"
+    temporary = path.with_name(path.name + ".tmp")
+    try:
+        with temporary.open("w", encoding="utf-8", newline="") as handle:
+            handle.writelines(lines)
+        os.replace(temporary, path)
+    except OSError as exc:
+        try:
+            temporary.unlink()
+        except OSError:
+            pass
+        fail(f"Cannot update ledger {path}: {exc}", 2)
 
 
 def append_record(path: Path, row: dict[str, Any], session: str | None) -> None:
@@ -713,6 +795,38 @@ def run_selftest() -> int:
         f"before={before}, after={after}",
     )
 
+    hidden = is_row_work([".tools/README.md"], prose_config)
+    explicit = is_row_work(["./tools/README.md"], prose_config)
+    report(
+        "only a literal ./ prefix is stripped (.tools/ is not tools/)",
+        hidden is False and explicit is True,
+        f"hidden={hidden}, explicit={explicit}",
+    )
+
+    forked = [
+        {"end_sha": "late", "end_shas": {"selftest": {"sha": "late", "epoch": 900}}},
+        {"end_sha": "early", "end_shas": {"selftest": {"sha": "early", "epoch": 800}}},
+    ]
+    legacy = [{"end_sha": "one"}, {"end_sha": "two"}]
+    report(
+        "the anchor is the highest-epoch row, not the last line (D-224)",
+        ledger_anchor(forked, "selftest") == "late" and ledger_anchor(legacy, "selftest") == "two",
+        f"forked={ledger_anchor(forked, 'selftest')}, legacy={ledger_anchor(legacy, 'selftest')}",
+    )
+
+    with tempfile.TemporaryDirectory() as temporary:
+        ledger = Path(temporary) / "ledger.jsonl"
+        kept = '{"end_sha":"a","session":"other"}\n'
+        ledger.write_text(kept + '{"end_sha": "b", "session": "same", "commits": 1}\n',
+                          encoding="utf-8", newline="")
+        replace_last_record(ledger, {"end_sha": "c", "session": "same", "commits": 2}, "same")
+        lines = ledger.read_text(encoding="utf-8").splitlines(keepends=True)
+        report(
+            "an upsert rewrites only the last row; other lines stay byte-for-byte",
+            len(lines) == 2 and lines[0] == kept and json.loads(lines[1])["end_sha"] == "c",
+            repr(lines),
+        )
+
     with tempfile.TemporaryDirectory() as temporary:
         ledger = Path(temporary) / "ledger.jsonl"
         banned_exit: int | None = None
@@ -803,7 +917,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         start_sha = args.since
         first_baseline = False
     elif ledger_rows:
-        start_sha = ledger_rows[-1]["end_sha"]
+        start_sha = ledger_anchor(ledger_rows, config.repo_name)
         first_baseline = False
     else:
         start_sha = None
@@ -828,7 +942,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         }
         if config.target_pct is not None:
             row["target_pct"] = config.target_pct
-        append_record(config.ledger, row, args.session)
+        # ONE ROW PER SESSION -- record_target() and merge_rows() existed, but this path
+        # appended unconditionally, so a re-run close wrote the duplicate they forbid.
+        action, index, reason = record_target(ledger_rows, args.session)
+        if action == "refuse":
+            fail(f"Refusing --record: {reason}", 4)
+        if action == "upsert" and index is not None:
+            replace_last_record(config.ledger, merge_rows(ledger_rows[index], row), args.session)
+        else:
+            append_record(config.ledger, row, args.session)
         recorded = True
 
     if args.json:
